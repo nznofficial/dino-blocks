@@ -3,120 +3,238 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Blocky Dinos</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,700,100&display=swap">
+<title>Blocky Dinos — An Expedition Journal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400;1,9..144,700&family=Special+Elite&display=swap">
 <style>
   :root {
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
     --sky: #a9d3ef;
-    --paper: #f3ecdc; --paper-2: #e6dcc4; --ink: #24291f; --ink-2: #5c6352;
-    --accent: #2f5d3a; --accent-ink: #f3ecdc; --line: #c9bd9f;
+    --paper: #efe4cd; --paper-2: #e6d7b7; --paper-3: #d9c7a1; --ink: #2b2419; --ink-2: #6b5d48; --ink-3: #9a8b71;
+    --line: #b9a985; --rule: rgba(43,36,25,.28); --stamp: #a8332d; --moss: #4e6b3d; --tape: rgba(255,246,214,.75);
+    --accent: #4e6b3d; --accent-ink: #efe4cd;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif; --mono: "Special Elite", "Courier New", monospace;
+    --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .2 0 0 0 0 .15 0 0 0 0 .1 0 0 0 .08 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
   }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-    --sky: #1b2a3a;
-    --paper: #232820; --paper-2: #2e3429; --ink: #ece6d4; --ink-2: #a9a795;
-    --accent: #8fbf7a; --accent-ink: #1a2016; --line: #46503f;
-  } }
-  :root[data-theme="dark"] {
-    --sky: #1b2a3a;
-    --paper: #232820; --paper-2: #2e3429; --ink: #ece6d4; --ink-2: #a9a795;
-    --accent: #8fbf7a; --accent-ink: #1a2016; --line: #46503f;
-  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #1b2a3a; } }
+  :root[data-theme="dark"] { --sky: #1b2a3a; }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--sky); color: var(--ink);
-    font: 15px/1.45 "Fraunces", Georgia, serif; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--sky); color: var(--ink); font: 15px/1.45 var(--serif); }
   canvas.stage { display: block; width: 100%; height: 100%; touch-action: none; }
   button { font: inherit; color: inherit; cursor: pointer; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
+  .paper { background: var(--paper) var(--noise); border: 1px solid var(--line); box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 6px 18px rgba(30,20,10,.22); color: var(--ink); }
+  .tape { position: absolute; width: 58px; height: 16px; background: var(--tape); box-shadow: 0 1px 2px rgba(0,0,0,.15); transform: rotate(-4deg); left: 50%; top: -8px; margin-left: -29px; }
+  .stamp { display: inline-block; font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--stamp); border: 2px solid var(--stamp); border-radius: 4px; padding: 4px 7px 3px; transform: rotate(-6deg); opacity: .85; mix-blend-mode: multiply; }
+  .stamp.jurassic { color: var(--moss); border-color: var(--moss); } .stamp.triassic { color: #8a5a2b; border-color: #8a5a2b; }
+  .mono { font-family: var(--mono); }
+  .rule { border: 0; border-top: 1px dashed var(--rule); margin: 8px 0; }
 
-  /* thumbnail strip */
-  #strip {
-    position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); left: 12px; right: 12px;
-    display: flex; gap: 10px; overflow-x: auto; padding: 4px; scrollbar-width: none;
-  }
-  #strip::-webkit-scrollbar { display: none; }
-  .thumb {
-    flex: 0 0 auto; width: 92px; padding: 6px 6px 8px; border: 1.5px solid var(--line); border-radius: 12px;
-    background: var(--paper); display: grid; gap: 4px; justify-items: center; opacity: .85;
-    transition: transform .15s, opacity .15s;
-  }
-  .thumb img { width: 76px; height: 76px; border-radius: 8px; background: var(--paper-2); }
-  .thumb span { font-size: 12.5px; line-height: 1.1; text-align: center; }
-  .thumb[aria-pressed="true"] { border-color: var(--accent); opacity: 1; transform: translateY(-2px); }
-  .thumb:hover { opacity: 1; }
+  /* ---- top: journal tab ---- */
+  #topbar { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; display: flex; gap: 8px; align-items: stretch; z-index: 2; }
+  #topbar .nav { width: 44px; border-radius: 6px; font-size: 26px; line-height: 1; padding: 0; }
+  #browse { flex: 1; display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; border-radius: 6px; text-align: left; position: relative; min-width: 0; }
+  #browse img { width: 44px; height: 44px; border: 3px solid #fffaf0; box-shadow: 0 1px 3px rgba(0,0,0,.3); transform: rotate(-3deg); background: var(--paper-2); flex: none; }
+  #browse strong { display: block; font-size: 17px; line-height: 1.05; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #browse small { display: block; font: 11px/1.2 var(--mono); color: var(--ink-2); letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+  #browse .open { font: 11px/1 var(--mono); color: var(--stamp); border: 1.5px solid var(--stamp); border-radius: 4px; padding: 5px 7px; letter-spacing: .1em; flex: none; }
 
-  /* info card */
-  #info {
-    position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    width: min(340px, calc(100vw - 24px)); background: var(--paper); border: 1.5px solid var(--line);
-    border-radius: 14px; padding: 14px 16px 16px;
-  }
-  #info h1 { margin: 0; font-size: 26px; font-weight: 700; font-variation-settings: "SOFT" 100; line-height: 1.1; }
-  #info .period { color: var(--ink-2); margin: 2px 0 10px; font-style: italic; }
-  #info dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0 0 10px; }
-  #info dt { color: var(--ink-2); }
-  #info dd { margin: 0; }
-  #info p { margin: 0; border-top: 1px solid var(--line); padding-top: 8px; }
-  #info summary { list-style: none; cursor: pointer; }
+  /* ---- bottom dock: controls + plaque ---- */
+  #dock { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; z-index: 2; }
+  #controls { display: grid; gap: 6px; }
+  .row { display: flex; gap: 4px; padding: 4px; border-radius: 6px; }
+  .row button { flex: 1; border: 0; background: transparent; border-radius: 4px; padding: 8px 6px; font: 13px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .row button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .row button.roar { color: var(--stamp); font-weight: 700; }
+  .row button.attack { background: var(--stamp); color: #fff; font-weight: 700; }
+  .row.clock { align-items: center; gap: 10px; padding: 6px 12px; }
+  .row.clock span { min-width: 6.5ch; text-align: right; font: 13px/1 var(--mono); }
+  .row.clock input { flex: 1; accent-color: var(--ink); }
+  .row.clock button { flex: 0 0 auto; padding: 6px 10px; }
+  #row2 { display: none; }
+  #controls.more #row2 { display: flex; }
+
+  /* ---- specimen plaque ---- */
+  #info { border-radius: 6px; position: relative; padding: 10px 14px 12px; }
+  #info summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: start; }
   #info summary::-webkit-details-marker { display: none; }
+  #info .no { font: 11px/1 var(--mono); color: var(--ink-2); letter-spacing: .12em; text-transform: uppercase; }
+  #info h1 { margin: 2px 0 0; font-size: clamp(22px, 6vw, 30px); font-weight: 700; font-style: italic; line-height: 1; }
+  #info .period { font: 12px/1.3 var(--mono); color: var(--ink-2); margin-top: 4px; }
+  #info .stamp { grid-row: 1 / span 3; align-self: center; margin-top: 4px; }
+  #info dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin: 10px 0 8px; font-size: 14px; }
+  #info dt { font: 12px/1.6 var(--mono); color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; }
+  #info dd { margin: 0; border-bottom: 1px dotted var(--rule); }
+  #info p { margin: 0; font-size: 14px; line-height: 1.45; font-style: italic; }
+  #info .note { font: 12.5px/1.4 var(--mono); color: var(--stamp); font-style: normal; margin-top: 6px; }
+  #info:not([open]) .stamp { display: inline-block; }
+  #info .hint { position: absolute; right: 12px; bottom: 8px; font: 10px/1 var(--mono); color: var(--ink-3); letter-spacing: .1em; }
 
-  /* controls */
-  #controls {
-    position: fixed; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    display: grid; gap: 8px; justify-items: end;
-  }
-  .row { display: flex; gap: 6px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px; padding: 4px; }
-  .row button {
-    border: 0; background: transparent; border-radius: 999px; padding: 6px 12px;
-  }
-  .row button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-  .row button.roar { font-weight: 700; }
-  .row.clock { align-items: center; gap: 10px; padding: 6px 14px; }
-  .row.clock span { min-width: 6ch; text-align: right; font-variant-numeric: tabular-nums; }
-  .row.clock input { width: 160px; accent-color: var(--accent); }
+  /* ---- the collection (drawer) ---- */
+  #drawer { position: fixed; inset: calc(64px + env(safe-area-inset-top, 0px)) 10px calc(10px + env(safe-area-inset-bottom, 0px)); border-radius: 6px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; z-index: 3; }
+  #drawer[hidden] { display: none; }
+  .dhead { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; }
+  .dhead h2 { margin: 0; flex: 1; font-size: 20px; font-style: italic; font-weight: 700; }
+  .dhead input { flex: 1; font: 14px/1.2 var(--mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: rgba(255,250,240,.6); color: var(--ink); min-width: 0; }
+  .dhead button { border: 1px solid var(--line); background: transparent; border-radius: 4px; width: 38px; height: 38px; font-size: 18px; flex: none; }
+  .maplabel { margin: 4px 0 -4px; font: 11px/1 var(--mono); color: var(--ink-2); letter-spacing: .14em; text-transform: uppercase; flex: 0 0 auto; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 0 0 auto; }
+  .chips button { border: 1px solid var(--line); background: transparent; border-radius: 4px; padding: 4px 9px; font: 12px/1.2 var(--mono); letter-spacing: .04em; }
+  .chips button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .locs button { display: flex; align-items: center; gap: 6px; }
+  .locs button b { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid currentColor; font-size: 10px; line-height: 15px; text-align: center; flex: none; }
+  .locs .cont { flex-basis: 100%; font: 11px/1 var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: .12em; margin-top: 4px; }
+  #map { position: relative; flex: 0 0 auto; height: 190px; border: 1px solid var(--line); overflow: hidden; background: #d9cba6 var(--noise); box-shadow: inset 0 0 40px rgba(60,40,10,.25); }
+  #map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #map .pin { position: absolute; transform: translate(-50%, -50%); width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #fff4dc; background: var(--stamp); color: #fff; font: 700 10px/15px var(--mono); padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+  #map .pin[aria-pressed="true"] { background: var(--ink); transform: translate(-50%, -50%) scale(1.25); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px 10px; padding-top: 6px; }
+  .tile { position: relative; border: 0; background: #fffaf0; padding: 6px 6px 8px; display: grid; gap: 4px; justify-items: center; box-shadow: 0 2px 6px rgba(30,20,10,.25); transform: rotate(var(--tilt, 0deg)); }
+  .tile:nth-child(3n) { --tilt: -1.6deg; } .tile:nth-child(3n+1) { --tilt: 1.2deg; } .tile:nth-child(5n) { --tilt: -.6deg; }
+  .tile img { width: 100%; aspect-ratio: 1; background: var(--paper-2); }
+  .tile span { font: italic 12px/1.1 var(--serif); text-align: center; color: var(--ink); }
+  .tile small { font: 9.5px/1 var(--mono); color: var(--ink-2); letter-spacing: .08em; text-transform: uppercase; }
+  .tile::before { content: ""; position: absolute; width: 40px; height: 12px; background: var(--tape); left: 50%; margin-left: -20px; top: -6px; transform: rotate(-3deg); }
+  .tile[aria-pressed="true"] { outline: 2px solid var(--stamp); outline-offset: 2px; }
+  .tile[hidden] { display: none; }
+  .count { margin: 0; font: 11px/1 var(--mono); color: var(--ink-2); letter-spacing: .1em; text-transform: uppercase; flex: 0 0 auto; }
 
-  @media (max-width: 640px) {
-    #info { width: calc(100vw - 24px); }
-    #info dl, #info p { display: none; }
-    #info[open] dl { display: grid; } #info[open] p { display: block; }
-    #controls { bottom: auto; top: calc(130px + env(safe-area-inset-top, 0px)); right: 12px; }
+  /* ---- cover page & guided tour ---- */
+  #splash { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 20px; background: rgba(25,20,14,.55); backdrop-filter: blur(3px); }
+  #splash[hidden] { display: none; }
+  #cover { width: min(440px, 100%); padding: 34px 30px 28px; border-radius: 4px; position: relative; text-align: center; border: 1px solid var(--line); outline: 1px dashed var(--rule); outline-offset: -10px; }
+  #cover .kicker { font: 12px/1 var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--ink-2); }
+  #cover h1 { margin: 12px 0 6px; font-size: clamp(34px, 9vw, 46px); font-weight: 700; font-style: italic; line-height: .95; }
+  #cover .sub { margin: 0; font-size: 15px; color: var(--ink-2); }
+  #cover .stamp { position: absolute; right: 22px; top: 18px; transform: rotate(9deg); font-size: 12px; }
+  #cover .actions { display: grid; gap: 8px; margin-top: 24px; }
+  #cover .actions button { border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: 4px; padding: 12px; font: 14px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  #cover .actions button.ghost { background: transparent; color: var(--ink); }
+  #cover .fine { margin: 16px 0 0; font: 11px/1.4 var(--mono); color: var(--ink-3); }
+  #tour { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 4; padding: 12px 14px; border-radius: 6px; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; }
+  #tour[hidden] { display: none; }
+  #tour .step { font: 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); grid-column: 1 / -1; }
+  #tour h3 { margin: 0; font-size: 20px; font-style: italic; font-weight: 700; }
+  #tour p { margin: 0; font-size: 14px; }
+  #tour .btns { display: flex; gap: 6px; grid-column: 2; grid-row: 2 / span 2; flex-direction: column; }
+  #tour .btns button { border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: 4px; padding: 8px 12px; font: 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  #tour .btns button.ghost { background: transparent; color: var(--ink); }
+  body.touring #dock, body.touring #topbar { opacity: 0; pointer-events: none; transition: opacity .3s; }
+
+  /* ---- story overlay ---- */
+  body.story #controls, body.story #info, body.story #topbar { opacity: 0; pointer-events: none; transition: opacity .4s; }
+  #cine { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+  #cine[hidden] { display: none; }
+  #cine .bar { position: absolute; left: 0; right: 0; height: 9vh; background: #000; }
+  #cine .bar.top { top: 0; } #cine .bar.bottom { bottom: 0; }
+  #lower { position: absolute; left: 4vw; bottom: calc(9vh + 26px); display: flex; align-items: stretch; max-width: 72vw; background: var(--paper) var(--noise); border-left: 6px solid var(--stamp); color: var(--ink); box-shadow: 0 6px 18px rgba(0,0,0,.35); opacity: 0; transform: translateY(14px); transition: opacity .4s, transform .4s; }
+  #lower.on { opacity: 1; transform: none; }
+  #lower .tag { background: var(--stamp); color: #fff; padding: 8px 12px; font: 700 12px/1 var(--mono); letter-spacing: .14em; display: flex; align-items: center; }
+  #lower .txt { padding: 8px 16px 10px; display: grid; gap: 2px; }
+  #lower strong { font-size: clamp(16px, 2.6vw, 28px); line-height: 1.1; font-style: italic; }
+  #lower em { font: 12.5px/1.3 var(--mono); color: var(--ink-2); font-style: normal; }
+  #skip { position: absolute; right: 4vw; bottom: calc(9vh + 26px); pointer-events: auto; border: 1.5px solid rgba(255,255,255,.6); background: rgba(0,0,0,.5); color: #fff; border-radius: 4px; padding: 6px 12px; font: 12px/1 var(--mono); letter-spacing: .1em; }
+
+  /* ---- tablet / desktop ---- */
+  @media (min-width: 820px) {
+    #topbar { left: 50%; right: auto; transform: translateX(-50%); width: min(520px, calc(100vw - 20px)); }
+    #dock { left: 14px; right: 14px; grid-template-columns: 360px 1fr; align-items: end; }
+    #controls { justify-self: end; width: 420px; }
+    #row2, #controls.more #row2 { display: flex; }
+    #controls .more-btn { display: none; }
+    #drawer { left: 14px; right: auto; width: 440px; top: calc(76px + env(safe-area-inset-top, 0px)); bottom: 14px; }
+    #tour { left: 50%; right: auto; transform: translateX(-50%); width: min(560px, calc(100vw - 20px)); }
   }
-  @media (prefers-reduced-motion: reduce) { .thumb { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .tile, #lower, #tour { transition: none; } }
 </style>
 </head>
 <body>
 <canvas class="stage" id="stage"></canvas>
 
-<nav id="strip" aria-label="Choose a dinosaur"></nav>
+<header id="topbar">
+  <button id="prev" class="nav paper" aria-label="Previous specimen">‹</button>
+  <button id="browse" class="paper" aria-expanded="false" aria-controls="drawer">
+    <img id="curThumb" alt=""><span style="min-width:0"><strong id="curName">—</strong><small>Now at <span id="curLoc">Santa Monica</span></small></span><span class="open">Collection</span>
+  </button>
+  <button id="next" class="nav paper" aria-label="Next specimen">›</button>
+</header>
 
-<details id="info" open>
-  <summary><h1 id="name">—</h1><div class="period" id="period"></div></summary>
-  <dl>
-    <dt>Length</dt><dd id="len"></dd>
-    <dt>Height</dt><dd id="hgt"></dd>
-    <dt>Weight</dt><dd id="wgt"></dd>
-    <dt>Diet</dt><dd id="diet"></dd>
-  </dl>
-  <p id="fact"></p>
-</details>
+<aside id="drawer" class="paper" hidden aria-label="The collection">
+  <div class="dhead"><h2>The Collection</h2><input id="search" type="search" placeholder="Search…" aria-label="Search species"><button id="closeDrawer" aria-label="Close">✕</button></div>
+  <p class="maplabel">Expedition map</p>
+  <div id="map"></div>
+  <div class="chips locs" id="locChips"></div>
+  <p class="maplabel">Specimens</p>
+  <div class="chips" id="chipPeriod"></div>
+  <div class="chips" id="chipDiet"></div>
+  <div class="chips" id="chipFamily"></div>
+  <div id="grid" class="grid"></div>
+  <p id="count" class="count"></p>
+</aside>
 
-<div id="controls">
-  <div class="row" role="group" aria-label="Animation">
-    <button data-mode="idle">Idle</button>
-    <button data-mode="walk" aria-pressed="true">Walk</button>
-    <button data-mode="run">Run</button>
-    <button class="roar" id="roar">Roar</button>
+<div id="cine" hidden>
+  <div class="bar top"></div><div class="bar bottom"></div>
+  <div id="lower"><span class="tag">DISPATCH</span><span class="txt"><strong id="headline"></strong><em id="subline"></em></span></div>
+  <button id="skip">Skip ▸</button>
+</div>
+
+<div id="dock">
+  <details id="info" class="paper" open>
+    <summary>
+      <span class="no">Specimen <span id="specNo">—</span></span>
+      <span id="stampPeriod" class="stamp">—</span>
+      <h1 id="name">—</h1>
+      <div class="period" id="period"></div>
+    </summary>
+    <hr class="rule">
+    <dl>
+      <dt>Length</dt><dd id="len"></dd>
+      <dt>Height</dt><dd id="hgt"></dd>
+      <dt>Weight</dt><dd id="wgt"></dd>
+      <dt>Diet</dt><dd id="diet"></dd>
+      <dt>Group</dt><dd id="family"></dd>
+    </dl>
+    <p id="fact"></p>
+    <p id="beached" class="note" hidden>No water here — it's beached. Try Santa Monica, London or Sydney.</p>
+    <span class="hint">‹ › turn page</span>
+  </details>
+  <div id="controls">
+    <div class="row paper" role="group" aria-label="Animation">
+      <button data-mode="idle">Idle</button>
+      <button data-mode="walk" aria-pressed="true">Walk</button>
+      <button data-mode="run">Run</button>
+      <button class="roar" id="roar">Roar</button>
+      <button class="attack" id="story">Attack!</button>
+      <button class="more-btn" id="more" aria-expanded="false" aria-label="More controls">⋯</button>
+    </div>
+    <div class="row paper clock" id="row2">
+      <span id="clockLabel">2:00 pm</span>
+      <input id="clock" type="range" min="0" max="24" step="0.05" value="14" aria-label="Time of day">
+      <button id="cycle" aria-pressed="false">Cycle</button>
+      <button id="sound" aria-pressed="false">Sound off</button>
+    </div>
   </div>
-  <div class="row">
-    <button id="cycle" aria-pressed="false">Cycle time</button>
-    <button id="sound" aria-pressed="false">Sound off</button>
+</div>
+
+<div id="splash">
+  <div id="cover" class="paper">
+    <span class="stamp">Expedition No. 1</span>
+    <div class="kicker">A field guide</div>
+    <h1>Blocky Dinos</h1>
+    <p class="sub">Forty Mesozoic specimens observed at nineteen places on seven continents.</p>
+    <div class="actions">
+      <button id="beginTour">Begin the guided tour</button>
+      <button id="explore" class="ghost">Explore freely</button>
+    </div>
+    <p class="fine">Drag to look around · pinch to zoom · turn sound on for the roars</p>
   </div>
-  <div class="row clock">
-    <span id="clockLabel">2:00 pm</span>
-    <input id="clock" type="range" min="0" max="24" step="0.05" value="14" aria-label="Time of day">
-  </div>
+</div>
+<div id="tour" class="paper" hidden>
+  <span class="step" id="tourStep"></span>
+  <h3 id="tourTitle"></h3>
+  <p id="tourText"></p>
+  <div class="btns"><button id="tourNext">Next</button><button id="tourEnd" class="ghost">End tour</button></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -127,57 +245,192 @@ window.addEventListener('error', e => { const f = document.getElementById('fact'
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const lerp = (a, b, t) => a + (b - a) * t;
 
-/* ============================ facts ============================ */
-const SPECIES = {
-  trex: { name: 'Tyrannosaurus rex', period: 'Late Cretaceous, 68–66 million years ago',
-    len: '12 m', hgt: '4 m at the hip', wgt: '8 tonnes', diet: 'Carnivore',
-    fact: 'Its bite was the strongest of any known land animal, and those famous little arms were still strong enough to lift more than a person.',
-    length: 12, height: 5.5, mass: 8000, walkHz: 0.7, runHz: 1.5, step: 2.6, voice: { f: 55, kind: 'growl' } },
-  trike: { name: 'Triceratops', period: 'Late Cretaceous, 68–66 million years ago',
-    len: '8–9 m', hgt: '3 m at the shoulder', wgt: '6–12 tonnes', diet: 'Herbivore',
-    fact: 'It carried several hundred teeth packed into batteries that were replaced continually, shearing tough plants like a pair of scissors.',
-    length: 9, height: 3.2, mass: 9000, walkHz: 0.6, runHz: 1.3, step: 2.2, voice: { f: 80, kind: 'bellow' } },
-  brachio: { name: 'Brachiosaurus', period: 'Late Jurassic, 154–150 million years ago',
-    len: '22 m', hgt: '12 m to the head', wgt: '30–60 tonnes', diet: 'Herbivore',
-    fact: 'The name means "arm lizard": its front legs were longer than its back legs, giving it a giraffe-like posture for browsing the treetops.',
-    length: 22, height: 12.5, mass: 45000, walkHz: 0.4, runHz: 0.75, step: 3.2, voice: { f: 40, kind: 'rumble' } },
-  raptor: { name: 'Velociraptor', period: 'Late Cretaceous, 75–71 million years ago',
-    len: '2 m', hgt: '0.5 m at the hip', wgt: '15 kg', diet: 'Carnivore',
-    fact: 'Turkey-sized and feathered: fossils of its forearm bones show quill knobs, the same anchors that hold flight feathers in modern birds.',
-    length: 2, height: 0.9, mass: 15, walkHz: 2.2, runHz: 4.5, step: 0.55, voice: { f: 700, kind: 'screech' } },
-  diplo: { name: 'Diplodocus', period: 'Late Jurassic, 154–152 million years ago',
-    len: '26 m', hgt: '4–5 m at the hip', wgt: '12–15 tonnes', diet: 'Herbivore',
+/* ============================ species ============================ */
+// One row per species. `plan` picks a parametric body-plan builder below; `p` are its knobs.
+// Sizes are real-world metres: H = hip/shoulder height, W = wingspan, L = total length.
+const V = (f, kind) => ({ f, kind });
+const SPECIES_LIST = [
+  // ---------------- Triassic ----------------
+  { id: 'coelophysis', name: 'Coelophysis', period: 'Triassic', dates: 'Late Triassic, 216–196 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '3 m', hgt: '1 m at the hip', wgt: '25 kg', mass: 25, walkHz: 1.9, runHz: 3.8, step: .8, voice: V(520, 'screech'),
+    fact: 'Hundreds were found buried together at Ghost Ranch, New Mexico; it is the state fossil of New Mexico.',
+    plan: 'theropod', H: .95, p: { bulk: .7, neckLen: 1.3, neckN: 3, headScale: .85, snout: 1.3, teeth: 3, skin: 0x8f9a5a, belly: 0xe2dcb0 } },
+  { id: 'herrerasaurus', name: 'Herrerasaurus', period: 'Triassic', dates: 'Late Triassic, 231 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '6 m', hgt: '1.1 m at the hip', wgt: '350 kg', mass: 350, walkHz: 1.4, runHz: 3, step: 1.2, voice: V(180, 'growl'),
+    fact: 'One of the earliest known dinosaurs, from the Ischigualasto badlands of Argentina, with a sliding jaw joint for gripping prey.',
+    plan: 'theropod', H: 1.15, p: { bulk: .9, teeth: 4, skin: 0x7a5a3c, belly: 0xd8c39a } },
+  { id: 'eoraptor', name: 'Eoraptor', period: 'Triassic', dates: 'Late Triassic, 231 million years ago', family: 'Theropods', diet: 'Omnivore',
+    len: '1 m', hgt: '0.4 m at the hip', wgt: '10 kg', mass: 10, walkHz: 2.6, runHz: 5, step: .4, voice: V(800, 'screech'),
+    fact: 'The "dawn thief" is among the very first dinosaurs; its mixed teeth suggest it ate both plants and small animals.',
+    plan: 'theropod', H: .4, p: { bulk: .75, headScale: .9, teeth: 2, armScale: 1.2, skin: 0x9a7d4a, belly: 0xe8dcb8 } },
+  { id: 'plateosaurus', name: 'Plateosaurus', period: 'Triassic', dates: 'Late Triassic, 214–204 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '7 m', hgt: '2 m at the hip', wgt: '1 tonne', mass: 1000, walkHz: 1, runHz: 2, step: 1.8, voice: V(110, 'bellow'),
+    fact: 'Europe\'s most common Triassic dinosaur; hundreds of skeletons come from Germany and Switzerland, many trapped in mud.',
+    plan: 'theropod', H: 2, p: { bulk: 1.15, neckN: 3, neckLen: 1.5, headScale: .75, teeth: 0, armScale: 1.8, clawLen: 1.5, skin: 0x6b8b5a, belly: 0xd9d2a8 } },
+  { id: 'riojasaurus', name: 'Riojasaurus', period: 'Triassic', dates: 'Late Triassic, 227–208 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '10 m', hgt: '2 m at the hip', wgt: '3 tonnes', mass: 3000, walkHz: .7, runHz: 1.3, step: 2, voice: V(70, 'rumble'),
+    fact: 'An early four-legged sauropodomorph from Argentina with unusually heavy limb bones for its time.',
+    plan: 'sauropod', H: 2, p: { neckN: 4, neckSeg: .38, neckPitch: -.5, tailN: 5, frontLeg: .8, bulk: 1.05, skin: 0x86795e, belly: 0xd8ccae } },
+  { id: 'staurikosaurus', name: 'Staurikosaurus', period: 'Triassic', dates: 'Late Triassic, 233 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '2 m', hgt: '0.6 m at the hip', wgt: '30 kg', mass: 30, walkHz: 2.2, runHz: 4.4, step: .6, voice: V(480, 'screech'),
+    fact: 'Found in Brazil, it is one of the oldest dinosaurs known, a lightly built runner with a long tail.',
+    plan: 'theropod', H: .6, p: { bulk: .75, tailLen: 1.2, teeth: 3, skin: 0x7b6d4d, belly: 0xe0d5b0 } },
+  { id: 'postosuchus', name: 'Postosuchus', period: 'Triassic', dates: 'Late Triassic, 228–202 million years ago', family: 'Other reptiles', diet: 'Carnivore',
+    len: '4.5 m', hgt: '1.2 m at the hip', wgt: '250 kg', mass: 250, walkHz: 1.4, runHz: 2.6, step: 1.2, voice: V(150, 'growl'),
+    fact: 'Not a dinosaur: a crocodile-line archosaur that was the top predator of Triassic North America, before dinosaurs took over.',
+    plan: 'theropod', H: 1.2, p: { bulk: 1.15, headScale: 1.35, snout: 1.1, teeth: 4, armScale: 1.5, pitch: .3, skin: 0x5a6b4a, belly: 0xc9c49b } },
+  { id: 'placerias', name: 'Placerias', period: 'Triassic', dates: 'Late Triassic, 221–210 million years ago', family: 'Other reptiles', diet: 'Herbivore',
+    len: '3.5 m', hgt: '1.5 m at the shoulder', wgt: '1 tonne', mass: 1000, walkHz: .9, runHz: 1.6, step: 1.4, voice: V(120, 'bellow'),
+    fact: 'A tusked dicynodont, a distant mammal relative rather than a dinosaur, and one of the last of its kind.',
+    plan: 'ankylosaur', H: 1.15, p: { armor: false, club: false, tusks: true, bulk: 1.2, skin: 0x8c7b6a, belly: 0xd9cdb8 } },
+  { id: 'nothosaurus', name: 'Nothosaurus', period: 'Triassic', dates: 'Middle–Late Triassic, 240–210 million years ago', family: 'Marine reptiles', diet: 'Piscivore',
+    len: '4 m', hgt: '—', wgt: '150 kg', mass: 150, walkHz: 1, runHz: 2, step: 1.5, voice: V(300, 'screech'),
+    fact: 'A seal-like fish hunter that hauled out on shore; its paddle limbs still had separate fingers.',
+    plan: 'marine', L: 4, p: { kind: 'nothosaur', skin: 0x5f7f7a, belly: 0xd8dcc8 } },
+  { id: 'shonisaurus', name: 'Shonisaurus', period: 'Triassic', dates: 'Late Triassic, 215 million years ago', family: 'Marine reptiles', diet: 'Piscivore',
+    len: '15 m', hgt: '—', wgt: '30 tonnes', mass: 30000, walkHz: .5, runHz: 1, step: 4, voice: V(45, 'rumble'),
+    fact: 'Nevada\'s state fossil and, for decades, the largest marine reptile known; dozens lie together at Berlin-Ichthyosaur State Park.',
+    plan: 'marine', L: 15, p: { kind: 'ichthyosaur', bulk: 1.3, skin: 0x4e6a80, belly: 0xd0d6d8 } },
+  { id: 'eudimorphodon', name: 'Eudimorphodon', period: 'Triassic', dates: 'Late Triassic, 210 million years ago', family: 'Pterosaurs', diet: 'Piscivore',
+    len: '1 m wingspan', hgt: '—', wgt: '10 kg', mass: 10, walkHz: 3.5, runHz: 6, step: 1.2, voice: V(900, 'screech'),
+    fact: 'One of the earliest pterosaurs, with multi-pointed teeth suited to gripping slippery fish.',
+    plan: 'pterosaur', W: 1, p: { tail: true, teeth: 2, skin: 0x8a6a4a, belly: 0xe4d6b8 } },
+  { id: 'tanystropheus', name: 'Tanystropheus', period: 'Triassic', dates: 'Middle Triassic, 242–235 million years ago', family: 'Other reptiles', diet: 'Piscivore',
+    len: '6 m', hgt: '—', wgt: '100 kg', mass: 100, walkHz: .9, runHz: 1.8, step: 1.5, voice: V(350, 'screech'),
+    fact: 'Its neck was longer than body and tail combined yet had only 13 vertebrae; it likely ambushed fish from the shallows.',
+    plan: 'marine', L: 6, p: { kind: 'nothosaur', neckN: 8, neckSeg: .065, skin: 0x6f8a6a, belly: 0xe0dcc0 } },
+
+  // ---------------- Jurassic ----------------
+  { id: 'brachio', name: 'Brachiosaurus', period: 'Jurassic', dates: 'Late Jurassic, 154–150 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '22 m', hgt: '12 m to the head', wgt: '30–60 tonnes', mass: 45000, walkHz: .4, runHz: .75, step: 3.2, voice: V(40, 'rumble'),
+    fact: 'The name means "arm lizard": its front legs were longer than its back legs, giving it a giraffe-like posture for browsing treetops.',
+    plan: 'sauropod', H: 4.2, p: { neckN: 5, neckSeg: .43, neckPitch: -1.05, tailN: 6, frontLeg: 1, skin: 0x6f7a8c, belly: 0xc4c6c0 } },
+  { id: 'diplo', name: 'Diplodocus', period: 'Jurassic', dates: 'Late Jurassic, 154–152 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '26 m', hgt: '4–5 m at the hip', wgt: '12–15 tonnes', mass: 14000, walkHz: .42, runHz: .8, step: 3, voice: V(48, 'rumble'),
     fact: 'More than half its length was tail. One hypothesis holds the whip-like tip could be cracked faster than the speed of sound.',
-    length: 26, height: 5.5, mass: 14000, walkHz: 0.42, runHz: 0.8, step: 3.0, voice: { f: 48, kind: 'rumble' } },
-};
-const ORDER = ['trex', 'trike', 'brachio', 'raptor', 'diplo'];
+    plan: 'sauropod', H: 3.3, p: { neckN: 6, neckSeg: .39, neckPitch: -.32, neckStep: -.02, tailN: 9, tailSeg: .45, frontLeg: .72, headScale: .8, skin: 0x7e8a5a, belly: 0xd4d2a8 } },
+  { id: 'apatosaurus', name: 'Apatosaurus', period: 'Jurassic', dates: 'Late Jurassic, 152–151 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '22 m', hgt: '4.5 m at the hip', wgt: '20 tonnes', mass: 20000, walkHz: .4, runHz: .75, step: 3, voice: V(42, 'rumble'),
+    fact: 'Long confused with "Brontosaurus", it had an unusually thick, heavy neck and a whip-like tail.',
+    plan: 'sauropod', H: 3.6, p: { bulk: 1.3, neckN: 5, neckSeg: .38, neckPitch: -.45, tailN: 8, frontLeg: .78, skin: 0x6a6f5e, belly: 0xcfc9b0 } },
+  { id: 'stegosaurus', name: 'Stegosaurus', period: 'Jurassic', dates: 'Late Jurassic, 155–150 million years ago', family: 'Stegosaurs', diet: 'Herbivore',
+    len: '9 m', hgt: '4 m to the plates', wgt: '5 tonnes', mass: 5000, walkHz: .6, runHz: 1.1, step: 1.8, voice: V(90, 'bellow'),
+    fact: 'Its brain was the size of a walnut; the tail spikes are nicknamed the "thagomizer" after a Far Side cartoon.',
+    plan: 'stegosaur', H: 2.1, p: { plates: 17, skin: 0x7a6f4a, belly: 0xd7cba0, plate: 0xb8563c } },
+  { id: 'allosaurus', name: 'Allosaurus', period: 'Jurassic', dates: 'Late Jurassic, 155–145 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '8.5 m', hgt: '2.5 m at the hip', wgt: '2.5 tonnes', mass: 2500, walkHz: .9, runHz: 1.9, step: 2, voice: V(90, 'growl'),
+    fact: 'Top predator of the Morrison Formation; it may have swung its hatchet-like upper jaw down into prey rather than biting.',
+    plan: 'theropod', H: 2.5, p: { headScale: 1.05, teeth: 4, armScale: 1.5, browHorns: true, skin: 0x8a5a3c, belly: 0xd9c49a } },
+  { id: 'dilophosaurus', name: 'Dilophosaurus', period: 'Jurassic', dates: 'Early Jurassic, 193 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '7 m', hgt: '1.8 m at the hip', wgt: '400 kg', mass: 400, walkHz: 1.2, runHz: 2.6, step: 1.6, voice: V(220, 'growl'),
+    fact: 'The real animal had no neck frill and no venom; it did have two thin bony crests along its snout.',
+    plan: 'theropod', H: 1.8, p: { bulk: .8, teeth: 3, armScale: 1.3, crests: true, skin: 0x5f7a4a, belly: 0xd6d0a0 } },
+  { id: 'kentrosaurus', name: 'Kentrosaurus', period: 'Jurassic', dates: 'Late Jurassic, 152 million years ago', family: 'Stegosaurs', diet: 'Herbivore',
+    len: '4.5 m', hgt: '1.5 m at the hip', wgt: '1 tonne', mass: 1000, walkHz: .8, runHz: 1.5, step: 1.2, voice: V(140, 'bellow'),
+    fact: 'A small East African stegosaur: plates over the shoulders give way to long paired spikes down the back and tail.',
+    plan: 'stegosaur', H: 1.25, p: { plates: 6, spikes: true, skin: 0x6f6a4a, belly: 0xd0c8a0, plate: 0xc7a55a } },
+  { id: 'mamenchisaurus', name: 'Mamenchisaurus', period: 'Jurassic', dates: 'Late Jurassic, 160–145 million years ago', family: 'Sauropodomorphs', diet: 'Herbivore',
+    len: '25 m', hgt: '3.5 m at the hip', wgt: '15 tonnes', mass: 15000, walkHz: .4, runHz: .75, step: 3, voice: V(44, 'rumble'),
+    fact: 'Its neck alone could reach 15 m, about half its total length, one of the longest necks of any animal.',
+    plan: 'sauropod', H: 3.2, p: { neckN: 8, neckSeg: .55, neckPitch: -.3, neckStep: -.03, tailN: 7, frontLeg: .8, headScale: .8, skin: 0x8b7c5e, belly: 0xdad0b2 } },
+  { id: 'compsognathus', name: 'Compsognathus', period: 'Jurassic', dates: 'Late Jurassic, 150 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '1 m', hgt: '0.3 m at the hip', wgt: '3 kg', mass: 3, walkHz: 3, runHz: 6, step: .3, voice: V(1100, 'screech'),
+    fact: 'Chicken-sized; one specimen was fossilised with a whole lizard in its stomach.',
+    plan: 'theropod', H: .3, p: { bulk: .7, neckLen: 1.2, teeth: 2, tailLen: 1.2, skin: 0x8f8a5a, belly: 0xe6e0b8 } },
+  { id: 'rhamphorhynchus', name: 'Rhamphorhynchus', period: 'Jurassic', dates: 'Late Jurassic, 150 million years ago', family: 'Pterosaurs', diet: 'Piscivore',
+    len: '1.8 m wingspan', hgt: '—', wgt: '1.5 kg', mass: 1.5, walkHz: 3, runHz: 5.5, step: 1.8, voice: V(850, 'screech'),
+    fact: 'A long-tailed pterosaur with a diamond-shaped vane at the tip and needle teeth angled outward for snatching fish.',
+    plan: 'pterosaur', W: 1.8, p: { tail: true, teeth: 3, skin: 0x7a6650, belly: 0xe0d4bc } },
+  { id: 'plesiosaurus', name: 'Plesiosaurus', period: 'Jurassic', dates: 'Early Jurassic, 199–175 million years ago', family: 'Marine reptiles', diet: 'Piscivore',
+    len: '3.5 m', hgt: '—', wgt: '100 kg', mass: 100, walkHz: .9, runHz: 1.8, step: 1.6, voice: V(320, 'screech'),
+    fact: 'Described in 1821 from Mary Anning\'s finds at Lyme Regis; it flew through the water with four wing-like flippers.',
+    plan: 'marine', L: 3.5, p: { kind: 'plesiosaur', neckN: 6, skin: 0x4f6f7a, belly: 0xd4dcd0 } },
+  { id: 'ichthyosaurus', name: 'Ichthyosaurus', period: 'Jurassic', dates: 'Early Jurassic, 200–190 million years ago', family: 'Marine reptiles', diet: 'Piscivore',
+    len: '3 m', hgt: '—', wgt: '90 kg', mass: 90, walkHz: 1.2, runHz: 2.4, step: 1.8, voice: V(600, 'screech'),
+    fact: 'Dolphin-shaped but a reptile; fossils show it gave birth to live young at sea, tail first.',
+    plan: 'marine', L: 3, p: { kind: 'ichthyosaur', skin: 0x3f5f78, belly: 0xd6dbdc } },
+  { id: 'liopleurodon', name: 'Liopleurodon', period: 'Jurassic', dates: 'Middle–Late Jurassic, 165–155 million years ago', family: 'Marine reptiles', diet: 'Carnivore',
+    len: '6.5 m', hgt: '—', wgt: '1.5 tonnes', mass: 1500, walkHz: .7, runHz: 1.5, step: 2.5, voice: V(70, 'growl'),
+    fact: 'A short-necked pliosaur with a crocodile-like skull; its nostrils may have let it smell underwater in stereo.',
+    plan: 'marine', L: 6.5, p: { kind: 'pliosaur', skin: 0x4a5a5e, belly: 0xcdd2cc } },
+
+  // ---------------- Cretaceous ----------------
+  { id: 'trex', name: 'Tyrannosaurus rex', period: 'Cretaceous', dates: 'Late Cretaceous, 68–66 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '12 m', hgt: '4 m at the hip', wgt: '8 tonnes', mass: 8000, walkHz: .7, runHz: 1.5, step: 2.6, voice: V(55, 'growl'),
+    fact: 'Its bite was the strongest of any known land animal, and those famous little arms were still strong enough to lift more than a person.',
+    plan: 'theropod', H: 3.6, p: { teeth: 4, skin: 0x5f8a3d, belly: 0xcbc48b } },
+  { id: 'trike', name: 'Triceratops', period: 'Cretaceous', dates: 'Late Cretaceous, 68–66 million years ago', family: 'Ceratopsians', diet: 'Herbivore',
+    len: '8–9 m', hgt: '3 m at the shoulder', wgt: '6–12 tonnes', mass: 9000, walkHz: .6, runHz: 1.3, step: 2.2, voice: V(80, 'bellow'),
+    fact: 'It carried several hundred teeth packed into batteries that were replaced continually, shearing tough plants like scissors.',
+    plan: 'ceratopsian', H: 1.7, p: { horns: 'trike', skin: 0x8a6f4e, belly: 0xd9c9a3 } },
+  { id: 'raptor', name: 'Velociraptor', period: 'Cretaceous', dates: 'Late Cretaceous, 75–71 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '2 m', hgt: '0.5 m at the hip', wgt: '15 kg', mass: 15, walkHz: 2.2, runHz: 4.5, step: .55, voice: V(700, 'screech'),
+    fact: 'Turkey-sized and feathered: fossils of its forearm bones show quill knobs, the same anchors that hold flight feathers in modern birds.',
+    plan: 'theropod', H: .55, p: { bulk: .8, teeth: 3, armScale: 1.3, feathers: true, sickle: true, skin: 0xb26b3c, belly: 0xe6d7b1 } },
+  { id: 'spinosaurus', name: 'Spinosaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 99–93 million years ago', family: 'Theropods', diet: 'Piscivore',
+    len: '14 m', hgt: '2.8 m at the hip', wgt: '7 tonnes', mass: 7000, walkHz: .7, runHz: 1.4, step: 2.4, voice: V(60, 'growl'),
+    fact: 'The largest known predatory dinosaur, with a 1.5 m sail and a crocodile-like snout; it probably hunted in rivers.',
+    plan: 'theropod', H: 2.8, p: { bulk: 1.1, headScale: 1.1, snout: 1.4, teeth: 5, armScale: 1.6, sail: true, pitch: .25, skin: 0x5b6d5a, belly: 0xd2c9a0 } },
+  { id: 'ankylosaurus', name: 'Ankylosaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 68–66 million years ago', family: 'Ankylosaurs', diet: 'Herbivore',
+    len: '7 m', hgt: '1.7 m', wgt: '6 tonnes', mass: 6000, walkHz: .55, runHz: 1, step: 1.6, voice: V(85, 'bellow'),
+    fact: 'A living tank: bony armor even covered its eyelids, and the tail club could have broken a tyrannosaur\'s leg.',
+    plan: 'ankylosaur', H: 1.15, p: { armor: true, club: true, bulk: 1.3, skin: 0x6e6a52, belly: 0xc9c2a2 } },
+  { id: 'parasaurolophus', name: 'Parasaurolophus', period: 'Cretaceous', dates: 'Late Cretaceous, 76–73 million years ago', family: 'Ornithopods', diet: 'Herbivore',
+    len: '9.5 m', hgt: '2.7 m at the hip', wgt: '2.5 tonnes', mass: 2500, walkHz: .8, runHz: 1.6, step: 2.2, voice: V(140, 'bellow'),
+    fact: 'The hollow crest was a resonating chamber; computer models suggest it produced a low, trombone-like call.',
+    plan: 'theropod', H: 2.6, p: { bulk: 1.1, teeth: 0, duckbill: true, crest: 'tube', armScale: 2, neckN: 3, neckLen: 1.2, skin: 0x7c8b4e, belly: 0xdad3a4 } },
+  { id: 'iguanodon', name: 'Iguanodon', period: 'Cretaceous', dates: 'Early Cretaceous, 126–122 million years ago', family: 'Ornithopods', diet: 'Herbivore',
+    len: '10 m', hgt: '2.7 m at the hip', wgt: '3.5 tonnes', mass: 3500, walkHz: .8, runHz: 1.5, step: 2.2, voice: V(120, 'bellow'),
+    fact: 'The second dinosaur ever named; its thumb spike was at first mistaken for a nose horn.',
+    plan: 'theropod', H: 2.6, p: { bulk: 1.15, teeth: 0, duckbill: true, thumbSpike: true, armScale: 2.2, neckN: 2, neckLen: 1.1, skin: 0x6f7f55, belly: 0xd6cfa6 } },
+  { id: 'pachycephalosaurus', name: 'Pachycephalosaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 70–66 million years ago', family: 'Pachycephalosaurs', diet: 'Omnivore',
+    len: '4.5 m', hgt: '1.5 m at the hip', wgt: '400 kg', mass: 400, walkHz: 1.1, runHz: 2.3, step: 1.4, voice: V(200, 'bellow'),
+    fact: 'Its skull dome was up to 25 cm thick; healed injuries on some domes suggest they really did butt heads.',
+    plan: 'theropod', H: 1.5, p: { bulk: .95, teeth: 0, dome: true, armScale: 1.3, headScale: .9, skin: 0x8f7a55, belly: 0xdcd2ae } },
+  { id: 'carnotaurus', name: 'Carnotaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 72–69 million years ago', family: 'Theropods', diet: 'Carnivore',
+    len: '8 m', hgt: '2.4 m at the hip', wgt: '1.5 tonnes', mass: 1500, walkHz: .9, runHz: 2.2, step: 2.2, voice: V(100, 'growl'),
+    fact: 'The "meat-eating bull" had horns over its eyes and arms even smaller than T. rex\'s; it may have been the fastest large theropod.',
+    plan: 'theropod', H: 2.4, p: { bulk: .95, headScale: .95, snout: .8, teeth: 3, armScale: .45, bullHorns: true, skin: 0x7a4a3a, belly: 0xd2b898 } },
+  { id: 'therizinosaurus', name: 'Therizinosaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 70 million years ago', family: 'Theropods', diet: 'Herbivore',
+    len: '10 m', hgt: '3 m at the hip', wgt: '5 tonnes', mass: 5000, walkHz: .7, runHz: 1.3, step: 2.2, voice: V(110, 'bellow'),
+    fact: 'A pot-bellied, plant-eating theropod whose hand claws reached a metre long, the longest of any animal.',
+    plan: 'theropod', H: 2.8, p: { bulk: 1.35, neckN: 3, neckLen: 1.4, headScale: .6, teeth: 0, armScale: 1.8, clawLen: 4, feathers: true, pitch: -.15, skin: 0x8a8a5a, belly: 0xe0d8b0 } },
+  { id: 'gallimimus', name: 'Gallimimus', period: 'Cretaceous', dates: 'Late Cretaceous, 70 million years ago', family: 'Theropods', diet: 'Omnivore',
+    len: '6 m', hgt: '1.9 m at the hip', wgt: '440 kg', mass: 440, walkHz: 1.3, runHz: 3, step: 1.8, voice: V(400, 'screech'),
+    fact: 'An ostrich-like runner, probably the fastest dinosaur of its size at 50 km/h or more.',
+    plan: 'theropod', H: 1.9, p: { bulk: .75, neckN: 3, neckLen: 1.5, headScale: .65, snout: 1.2, teeth: 0, armScale: 1.4, tailLen: 1.1, skin: 0xa88a5a, belly: 0xe6dcc0 } },
+  { id: 'pteranodon', name: 'Pteranodon', period: 'Cretaceous', dates: 'Late Cretaceous, 86–84 million years ago', family: 'Pterosaurs', diet: 'Piscivore',
+    len: '6.5 m wingspan', hgt: '—', wgt: '25 kg', mass: 25, walkHz: 1.2, runHz: 2, step: 8, voice: V(500, 'screech'),
+    fact: 'Toothless and crested; over a thousand specimens are known from the chalk of Kansas, once a shallow inland sea.',
+    plan: 'pterosaur', W: 6.5, p: { crest: 'back', skin: 0x8a7a66, belly: 0xe6dccc } },
+  { id: 'quetzalcoatlus', name: 'Quetzalcoatlus', period: 'Cretaceous', dates: 'Late Cretaceous, 68 million years ago', family: 'Pterosaurs', diet: 'Carnivore',
+    len: '10.5 m wingspan', hgt: '5 m standing', wgt: '250 kg', mass: 250, walkHz: .9, runHz: 1.6, step: 12, voice: V(300, 'screech'),
+    fact: 'The largest flying animal ever: as tall as a giraffe on the ground, with the wingspan of a small aeroplane.',
+    plan: 'pterosaur', W: 10.5, p: { neckLen: 1.8, crest: 'small', skin: 0x9a8a72, belly: 0xece2d0 } },
+  { id: 'mosasaurus', name: 'Mosasaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 82–66 million years ago', family: 'Marine reptiles', diet: 'Carnivore',
+    len: '15 m', hgt: '—', wgt: '14 tonnes', mass: 14000, walkHz: .6, runHz: 1.2, step: 3.5, voice: V(55, 'growl'),
+    fact: 'A giant sea lizard related to monitors and snakes, with a second set of teeth in the roof of its mouth to ratchet prey down.',
+    plan: 'marine', L: 15, p: { kind: 'mosasaur', skin: 0x3e5a5e, belly: 0xcfd6d0 } },
+  { id: 'elasmosaurus', name: 'Elasmosaurus', period: 'Cretaceous', dates: 'Late Cretaceous, 80 million years ago', family: 'Marine reptiles', diet: 'Piscivore',
+    len: '12 m', hgt: '—', wgt: '2 tonnes', mass: 2000, walkHz: .6, runHz: 1.2, step: 2.5, voice: V(280, 'screech'),
+    fact: 'Its 7 m neck held 72 vertebrae; the first describer famously mounted the skull on the wrong end.',
+    plan: 'marine', L: 12, p: { kind: 'plesiosaur', neckN: 12, neckFrac: .55, skin: 0x4a6a78, belly: 0xd4dbd6 } },
+];
+const SPECIES = {}; for (const s of SPECIES_LIST) { s.period_label = s.dates; SPECIES[s.id] = s; }
+const ORDER = SPECIES_LIST.map(s => s.id);
 
 /* ============================ builders ============================ */
 const mat = (c, r = .85) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
-const M = {
-  rexSkin: mat(0x5f8a3d), rexBelly: mat(0xcbc48b),
-  trikeSkin: mat(0x8a6f4e), trikeBelly: mat(0xd9c9a3),
-  brSkin: mat(0x6f7a8c), brBelly: mat(0xc4c6c0),
-  rapSkin: mat(0xb26b3c), rapFeather: mat(0x3d3d46, .95), rapBelly: mat(0xe6d7b1),
-  dipSkin: mat(0x7e8a5a), dipBelly: mat(0xd4d2a8),
-  dark: mat(0x232323, .5), bone: mat(0xf1ead2, .7), horn: mat(0xe9dfc0, .6),
-};
-function bx(w, h, d, m) {
-  const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-  o.castShadow = o.receiveShadow = true;
-  return o;
-}
-// group whose origin is the joint; box hangs down (-y)
+const M = { dark: mat(0x232323, .5), bone: mat(0xf1ead2, .7), horn: mat(0xe9dfc0, .6), feather: mat(0x3d3d46, .95), membrane: mat(0x6a5545, .9) };
+function bx(w, h, d, m) { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.castShadow = o.receiveShadow = true; return o; }
 function hang(w, h, d, m) { const g = new THREE.Group(); const o = bx(w, h, d, m); o.position.y = -h / 2; g.add(o); return g; }
-// group whose origin is the joint; box extends along z (dir = +1 forward, -1 back)
 function ext(w, h, d, m, dir = 1) { const g = new THREE.Group(); const o = bx(w, h, d, m); o.position.z = dir * d / 2; g.add(o); return g; }
-
 function chain(parent, pos, n, len, w, h, taper, pitch0, pitchStep, m, dir) {
-  const segs = []; let p = parent; let pz = pos.z;
+  const segs = []; let p = parent;
   for (let i = 0; i < n; i++) {
-    const s = 1 - taper * i;
+    const s = Math.max(.15, 1 - taper * i);
     const g = ext(w * s, h * s, len, m, dir);
-    g.position.set(0, i === 0 ? pos.y : 0, i === 0 ? pz : dir * len);
+    g.position.set(0, i === 0 ? pos.y : 0, i === 0 ? pos.z : dir * len);
     g.rotation.x = i === 0 ? pitch0 : pitchStep;
     p.add(g); p = g; segs.push(g);
   }
@@ -187,10 +440,10 @@ function leg(parent, x, y, z, T, S, F, m, front, side, claws) {
   const thigh = hang(T[0], T[1], T[2], m); thigh.position.set(x, y, z);
   const shin = hang(S[0], S[1], S[2], m); shin.position.y = -T[1]; thigh.add(shin);
   const foot = new THREE.Group(); foot.position.y = -S[1]; shin.add(foot);
-  const sole = bx(F[0], F[1], F[2], m); sole.position.set(0, -F[1] / 2, F[2] * 0.25); foot.add(sole);
+  const sole = bx(F[0], F[1], F[2], m); sole.position.set(0, -F[1] / 2, F[2] * .25); foot.add(sole);
   if (claws) for (const cx of [-1, 0, 1]) { const c = bx(F[0] * .2, F[1] * .6, F[2] * .35, M.bone); c.position.set(cx * F[0] * .32, -F[1] * .55, F[2] * .8); foot.add(c); }
   parent.add(thigh);
-  return { thigh, shin, foot, front, side, prevC: 1, groundY: -(T[1] + S[1] + F[1]) };
+  return { thigh, shin, foot, front, side, prevC: 1 };
 }
 function head(parent, pos, pitch, size, m, opts = {}) {
   const g = new THREE.Group(); g.position.copy(pos); g.rotation.x = pitch; parent.add(g);
@@ -199,96 +452,203 @@ function head(parent, pos, pitch, size, m, opts = {}) {
   const jaw = ext(w * .9, h * .35, d * .85, m); jaw.position.set(0, -h * .5, -d * .05); g.add(jaw);
   for (const s of [-1, 1]) {
     const eye = bx(w * .16, h * .22, h * .22, M.dark); eye.position.set(s * w * .5, h * .15, d * .65); g.add(eye);
-    if (opts.teeth) for (let i = 0; i < opts.teeth; i++) { const t = bx(w * .1, h * .22, w * .1, M.bone); t.position.set(s * w * .34, -h * .48, d * .2 + i * d * .18); g.add(t); }
+    if (opts.teeth) for (let i = 0; i < opts.teeth; i++) { const t = bx(w * .1, h * .22, w * .1, M.bone); t.position.set(s * w * .34, -h * .48, d * .2 + i * d * .75 / opts.teeth); g.add(t); }
   }
-  return { group: g, jaw };
+  return { group: g, jaw, w, h, d };
 }
 function finish(root) { root.traverse(o => { o.userData.rest = o.rotation.clone(); }); }
+function fin(parent, sd, x, y, z, fw, ft, fd, m, front, sweep = -.4) {
+  const g = new THREE.Group(); g.position.set(sd * x, y, z);
+  const f = bx(fw, ft, fd, m); f.position.x = sd * fw / 2; g.add(f);
+  g.rotation.y = sd * sweep; parent.add(g);
+  return { group: g, side: sd, front };
+}
 
-const BUILD = {
-  trex() {
-    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = 3.6; root.add(hips);
-    const torso = bx(1.8, 1.9, 3.4, M.rexSkin); torso.position.set(0, .45, .4); torso.rotation.x = -.12; hips.add(torso);
-    const belly = bx(1.4, .9, 3, M.rexBelly); belly.position.set(0, -.2, .5); hips.add(belly);
-    const neck = chain(hips, { y: 1.05, z: 1.95 }, 2, 1.1, 1, 1.1, .12, -1.1, .45, M.rexSkin, 1);
-    const hd = head(neck[1], new THREE.Vector3(0, 0, 1.1), .55, [1.1, 1, 1.9], M.rexSkin, { teeth: 4 });
-    const tail = chain(hips, { y: .1, z: -1.4 }, 5, 1.5, 1.4, 1.2, .18, .04, .03, M.rexSkin, -1);
-    const legs = [leg(hips, -.85, -.2, -.1, [.8, 1.7, 1], [.55, 1.3, .65], [.7, .3, 1.2], M.rexSkin, false, -1, true),
-                  leg(hips, .85, -.2, -.1, [.8, 1.7, 1], [.55, 1.3, .65], [.7, .3, 1.2], M.rexSkin, false, 1, true)];
-    const arms = [-1, 1].map(s => { const a = hang(.28, .8, .28, M.rexSkin); a.position.set(s * .8, .45, 1.6); a.rotation.x = -.6;
-      const c = bx(.1, .28, .1, M.bone); c.position.set(0, -.9, .06); a.add(c); hips.add(a); return a; });
-    finish(root); return { root, hips, torso, neck, head: hd, tail, legs, arms, hipY: 3.6, quad: false, width: 1.8 };
+const PLANS = {
+  theropod(H, o) {
+    const S = mat(o.skin), B = mat(o.belly);
+    const bulk = o.bulk ?? 1, hs = o.headScale ?? 1, nl = o.neckLen ?? 1, nn = o.neckN ?? 2, tl = o.tailLen ?? 1, tn = o.tailN ?? 5, as = o.armScale ?? 1, cl = o.clawLen ?? 1;
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = H; root.add(hips);
+    const tw = .5 * H * bulk, th = .55 * H * bulk, td = .95 * H;
+    const torso = bx(tw, th, td, S); torso.position.set(0, th * .24, td * .12); torso.rotation.x = -(o.pitch ?? .12); hips.add(torso);
+    const belly = bx(tw * .78, th * .45, td * .88, B); belly.position.set(0, -th * .1, td * .15); hips.add(belly);
+    const segLen = .3 * H * nl;
+    const neck = chain(hips, { y: th * .55, z: td * .57 }, nn, segLen, .28 * H * bulk * hs, .3 * H * bulk * hs, .3 / nn, o.neckPitch ?? -1.1, (o.neckStep ?? .5) / Math.max(1, nn - 1), S, 1);
+    const hd = head(neck[nn - 1], new THREE.Vector3(0, 0, segLen), o.headPitch ?? .55, [.3 * H * hs, .28 * H * hs, .53 * H * hs * (o.snout ?? 1)], S, { teeth: o.teeth ?? 4 });
+    const tail = chain(hips, { y: .03 * H, z: -.4 * H }, tn, .42 * H * tl, .39 * H * bulk, .33 * H * bulk, .85 / tn, .04, .03, S, -1);
+    const legs = [-1, 1].map(sd => leg(hips, sd * .24 * H * bulk, -.09 * H, -.03 * H, [.22 * H, .47 * H, .28 * H], [.15 * H, .36 * H, .18 * H], [.2 * H, .08 * H, .33 * H], S, false, sd, true));
+    const arms = as > 0 ? [-1, 1].map(sd => {
+      const a = hang(.08 * H * as, .22 * H * as, .08 * H * as, S); a.position.set(sd * .22 * H * bulk, .12 * H, .45 * H); a.rotation.x = -.6;
+      const c = bx(.03 * H * as, .08 * H * as * cl, .03 * H * as, M.bone); c.position.set(0, -.22 * H * as - .04 * H * as * cl, .02 * H); a.add(c);
+      if (o.feathers) { const f = bx(.02 * H, .18 * H * as, .1 * H * as, M.feather); f.position.set(sd * .05 * H, -.12 * H * as, -.04 * H); a.add(f); }
+      if (o.thumbSpike) { const t = bx(.04 * H, .12 * H, .04 * H, M.bone); t.position.set(-sd * .05 * H, -.2 * H * as, .04 * H); a.add(t); }
+      hips.add(a); return a;
+    }) : [];
+    const hw = hd.w, hh = hd.h, hdp = hd.d, hg = hd.group;
+    if (o.sail) for (let i = 0; i < 7; i++) { const k = i / 6, ph = (.25 + Math.sin(k * Math.PI) * .5) * H; const s = bx(.05 * H, ph, .13 * H, S); s.position.set(0, th * .5 + ph / 2 - .05 * H, td * .45 - k * td * .9); hips.add(s); }
+    if (o.bullHorns) for (const sd of [-1, 1]) { const h = bx(hw * .2, hh * .25, hw * .3, M.horn); h.position.set(sd * hw * .55, hh * .55, hdp * .5); h.rotation.z = sd * .4; hg.add(h); }
+    if (o.browHorns) for (const sd of [-1, 1]) { const h = bx(hw * .15, hh * .3, hw * .15, M.horn); h.position.set(sd * hw * .4, hh * .55, hdp * .6); hg.add(h); }
+    if (o.crests) for (const sd of [-1, 1]) { const c = bx(hw * .05, hh * .6, hdp * .6, mat(0xd8553f)); c.position.set(sd * hw * .2, hh * .6, hdp * .35); hg.add(c); }
+    if (o.dome) { const d = new THREE.Mesh(new THREE.SphereGeometry(hw * .62, 12, 10), M.horn); d.position.set(0, hh * .35, hdp * .05); d.castShadow = true; hg.add(d); for (let i = 0; i < 6; i++) { const k = bx(hw * .08, hh * .18, hw * .08, M.horn); k.position.set(Math.sin(i) * hw * .55, hh * .1, -hdp * .3 + Math.cos(i) * hw * .3); hg.add(k); } }
+    if (o.duckbill) { const b = bx(hw * 1.15, hh * .28, hdp * .38, mat(0x9c8b70)); b.position.set(0, -hh * .3, hdp * .85); hg.add(b); }
+    if (o.crest === 'tube') { const c = bx(hw * .35, hh * .35, hdp * 1.3, S); c.position.set(0, hh * .5, -hdp * .5); c.rotation.x = .5; hg.add(c); }
+    if (o.feathers) { const f = bx(.06 * H, .16 * H, .35 * H, M.feather); f.position.set(0, .08 * H, -.2 * H); tail[tn - 1].add(f); }
+    if (o.sickle) for (const l of legs) { const s = bx(.03 * H, .16 * H, .05 * H, M.bone); s.position.set(l.side * .06 * H, .02 * H, .12 * H); s.rotation.x = -.6; l.foot.add(s); }
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs, arms, hipY: H, quad: false, kind: 'land', width: tw };
   },
-  raptor() {
-    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = .55; root.add(hips);
-    const torso = bx(.32, .36, .75, M.rapSkin); torso.position.set(0, .06, .12); hips.add(torso);
-    const belly = bx(.26, .18, .7, M.rapBelly); belly.position.set(0, -.08, .12); hips.add(belly);
-    const neck = chain(hips, { y: .16, z: .48 }, 2, .28, .2, .22, .1, -1.2, .6, M.rapSkin, 1);
-    const hd = head(neck[1], new THREE.Vector3(0, 0, .28), .6, [.18, .17, .42], M.rapSkin, { teeth: 3 });
-    const tail = chain(hips, { y: .02, z: -.3 }, 5, .32, .24, .22, .16, .05, .01, M.rapSkin, -1);
-    const fan = bx(.05, .12, .3, M.rapFeather); fan.position.set(0, .08, -.2); tail[4].add(fan);
-    const legs = [leg(hips, -.17, -.05, -.02, [.14, .28, .18], [.09, .27, .11], [.12, .06, .22], M.rapSkin, false, -1, true),
-                  leg(hips, .17, -.05, -.02, [.14, .28, .18], [.09, .27, .11], [.12, .06, .22], M.rapSkin, false, 1, true)];
-    for (const l of legs) { const sickle = bx(.03, .14, .05, M.bone); sickle.position.set(l.side * .05, .02, .12); sickle.rotation.x = -.6; l.foot.add(sickle); }
-    const arms = [-1, 1].map(s => { const a = hang(.06, .26, .06, M.rapSkin); a.position.set(s * .15, .1, .38); a.rotation.x = -.7;
-      const f = bx(.02, .2, .16, M.rapFeather); f.position.set(s * .04, -.14, -.06); a.add(f); hips.add(a); return a; });
-    finish(root); return { root, hips, torso, neck, head: hd, tail, legs, arms, hipY: .55, quad: false, width: .35 };
+  sauropod(H, o) {
+    const S = mat(o.skin), B = mat(o.belly);
+    const bulk = o.bulk ?? 1, nn = o.neckN ?? 5, ns = (o.neckSeg ?? .43) * H, tn = o.tailN ?? 6, ts = (o.tailSeg ?? .45) * H, fl = o.frontLeg ?? .85, hs = o.headScale ?? 1;
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = H; root.add(hips);
+    const torso = bx(.72 * H * bulk, .76 * H * bulk, 1.67 * H, S); torso.position.set(0, .19 * H, .24 * H); torso.rotation.x = -.14 * (fl - .7); hips.add(torso);
+    const belly = bx(.6 * H * bulk, .36 * H * bulk, 1.52 * H, B); belly.position.set(0, -.07 * H, .28 * H); hips.add(belly);
+    const neck = chain(hips, { y: .5 * H, z: 1.0 * H }, nn, ns, .36 * H * bulk, .38 * H * bulk, .6 / nn, o.neckPitch ?? -1, o.neckStep ?? .02, S, 1);
+    const hd = head(neck[nn - 1], new THREE.Vector3(0, 0, ns), o.headPitch ?? 1, [.19 * H * hs, .19 * H * hs, .29 * H * hs], S);
+    const tail = chain(hips, { y: .07 * H, z: -.57 * H }, tn, ts, .48 * H * bulk, .43 * H * bulk, .8 / tn, .05, .06, S, -1);
+    const back = sd => leg(hips, sd * .29 * H * bulk, -.07 * H, -.29 * H, [.26 * H, .48 * H, .29 * H], [.2 * H, .38 * H, .23 * H], [.26 * H, .07 * H, .29 * H], S, false, sd, false);
+    const front = sd => leg(hips, sd * .27 * H * bulk, (1.08 * fl + .07) * H - H, .86 * H, [.24 * H, .6 * H * fl, .26 * H], [.19 * H, .48 * H * fl, .21 * H], [.24 * H, .07 * H, .26 * H], S, true, sd, false);
+    const legs = [back(-1), back(1), front(-1), front(1)];
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: H, quad: true, kind: 'land', width: .72 * H * bulk };
   },
-  trike() {
-    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = 1.7; root.add(hips);
-    const torso = bx(2.3, 1.9, 4.4, M.trikeSkin); torso.position.set(0, .2, .6); hips.add(torso);
-    const belly = bx(1.9, .9, 4, M.trikeBelly); belly.position.set(0, -.5, .6); hips.add(belly);
-    const neck = chain(hips, { y: .3, z: 2.8 }, 1, .8, 1.5, 1.4, 0, -.1, 0, M.trikeSkin, 1);
-    const hd = head(neck[0], new THREE.Vector3(0, 0, .8), .15, [1.3, 1.1, 2], M.trikeSkin);
-    const beak = bx(.5, .5, .6, M.horn); beak.position.set(0, -.15, 1.9); hd.group.add(beak);
-    const frill = bx(2.6, 2.2, .25, M.trikeSkin); frill.position.set(0, .8, -.1); frill.rotation.x = -.35; hd.group.add(frill);
-    for (const s of [-1, 1]) { const h = bx(.22, .22, 1.3, M.horn); h.position.set(s * .5, .55, 1.4); h.rotation.x = -.35; h.rotation.y = s * .15; hd.group.add(h); }
-    const nose = bx(.2, .5, .2, M.horn); nose.position.set(0, .5, 1.6); hd.group.add(nose);
-    const tail = chain(hips, { y: 0, z: -1.5 }, 3, 1.1, 1.3, 1.1, .25, .02, .04, M.trikeSkin, -1);
-    const L = m => [leg(hips, -.95, -.4, -.6, [.8, .9, .9], [.6, .6, .7], [.8, .25, 1], m, false, -1, false),
-                    leg(hips, .95, -.4, -.6, [.8, .9, .9], [.6, .6, .7], [.8, .25, 1], m, false, 1, false),
-                    leg(hips, -.95, -.35, 2, [.7, .85, .8], [.55, .6, .65], [.75, .25, .9], m, true, -1, false),
-                    leg(hips, .95, -.35, 2, [.7, .85, .8], [.55, .6, .65], [.75, .25, .9], m, true, 1, false)];
-    const legs = L(M.trikeSkin);
-    finish(root); return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: 1.7, quad: true, width: 2.4 };
+  ceratopsian(H, o) {
+    const S = mat(o.skin), B = mat(o.belly), fs = o.frill ?? (o.horns === 'proto' ? .6 : 1);
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = H; root.add(hips);
+    const torso = bx(1.35 * H, 1.1 * H, 2.6 * H, S); torso.position.set(0, .12 * H, .35 * H); hips.add(torso);
+    const belly = bx(1.1 * H, .55 * H, 2.35 * H, B); belly.position.set(0, -.3 * H, .35 * H); hips.add(belly);
+    const neck = chain(hips, { y: .18 * H, z: 1.65 * H }, 1, .47 * H, .9 * H, .8 * H, 0, -.1, 0, S, 1);
+    const hd = head(neck[0], new THREE.Vector3(0, 0, .47 * H), .15, [.76 * H, .65 * H, 1.2 * H], S);
+    const hg = hd.group, hw = hd.w, hh = hd.h, hdp = hd.d;
+    const beak = bx(hw * .38, hh * .45, hdp * .3, M.horn); beak.position.set(0, -hh * .14, hdp * .95); hg.add(beak);
+    const frill = bx(1.5 * H * fs, 1.3 * H * fs, .15 * H, S); frill.position.set(0, .47 * H * fs, -.06 * H); frill.rotation.x = -.35; hg.add(frill);
+    if (o.horns === 'trike') { for (const sd of [-1, 1]) { const h = bx(.13 * H, .13 * H, .76 * H, M.horn); h.position.set(sd * .3 * H, .32 * H, .82 * H); h.rotation.x = -.35; h.rotation.y = sd * .15; hg.add(h); } const n = bx(.12 * H, .3 * H, .12 * H, M.horn); n.position.set(0, .3 * H, .94 * H); hg.add(n); }
+    if (o.horns === 'styraco') { const n = bx(.13 * H, .55 * H, .13 * H, M.horn); n.position.set(0, .4 * H, .9 * H); n.rotation.x = -.3; hg.add(n); for (let i = 0; i < 6; i++) { const a = -1.1 + i * .44, s = bx(.09 * H, .09 * H, .45 * H, M.horn); s.position.set(Math.sin(a) * .8 * H * fs, .47 * H * fs + Math.cos(a) * .7 * H * fs, -.15 * H); s.rotation.x = -1.3 - Math.cos(a) * .3; s.rotation.z = -Math.sin(a) * .5; hg.add(s); } }
+    if (o.horns === 'pachyrhino') { const b = bx(.35 * H, .2 * H, .4 * H, M.horn); b.position.set(0, .32 * H, .8 * H); hg.add(b); }
+    const tail = chain(hips, { y: 0, z: -.88 * H }, 3, .65 * H, .76 * H, .65 * H, .25, .02, .04, S, -1);
+    const legs = [-1, 1].flatMap(sd => [
+      leg(hips, sd * .56 * H, -.03 * H, -.35 * H, [.47 * H, .53 * H, .53 * H], [.35 * H, .35 * H, .41 * H], [.47 * H, .15 * H, .6 * H], S, false, sd, false),
+      leg(hips, sd * .56 * H, 0, 1.18 * H, [.41 * H, .5 * H, .47 * H], [.32 * H, .35 * H, .38 * H], [.44 * H, .15 * H, .53 * H], S, true, sd, false)]);
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: H, quad: true, kind: 'land', width: 1.4 * H };
   },
-  brachio() {
-    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = 4.2; root.add(hips);
-    const torso = bx(3, 3.2, 7, M.brSkin); torso.position.set(0, .8, 1); torso.rotation.x = -.14; hips.add(torso);
-    const belly = bx(2.5, 1.5, 6.4, M.brBelly); belly.position.set(0, -.3, 1.2); hips.add(belly);
-    const neck = chain(hips, { y: 2.4, z: 4.2 }, 5, 1.8, 1.5, 1.6, .12, -1.05, .02, M.brSkin, 1);
-    const hd = head(neck[4], new THREE.Vector3(0, 0, 1.8), 1.0, [.8, .8, 1.2], M.brSkin);
-    const tail = chain(hips, { y: .3, z: -2.4 }, 6, 1.6, 2, 1.8, .15, .05, .06, M.brSkin, -1);
-    const legs = [leg(hips, -1.2, -.3, -1.2, [1.1, 2, 1.2], [.85, 1.6, .95], [1.1, .3, 1.2], M.brSkin, false, -1, false),
-                  leg(hips, 1.2, -.3, -1.2, [1.1, 2, 1.2], [.85, 1.6, .95], [1.1, .3, 1.2], M.brSkin, false, 1, false),
-                  leg(hips, -1.15, .6, 3.6, [1, 2.5, 1.1], [.8, 2, .9], [1, .3, 1.1], M.brSkin, true, -1, false),
-                  leg(hips, 1.15, .6, 3.6, [1, 2.5, 1.1], [.8, 2, .9], [1, .3, 1.1], M.brSkin, true, 1, false)];
-    finish(root); return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: 4.2, quad: true, width: 3 };
+  stegosaur(H, o) {
+    const S = mat(o.skin), B = mat(o.belly), P = mat(o.plate, .8);
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = H; root.add(hips);
+    const torso = bx(.95 * H, .95 * H, 2.3 * H, S); torso.position.set(0, .18 * H, .25 * H); torso.rotation.x = .08; hips.add(torso);
+    const belly = bx(.8 * H, .45 * H, 2.1 * H, B); belly.position.set(0, -.2 * H, .3 * H); hips.add(belly);
+    const neck = chain(hips, { y: -.05 * H, z: 1.35 * H }, 2, .35 * H, .4 * H, .38 * H, .1, .35, .1, S, 1);
+    const hd = head(neck[1], new THREE.Vector3(0, 0, .35 * H), -.3, [.3 * H, .28 * H, .55 * H], S);
+    const tail = chain(hips, { y: .05 * H, z: -.85 * H }, 5, .5 * H, .6 * H, .55 * H, .16, .12, -.05, S, -1);
+    const n = o.plates, spikes = o.spikes;
+    for (let i = 0; i < n; i++) {
+      const k = i / (n - 1), z = 1.1 * H - k * 2.9 * H, sd = i % 2 ? 1 : -1;
+      const inTail = z < -.85 * H;
+      if (spikes && k > .45) { const s = bx(.08 * H, .8 * H, .08 * H, M.horn); s.position.set(sd * .18 * H, .5 * H, inTail ? 0 : z); s.rotation.z = sd * .55; s.rotation.x = .3;
+        if (inTail) { const seg = tail[Math.min(4, Math.floor((-z - .85 * H) / (.5 * H)))]; s.position.z = -.25 * H; s.position.y = .3 * H; seg.add(s); } else hips.add(s); continue; }
+      const ph = (.3 + Math.sin(k * Math.PI) * .5) * H * (spikes ? .7 : 1);
+      const p = bx(.07 * H, ph, .28 * H, P); p.position.set(sd * .1 * H, .6 * H + ph / 2 - .1 * H, inTail ? -.25 * H : z);
+      if (inTail) { const seg = tail[Math.min(4, Math.floor((-z - .85 * H) / (.5 * H)))]; p.position.y = .25 * H + ph / 2; seg.add(p); } else hips.add(p);
+    }
+    for (const sd of [-1, 1]) for (const zz of [-.15, -.4]) { const s = bx(.07 * H, .55 * H, .07 * H, M.horn); s.position.set(sd * .12 * H, .15 * H, zz * H); s.rotation.z = sd * .8; s.rotation.x = .6; tail[4].add(s); }
+    if (spikes) for (const sd of [-1, 1]) { const s = bx(.08 * H, .6 * H, .08 * H, M.horn); s.position.set(sd * .5 * H, .25 * H, 1.1 * H); s.rotation.z = sd * 1.3; hips.add(s); }
+    const legs = [-1, 1].flatMap(sd => [
+      leg(hips, sd * .4 * H, -.02 * H, -.3 * H, [.32 * H, .55 * H, .38 * H], [.26 * H, .35 * H, .3 * H], [.32 * H, .12 * H, .4 * H], S, false, sd, false),
+      leg(hips, sd * .38 * H, -.32 * H, 1.05 * H, [.28 * H, .4 * H, .32 * H], [.22 * H, .2 * H, .25 * H], [.28 * H, .1 * H, .34 * H], S, true, sd, false)]);
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: H, quad: true, kind: 'land', width: H };
   },
-  diplo() {
-    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = 3.3; root.add(hips);
-    const torso = bx(2.6, 2.6, 6, M.dipSkin); torso.position.set(0, .5, .8); hips.add(torso);
-    const belly = bx(2.2, 1.2, 5.6, M.dipBelly); belly.position.set(0, -.4, .9); hips.add(belly);
-    const neck = chain(hips, { y: 1.2, z: 3.7 }, 6, 1.3, 1.2, 1.2, .1, -.32, -.02, M.dipSkin, 1);
-    const hd = head(neck[5], new THREE.Vector3(0, 0, 1.3), .35, [.55, .5, 1.0], M.dipSkin);
-    const tail = chain(hips, { y: .4, z: -2.1 }, 9, 1.5, 1.8, 1.6, .1, .06, .02, M.dipSkin, -1);
-    const legs = [leg(hips, -1.05, -.3, -1, [.95, 1.5, 1.1], [.75, 1.2, .85], [1, .3, 1.1], M.dipSkin, false, -1, false),
-                  leg(hips, 1.05, -.3, -1, [.95, 1.5, 1.1], [.75, 1.2, .85], [1, .3, 1.1], M.dipSkin, false, 1, false),
-                  leg(hips, -1, -.35, 3.1, [.85, 1.35, 1], [.7, 1.1, .8], [.9, .3, 1], M.dipSkin, true, -1, false),
-                  leg(hips, 1, -.35, 3.1, [.85, 1.35, 1], [.7, 1.1, .8], [.9, .3, 1], M.dipSkin, true, 1, false)];
-    finish(root); return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: 3.3, quad: true, width: 2.6 };
+  ankylosaur(H, o) {
+    const S = mat(o.skin), B = mat(o.belly), bulk = o.bulk ?? 1;
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = H; root.add(hips);
+    const torso = bx(1.6 * H * bulk, .8 * H, 2.6 * H, S); torso.position.set(0, .2 * H, .3 * H); hips.add(torso);
+    const belly = bx(1.3 * H * bulk, .4 * H, 2.4 * H, B); belly.position.set(0, -.15 * H, .3 * H); hips.add(belly);
+    if (o.armor) for (let r = 0; r < 5; r++) for (let c = 0; c < 4; c++) { const a = bx(.22 * H, .12 * H, .22 * H, mat(0x4f4a3a)); a.position.set((c - 1.5) * .36 * H * bulk, .66 * H, 1.3 * H - r * .55 * H); hips.add(a); }
+    const neck = chain(hips, { y: .05 * H, z: 1.6 * H }, 1, .3 * H, .7 * H, .5 * H, 0, .1, 0, S, 1);
+    const hd = head(neck[0], new THREE.Vector3(0, 0, .3 * H), 0, [.65 * H, .4 * H, .7 * H], S);
+    const hg = hd.group;
+    if (o.armor) for (const sd of [-1, 1]) for (const [y, z] of [[.15, -.2], [-.1, -.2]]) { const h = bx(.1 * H, .1 * H, .22 * H, M.horn); h.position.set(sd * .38 * H, y * H, z * H); h.rotation.y = sd * .6; hg.add(h); }
+    if (o.tusks) { for (const sd of [-1, 1]) { const t = bx(.06 * H, .3 * H, .06 * H, M.bone); t.position.set(sd * .22 * H, -.28 * H, .55 * H); hg.add(t); } const b = bx(.3 * H, .2 * H, .2 * H, M.horn); b.position.set(0, -.05 * H, .72 * H); hg.add(b); }
+    const tail = chain(hips, { y: .05 * H, z: -1 * H }, 4, .55 * H, .7 * H, .45 * H, .18, .05, .02, S, -1);
+    if (o.club) { const c = bx(.55 * H, .35 * H, .55 * H, mat(0x4f4a3a)); c.position.set(0, 0, -.6 * H); tail[3].add(c); }
+    const legs = [-1, 1].flatMap(sd => [
+      leg(hips, sd * .62 * H * bulk, -.08 * H, -.55 * H, [.36 * H, .45 * H, .4 * H], [.28 * H, .35 * H, .3 * H], [.36 * H, .12 * H, .45 * H], S, false, sd, false),
+      leg(hips, sd * .6 * H * bulk, -.08 * H, 1.05 * H, [.34 * H, .45 * H, .38 * H], [.26 * H, .35 * H, .28 * H], [.34 * H, .12 * H, .42 * H], S, true, sd, false)]);
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs, arms: [], hipY: H, quad: true, kind: 'land', width: 1.6 * H * bulk };
+  },
+  pterosaur(W, o) {
+    const S = mat(o.skin), B = mat(o.belly), nl = o.neckLen ?? 1;
+    const FLY = 14 + W * 1.2;
+    const root = new THREE.Group(), hips = new THREE.Group(); hips.position.y = FLY; root.add(hips);
+    const torso = bx(.09 * W, .08 * W, .2 * W, S); torso.rotation.x = -.15; hips.add(torso);
+    const belly = bx(.07 * W, .04 * W, .18 * W, B); belly.position.y = -.03 * W; hips.add(belly);
+    const neck = chain(hips, { y: .02 * W, z: .1 * W }, 2, .07 * W * nl, .05 * W, .05 * W, .1, -.55, .4, S, 1);
+    const hd = head(neck[1], new THREE.Vector3(0, 0, .07 * W * nl), .55, [.045 * W, .045 * W, .18 * W], S, { teeth: o.teeth ?? 0 });
+    if (o.crest === 'back') { const c = bx(.02 * W, .04 * W, .16 * W, S); c.position.set(0, .03 * W, -.1 * W); c.rotation.x = -.3; hd.group.add(c); }
+    if (o.crest === 'small') { const c = bx(.015 * W, .05 * W, .06 * W, S); c.position.set(0, .04 * W, .02 * W); hd.group.add(c); }
+    const tail = o.tail ? chain(hips, { y: 0, z: -.1 * W }, 3, .12 * W, .02 * W, .02 * W, .1, .1, 0, S, -1) : [];
+    if (o.tail) { const v = bx(.01 * W, .06 * W, .07 * W, M.membrane); v.position.set(0, 0, -.1 * W); tail[2].add(v); }
+    const wings = [-1, 1].map(sd => {
+      const sh = new THREE.Group(); sh.position.set(sd * .045 * W, .02 * W, .03 * W); hips.add(sh);
+      const inner = bx(.2 * W, .012 * W, .14 * W, M.membrane); inner.position.set(sd * .1 * W, 0, -.04 * W); sh.add(inner);
+      const bone = bx(.2 * W, .02 * W, .02 * W, S); bone.position.set(sd * .1 * W, 0, .03 * W); sh.add(bone);
+      const el = new THREE.Group(); el.position.set(sd * .2 * W, 0, .03 * W); sh.add(el);
+      const outer = bx(.3 * W, .01 * W, .1 * W, M.membrane); outer.position.set(sd * .15 * W, 0, -.04 * W); el.add(outer);
+      const bone2 = bx(.3 * W, .016 * W, .016 * W, S); bone2.position.set(sd * .15 * W, 0, 0); el.add(bone2);
+      el.rotation.z = -sd * .12; el.rotation.y = sd * .35;
+      return { shoulder: sh, elbow: el, side: sd };
+    });
+    const legs = [-1, 1].map(sd => { const l = hang(.02 * W, .09 * W, .02 * W, S); l.position.set(sd * .03 * W, -.02 * W, -.08 * W); l.rotation.x = 1.5; hips.add(l); return { thigh: l, side: sd }; });
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs: [], tucked: legs, arms: [], wings, hipY: FLY, quad: false, kind: 'air', width: W };
+  },
+  marine(L, o) {
+    const S = mat(o.skin, .55), B = mat(o.belly, .6), k = o.kind, bulk = o.bulk ?? 1;
+    const root = new THREE.Group(), hips = new THREE.Group(); root.add(hips);
+    const dims = { plesiosaur: [.26, .17, .32], pliosaur: [.3, .22, .4], ichthyosaur: [.17, .2, .38], mosasaur: [.16, .16, .36], nothosaur: [.14, .11, .3] }[k];
+    const [bw, bh, bd] = dims.map(v => v * L);
+    hips.position.y = -.3 + bh * .35;
+    const torso = bx(bw * bulk, bh * bulk, bd, S); hips.add(torso);
+    const belly = bx(bw * .8 * bulk, bh * .5 * bulk, bd * .9, B); belly.position.y = -bh * .25; hips.add(belly);
+    let neck, hd, tail, fins = [];
+    if (k === 'plesiosaur') {
+      const nn = o.neckN ?? 6, ns = (o.neckFrac ?? .45) * L / nn;
+      neck = chain(hips, { y: bh * .1, z: bd * .5 }, nn, ns, bw * .32, bh * .4, .4 / nn, -.15, -.01, S, 1);
+      hd = head(neck[nn - 1], new THREE.Vector3(0, 0, ns), .2, [.07 * L, .06 * L, .11 * L], S, { teeth: 3 });
+      tail = chain(hips, { y: 0, z: -bd * .5 }, 3, .06 * L, bw * .5, bh * .5, .25, .05, 0, S, -1);
+      fins = [-1, 1].flatMap(sd => [fin(hips, sd, bw * .45, -bh * .1, bd * .28, .22 * L, .035 * L, .09 * L, S, true), fin(hips, sd, bw * .45, -bh * .1, -bd * .3, .2 * L, .035 * L, .08 * L, S, false)]);
+    } else if (k === 'pliosaur') {
+      neck = chain(hips, { y: bh * .05, z: bd * .5 }, 1, .06 * L, bw * .75, bh * .7, 0, 0, 0, S, 1);
+      hd = head(neck[0], new THREE.Vector3(0, 0, .06 * L), .05, [.17 * L, .13 * L, .3 * L], S, { teeth: 5 });
+      tail = chain(hips, { y: 0, z: -bd * .5 }, 3, .08 * L, bw * .55, bh * .55, .25, .03, 0, S, -1);
+      fins = [-1, 1].flatMap(sd => [fin(hips, sd, bw * .45, -bh * .15, bd * .28, .25 * L, .04 * L, .1 * L, S, true), fin(hips, sd, bw * .45, -bh * .15, -bd * .3, .24 * L, .04 * L, .1 * L, S, false)]);
+    } else if (k === 'ichthyosaur') {
+      neck = chain(hips, { y: 0, z: bd * .5 }, 1, .04 * L, bw * .8, bh * .8, 0, 0, 0, S, 1);
+      hd = head(neck[0], new THREE.Vector3(0, 0, .04 * L), 0, [.1 * L, .1 * L, .22 * L], S, { teeth: 6 });
+      tail = chain(hips, { y: 0, z: -bd * .5 }, 4, .08 * L, bw * .7, bh * .7, .18, .02, .02, S, -1);
+      for (const sd of [-1, 1]) { const f = bx(.02 * L, .16 * L, .07 * L, S); f.position.set(0, sd * .08 * L, -.07 * L); f.rotation.x = sd * .5; tail[3].add(f); }
+      const dorsal = bx(.02 * L, .09 * L, .1 * L, S); dorsal.position.set(0, bh * .5 + .04 * L, -bd * .05); dorsal.rotation.x = .4; hips.add(dorsal);
+      fins = [-1, 1].flatMap(sd => [fin(hips, sd, bw * .45, -bh * .2, bd * .2, .15 * L, .025 * L, .07 * L, S, true, -.6), fin(hips, sd, bw * .4, -bh * .2, -bd * .3, .07 * L, .02 * L, .04 * L, S, false, -.6)]);
+    } else if (k === 'mosasaur') {
+      neck = chain(hips, { y: 0, z: bd * .5 }, 1, .06 * L, bw * .85, bh * .85, 0, 0, 0, S, 1);
+      hd = head(neck[0], new THREE.Vector3(0, 0, .06 * L), .05, [.11 * L, .09 * L, .22 * L], S, { teeth: 6 });
+      tail = chain(hips, { y: 0, z: -bd * .5 }, 6, .075 * L, bw * .9, bh * .9, .12, .0, .03, S, -1);
+      const fl = bx(.02 * L, .14 * L, .09 * L, S); fl.position.set(0, .02 * L, -.06 * L); fl.rotation.x = -.6; tail[5].add(fl);
+      fins = [-1, 1].flatMap(sd => [fin(hips, sd, bw * .45, -bh * .2, bd * .3, .1 * L, .025 * L, .06 * L, S, true), fin(hips, sd, bw * .45, -bh * .2, -bd * .3, .08 * L, .02 * L, .05 * L, S, false)]);
+    } else {  // nothosaur
+      const nn = o.neckN ?? 3, ns = (o.neckSeg ?? .06) * L;
+      neck = chain(hips, { y: bh * .1, z: bd * .5 }, nn, ns, bw * .5, bh * .5, .4 / nn, -.1, -.01, S, 1);
+      hd = head(neck[nn - 1], new THREE.Vector3(0, 0, ns), .1, [.06 * L, .05 * L, .12 * L], S, { teeth: 4 });
+      tail = chain(hips, { y: 0, z: -bd * .5 }, 5, .07 * L, bw * .8, bh * .8, .16, .02, .01, S, -1);
+      fins = [-1, 1].flatMap(sd => [fin(hips, sd, bw * .45, -bh * .2, bd * .3, .12 * L, .03 * L, .05 * L, S, true), fin(hips, sd, bw * .45, -bh * .2, -bd * .3, .11 * L, .03 * L, .05 * L, S, false)]);
+    }
+    finish(root);
+    return { root, hips, torso, neck, head: hd, tail, legs: [], arms: [], fins, hipY: hips.position.y, quad: false, kind: 'sea', width: bw, bh };
   },
 };
-
-function buildHuman() {
-  const skin = mat(0xd9a880), shirt = mat(0x3b5f8a), pants = mat(0x2c2c30);
-  const g = new THREE.Group();
-  const add = (o, x, y, z) => { o.position.set(x, y, z); g.add(o); return o; };
-  add(bx(.36, .55, .22, shirt), 0, 1.2, 0);
-  add(bx(.2, .24, .22, skin), 0, 1.67, 0);
-  for (const s of [-1, 1]) { add(bx(.1, .6, .1, shirt), s * .24, 1.15, 0); add(bx(.15, .9, .15, pants), s * .1, .45, 0); }
-  return g;
-}
+const BUILD = {};
+for (const s of SPECIES_LIST) BUILD[s.id] = () => PLANS[s.plan](s.H ?? s.W ?? s.L, s.p);
 
 /* ============================ scene ============================ */
 const canvas = document.getElementById('stage');
@@ -312,40 +672,91 @@ Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, n
 scene.add(sun);
 
 
-/* ============================ Santa Monica ============================ */
-// The dino walks north (+z) down the middle of Ocean Ave. Everything else lives in
-// `world`, scrolls south past it, and wraps every L metres. Real-world scale: metres.
-const L = 440;
+/* ============================ world kit ============================ */
+// The dino walks north (+z) at the origin. Everything scrolling lives in `world`, wraps every
+// L metres, and is rebuilt per location; `statics` holds ground and horizon pieces that don't scroll.
+let L = 440, waveDrift = 0, loc = null;
 const world = new THREE.Group(); scene.add(world);
-const scrollers = [];                                    // { obj, vz, wheels?, legs? }
+const statics = new THREE.Group(); scene.add(statics);
+let scrollers = [];
+const baseNightMats = []; let locNightMats = [];
+const nightMats = { push: (...m) => locNightMats.push(...m), all: () => baseNightMats.concat(locNightMats) };
 let seed = 7; const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
 const rr = (a, b) => a + rnd() * (b - a);
+const pick = a => a[Math.floor(rnd() * a.length)];
 const wrapZ = o => { if (o.position.z < -L / 2) o.position.z += L; else if (o.position.z > L / 2) o.position.z -= L; };
-
-const plane = (w, d, color, y, x, rough = 1, metal = 0) => {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal }));
-  m.rotation.x = -Math.PI / 2; m.position.set(x, y, 0); m.receiveShadow = true; scene.add(m); return m;
-};
-// road with lane markings (canvas texture, scrolled)
-const rc = document.createElement('canvas'); rc.width = 128; rc.height = 256;
-const rx = rc.getContext('2d');
-rx.fillStyle = '#4a4a4c'; rx.fillRect(0, 0, 128, 256);
-rx.fillStyle = '#e8c342'; rx.fillRect(61, 0, 2, 256); rx.fillRect(65, 0, 2, 256);
-rx.fillStyle = '#e6e6e6'; rx.fillRect(34, 40, 3, 90); rx.fillRect(91, 40, 3, 90); rx.fillRect(2, 0, 3, 256); rx.fillRect(123, 0, 3, 256);
-const roadTex = new THREE.CanvasTexture(rc); roadTex.wrapS = roadTex.wrapT = THREE.RepeatWrapping; roadTex.repeat.set(1, (L * 2) / 12);
-const road = plane(18, L * 2, 0xffffff, 0, 0); road.material.map = roadTex; road.material.needsUpdate = true;
-plane(5, L * 2, 0xc9c4b8, .12, -11.5);      // west sidewalk
-plane(5, L * 2, 0xc9c4b8, .12, 11.5);       // east sidewalk
-plane(60, L * 2, 0xe3d3a6, 0, -44);         // beach
-plane(600, L * 2, 0x2e7fb0, -.3, -374, .35, .1);   // Pacific
-plane(200, L * 2, 0x8f8b84, .05, 114);      // east lots
-const curb = (x) => { const m = bx(.4, .15, L * 2, mat(0xb9b4a8)); m.position.set(x, .08, 0); m.receiveShadow = true; scene.add(m); };
-curb(-9); curb(9);
-
 const scroll = (obj, vz = 0, extra = {}) => { world.add(obj); scrollers.push(Object.assign({ obj, vz }, extra)); return obj; };
+const plane = (w, d, color, y, x, rough = 1, metal = 0, z = 0) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal }));
+  m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); m.receiveShadow = true; statics.add(m); return m;
+};
+function roadTexture(width, lanes, { yellow = true, edges = true } = {}) {   // lanes: x positions of dashed lines
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256; const g = c.getContext('2d');
+  g.fillStyle = '#4a4a4c'; g.fillRect(0, 0, 256, 256);
+  const px = x => (x / width + .5) * 256;
+  if (yellow) { g.fillStyle = '#e8c342'; g.fillRect(px(-.25) - 1, 0, 2, 256); g.fillRect(px(.25) - 1, 0, 2, 256); }
+  g.fillStyle = '#e6e6e6';
+  for (const x of lanes) g.fillRect(px(x) - 1.5, 40, 3, 90);
+  if (edges) { g.fillRect(4, 0, 3, 256); g.fillRect(249, 0, 3, 256); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, (L * 2) / 12); return t;
+}
+function road(width, dashes, opts) {
+  const tex = roadTexture(width, dashes, opts); const m = plane(width, L * 2, 0xffffff, 0, 0); m.material.map = tex; m.material.needsUpdate = true; return tex;
+}
+const curb = (x, len = L * 2) => { const m = bx(.4, .15, len, mat(0xb9b4a8)); m.position.set(x, .08, 0); statics.add(m); };
 
-// palms: tapered trunk, seven drooping fronds
-const trunkMat = mat(0x8a6a48), frondMat = mat(0x4f8a3a);
+// window textures shared by all buildings
+const wc = document.createElement('canvas'); wc.width = wc.height = 64;
+const wx = wc.getContext('2d'); wx.fillStyle = '#fff'; wx.fillRect(0, 0, 64, 64); wx.fillStyle = '#5d7686'; wx.fillRect(14, 12, 36, 36);
+const winTex = new THREE.CanvasTexture(wc); winTex.wrapS = winTex.wrapT = THREE.RepeatWrapping;
+const lc = document.createElement('canvas'); lc.width = lc.height = 128;
+const lx = lc.getContext('2d'); lx.fillStyle = '#000'; lx.fillRect(0, 0, 128, 128);
+for (const [ox, oy, c] of [[14, 12, '#ffd48a'], [78, 12, '#5a4a30'], [14, 76, '#ffe2a8'], [78, 76, '#f4c46a']]) { lx.fillStyle = c; lx.fillRect(ox, oy, 36, 36); }
+const litTex = new THREE.CanvasTexture(lc); litTex.wrapS = litTex.wrapT = THREE.RepeatWrapping;
+function building(x, z, w, d, floors, color, { roof = .4, storey = 3.5 } = {}) {
+  const h = floors * storey, cols = Math.max(1, Math.round(w / 3.2));
+  const tex = winTex.clone(); tex.needsUpdate = true; tex.repeat.set(cols, floors);
+  const lit = litTex.clone(); lit.needsUpdate = true; lit.repeat.set(cols / 2, floors / 2);
+  const bm = new THREE.MeshStandardMaterial({ color, map: tex, roughness: .9, emissive: 0xffffff, emissiveMap: lit, emissiveIntensity: 0 });
+  nightMats.push(bm);
+  const m = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), bm); m.castShadow = m.receiveShadow = true;
+  m.position.set(x, h / 2 + .05, z); scroll(m);
+  if (rnd() < roof) { const r = bx(d * .4, 4, w * .4, mat(0xd9d2c4)); r.position.set(x, h + 2, z); scroll(r); }
+  return m;
+}
+// animated billboard screens (Times Square, Shibuya)
+const screens = [];
+function screen(x, y, z, w, h, facing) {
+  const c = document.createElement('canvas'); c.width = 128; c.height = Math.round(128 * h / w);
+  const tex = new THREE.CanvasTexture(c);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: .95, roughness: .6 }));
+  m.position.set(x, y, z); m.rotation.y = facing; scroll(m);
+  const frame = bx(w + .6, h + .6, .3, mat(0x1a1a1a, .5)); frame.position.set(x, y, z); frame.rotation.y = facing; frame.translateZ(-.25); scroll(frame);
+  const s = { c, tex, t: rr(0, 3), hue: rr(0, 360) }; screens.push(s); paintScreen(s); return m;
+}
+function paintScreen(s) {
+  const g = s.c.getContext('2d'), W = s.c.width, H = s.c.height;
+  g.fillStyle = `hsl(${s.hue}, 70%, 22%)`; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 6; i++) { g.fillStyle = `hsl(${(s.hue + i * 47) % 360}, 85%, ${45 + i * 7}%)`; g.fillRect(rr(0, W * .8), rr(0, H * .8), rr(W * .15, W * .5), rr(H * .1, H * .4)); }
+  g.fillStyle = '#fff'; g.fillRect(rr(0, W * .6), rr(0, H * .8), rr(W * .2, W * .4), H * .08);
+  s.tex.needsUpdate = true;
+}
+function updateScreens(dt) { for (const s of screens) { s.t -= dt; if (s.t < 0) { s.t = rr(1.5, 4); s.hue = (s.hue + rr(40, 200)) % 360; paintScreen(s); } } }
+
+// street lamps
+const lampMat = new THREE.MeshStandardMaterial({ color: 0xfff1cc, emissive: 0xffe2a0, emissiveIntensity: 0 }); baseNightMats.push(lampMat);
+const poleMat = mat(0x3a3a3a, .6);
+function lamps(x, sd, every = 30) {
+  for (let z = -L / 2 + 8; z < L / 2; z += every) {
+    const g = new THREE.Group(); g.position.set(x, .12, z);
+    const pole = bx(.22, 8, .22, poleMat); pole.position.y = 4; g.add(pole);
+    const arm = bx(2.4, .16, .16, poleMat); arm.position.set(-sd * 1.1, 8, 0); g.add(arm);
+    const bulb = bx(.8, .25, .5, lampMat); bulb.position.set(-sd * 2.1, 7.85, 0); g.add(bulb);
+    scroll(g);
+  }
+}
+// trees
+const trunkMat = mat(0x8a6a48), frondMat = mat(0x4f8a3a), pineMat = mat(0x2f5a34), pineTrunk = mat(0x5a4632);
 function palm(x, z) {
   const g = new THREE.Group(); const h = rr(13, 19);
   const t = new THREE.Mesh(new THREE.CylinderGeometry(.28, .45, h, 7), trunkMat); t.position.y = h / 2; t.castShadow = true; g.add(t);
@@ -357,55 +768,34 @@ function palm(x, z) {
   g.position.set(x, .12, z); g.rotation.z = rr(-.05, .05) * (x < 0 ? -1 : 1);
   return scroll(g);
 }
-for (let z = -L / 2; z < L / 2; z += 14) { palm(-11.6, z + rr(-2, 2)); palm(11.6, z + rr(-2, 2)); }
-
-// buildings along the east side, 3.5 m per storey
-const wc = document.createElement('canvas'); wc.width = wc.height = 64;
-const wx = wc.getContext('2d'); wx.fillStyle = '#fff'; wx.fillRect(0, 0, 64, 64); wx.fillStyle = '#5d7686'; wx.fillRect(14, 12, 36, 36);
-const winTex = new THREE.CanvasTexture(wc); winTex.wrapS = winTex.wrapT = THREE.RepeatWrapping;
-const lc = document.createElement('canvas'); lc.width = lc.height = 128;
-const lx = lc.getContext('2d'); lx.fillStyle = '#000'; lx.fillRect(0, 0, 128, 128);
-for (const [ox, oy, c] of [[14, 12, '#ffd48a'], [78, 12, '#5a4a30'], [14, 76, '#ffe2a8'], [78, 76, '#f4c46a']]) { lx.fillStyle = c; lx.fillRect(ox, oy, 36, 36); }
-const litTex = new THREE.CanvasTexture(lc); litTex.wrapS = litTex.wrapT = THREE.RepeatWrapping;
-const nightMats = [];   // materials whose emissiveIntensity follows darkness
-const facadeColors = [0xf2e8d6, 0xe9d8c2, 0xd9b8a8, 0xf5f1e8, 0xc9d3d6, 0xe7c9b0];
-for (let z = -L / 2; z < L / 2;) {
-  const w = rr(18, 40), d = rr(18, 30), floors = Math.round(rr(2, 12)), h = floors * 3.5;
-  const cols = Math.round(w / 3.2), tex = winTex.clone(); tex.needsUpdate = true; tex.repeat.set(cols, floors);
-  const lit = litTex.clone(); lit.needsUpdate = true; lit.repeat.set(cols / 2, floors / 2);
-  const bm = new THREE.MeshStandardMaterial({ color: facadeColors[Math.floor(rnd() * facadeColors.length)], map: tex, roughness: .9, emissive: 0xffffff, emissiveMap: lit, emissiveIntensity: 0 });
-  nightMats.push(bm);
-  const m = new THREE.Mesh(new THREE.BoxGeometry(d, h, w), bm);
-  m.castShadow = m.receiveShadow = true;
-  m.position.set(16 + d / 2, h / 2 + .05, z + w / 2);
-  scroll(m);
-  if (rnd() < .4) { const roof = bx(d * .4, 4, w * .4, mat(0xd9d2c4)); roof.position.set(16 + d / 2, h + 2, z + w / 2); scroll(roof); }
-  z += w + rr(3, 9);
+function pine(x, y, z, h = rr(6, 14)) {
+  const g = new THREE.Group(); g.position.set(x, y, z);
+  const t = new THREE.Mesh(new THREE.CylinderGeometry(.2, .35, h * .3, 6), pineTrunk); t.position.y = h * .15; g.add(t);
+  const c = new THREE.Mesh(new THREE.ConeGeometry(h * .28, h * .8, 7), pineMat); c.position.y = h * .6; c.castShadow = true; g.add(c);
+  return scroll(g);
 }
 
-// cars: four lanes, wheels spin with speed
+// cars and people (behaviour lives in updateCar / updatePed below)
 const carColors = [0xd83b2c, 0xf1f1f1, 0x2b2f38, 0x3466c2, 0xc9c9c9, 0xe1a63b, 0x4d8b5a];
 const wheelGeo = new THREE.CylinderGeometry(.32, .32, .22, 12), wheelMat = mat(0x1b1b1b, .8);
 const headMat = new THREE.MeshStandardMaterial({ color: 0xfff6d0, emissive: 0xfff2c0, emissiveIntensity: 0 });
 const tailMat = new THREE.MeshStandardMaterial({ color: 0x8a1010, emissive: 0xff2a2a, emissiveIntensity: 0 });
-nightMats.push(headMat, tailMat);
-function car(lane, dir) {
-  const g = new THREE.Group(), c = mat(carColors[Math.floor(rnd() * carColors.length)], .5);
+baseNightMats.push(headMat, tailMat);
+function car(lane, dir, { color, escape = lane, taxi = false, speed = [8, 14] } = {}) {
+  const g = new THREE.Group(), c = mat(color ?? pick(carColors), .5);
   const body = bx(1.8, .55, 4.4, c); body.position.y = .62; g.add(body);
   const cab = bx(1.6, .55, 2.1, mat(0x8fb4c9, .2)); cab.position.set(0, 1.15, -.25); g.add(cab);
+  if (taxi) { const sign = bx(.9, .25, .4, mat(0xffe27a)); sign.position.set(0, 1.55, -.25); g.add(sign); }
   for (const sd of [-1, 1]) { const hl = bx(.35, .2, .1, headMat); hl.position.set(sd * .62, .7, 2.2); g.add(hl); const tl = bx(.35, .18, .1, tailMat); tl.position.set(sd * .62, .7, -2.2); g.add(tl); }
   const wheels = [];
-  for (const wx of [-.92, .92]) for (const wz of [-1.4, 1.4]) { const w = new THREE.Mesh(wheelGeo, wheelMat); w.rotation.z = Math.PI / 2; w.position.set(wx, .32, wz); w.castShadow = true; g.add(w); wheels.push(w); }
+  for (const wxx of [-.92, .92]) for (const wz of [-1.4, 1.4]) { const w = new THREE.Mesh(wheelGeo, wheelMat); w.rotation.z = Math.PI / 2; w.position.set(wxx, .32, wz); w.castShadow = true; g.add(w); wheels.push(w); }
   g.position.set(lane, 0, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
-  const v0 = rr(8, 14);
-  return scroll(g, dir * v0, { kind: 'car', wheels, lane, dir, v0, xT: lane, brakeUntil: 0, honked: false });
+  const v0 = rr(speed[0], speed[1]);
+  return scroll(g, dir * v0, { kind: 'car', wheels, lane, escape, dir, v0, xT: lane, brakeUntil: 0, honked: false });
 }
-for (let i = 0; i < 6; i++) { car(-6.8, -1); car(-2.6, -1); car(2.6, 1); car(6.8, 1); }
-
-// pedestrians on both sidewalks
 const skinMats = [0xd9a880, 0x8d5a3b, 0xf0c9a6, 0x5c3a22].map(c => mat(c)), topMats = [0xffffff, 0xe0555f, 0x3a5f8a, 0xf0d15c, 0x2c2c30, 0x7cc4b0].map(c => mat(c));
-function person(x, dir) {
-  const g = new THREE.Group(), top = topMats[Math.floor(rnd() * topMats.length)], skin = skinMats[Math.floor(rnd() * skinMats.length)];
+function personMesh() {
+  const g = new THREE.Group(), top = pick(topMats), skin = pick(skinMats);
   const torso = bx(.36, .55, .22, top); torso.position.y = 1.2; g.add(torso);
   const hd = bx(.2, .24, .22, skin); hd.position.y = 1.67; g.add(hd);
   const legs = [], arms = [];
@@ -413,70 +803,69 @@ function person(x, dir) {
     const arm = hang(.1, .6, .1, top); arm.position.set(sd * .24, 1.45, 0); g.add(arm); arms.push(arm);
     const leg = hang(.15, .9, .15, mat(0x2c2c30)); leg.position.set(sd * .1, .9, 0); g.add(leg); legs.push(leg);
   }
-  g.position.set(x, .12, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
+  return { g, legs, arms };
+}
+function person(x, dir, y = .12) {
+  const { g, legs, arms } = personMesh();
+  g.position.set(x, y, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
   return scroll(g, dir * rr(1.1, 1.7), { kind: 'ped', legs, arms, dir, v0: rr(1.1, 1.7), fleeUntil: 0, ph: rr(0, 6) });
 }
-for (let i = 0; i < 16; i++) { person(rr(-13.6, -9.6), i % 2 ? 1 : -1); person(rr(9.6, 13.6), i % 2 ? 1 : -1); }
-
-// the pier: deck on pilings, Pacific Wheel, a couple of arcade sheds
-const pier = new THREE.Group(); pier.position.set(0, 0, 120);
-const deckMat = mat(0x9c7b57), pileMat = mat(0x5a4a3c);
-const deck = bx(150, .6, 26, deckMat); deck.position.set(-89, 5.3, 0); pier.add(deck);
-for (let x = -20; x > -164; x -= 10) for (const z of [-11, 0, 11]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(.35, .35, 6, 8), pileMat); p.position.set(x, 2.5, z); pier.add(p); }
-const ramp = bx(8, .6, 26, deckMat); ramp.position.set(-14, 2.7, 0); ramp.rotation.z = Math.atan2(5.2, 8); pier.add(ramp);
-for (const z of [-12.5, 12.5]) { const rail = bx(150, 1.1, .12, mat(0xffffff)); rail.position.set(-89, 6.15, z); pier.add(rail); }
-const sign = bx(.4, 2, 12, mat(0x1e5a9c)); sign.position.set(-10, 9, 0); pier.add(sign);
-for (const z of [-6, 6]) { const post = bx(.4, 9, .4, mat(0xffffff)); post.position.set(-10, 4.5, z); pier.add(post); }
-const shed = (x, z, w, h, d, c) => { const m = bx(w, h, d, mat(0xf3ead8)); m.position.set(x, 5.6 + h / 2, z); pier.add(m); const r = bx(w + .6, .4, d + .6, mat(c)); r.position.set(x, 5.6 + h + .2, z); pier.add(r); };
-shed(-40, -6, 18, 5, 10, 0xd8433a); shed(-70, 7, 22, 7, 9, 0x2f7fb8); shed(-150, 0, 14, 5, 12, 0xf1c232);
-// Pacific Wheel: ~26 m across, plane runs along the pier so it faces the street
-const wheel = new THREE.Group(); wheel.position.set(-110, 5.6 + 15, 0); pier.add(wheel);
-const rot = new THREE.Group(); wheel.add(rot);
-const ringMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .4, emissive: 0xff5fb0, emissiveIntensity: 0 }); nightMats.push(ringMat);
-const ring = new THREE.Mesh(new THREE.TorusGeometry(12.5, .35, 8, 48), ringMat); ring.rotation.y = Math.PI / 2; rot.add(ring);
-for (let i = 0; i < 12; i++) { const sp = bx(.25, 25, .25, ringMat); sp.rotation.x = i * Math.PI / 12; rot.add(sp); }
-const gondolas = []; const gondMats = [0xe0555f, 0xf0d15c, 0x3a8fd0, 0x6fc276].map(c => { const m = new THREE.MeshStandardMaterial({ color: c, roughness: .6, emissive: c, emissiveIntensity: 0 }); nightMats.push(m); return m; });
-for (let i = 0; i < 20; i++) {
-  const a = i * Math.PI * 2 / 20, pivot = new THREE.Group(); pivot.position.set(0, Math.cos(a) * 12.5, Math.sin(a) * 12.5); rot.add(pivot);
-  const g = bx(1.6, 1.4, 1.6, gondMats[i % 4]); g.position.y = -1.2; pivot.add(g); gondolas.push(pivot);
+// water
+const hullMat = mat(0xf4f1e8, .6), sailMat = mat(0xffffff, .9), deckMat2 = mat(0x8c6a48);
+function sailboat(x, dir, y = -.3) {
+  const g = new THREE.Group(); const len = rr(7, 12);
+  const hull = bx(len * .3, len * .12, len, hullMat); hull.position.y = .1; g.add(hull);
+  const deck = bx(len * .26, .1, len * .9, deckMat2); deck.position.y = .22 + len * .05; g.add(deck);
+  const mast = bx(.14, len * 1.3, .14, mat(0x6b5a44)); mast.position.set(0, len * .7, len * .1); g.add(mast);
+  const main = bx(.05, len * 1.05, len * .45, sailMat); main.position.set(.05, len * .75, -len * .15); g.add(main);
+  const jib = bx(.05, len * .8, len * .35, sailMat); jib.position.set(-.05, len * .6, len * .3); g.add(jib);
+  g.position.set(x, y, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
+  return scroll(g, dir * rr(2, 4), { kind: 'float', y, amp: .25, ph: rr(0, 6) });
 }
-for (const sd of [-1, 1]) { const leg = bx(.6, 17, .6, ringMat); leg.position.set(0, -8, sd * 5); leg.rotation.x = sd * .3; wheel.add(leg); }
-scroll(pier);
-// street lamps
-const lampMat = new THREE.MeshStandardMaterial({ color: 0xfff1cc, emissive: 0xffe2a0, emissiveIntensity: 0 }); nightMats.push(lampMat);
-const poleMat = mat(0x3a3a3a, .6);
-for (let z = -L / 2 + 8; z < L / 2; z += 30) for (const sd of [-1, 1]) {
-  const g = new THREE.Group(); g.position.set(sd * 13.4, .12, z);
-  const pole = bx(.22, 8, .22, poleMat); pole.position.y = 4; g.add(pole);
-  const arm = bx(2.4, .16, .16, poleMat); arm.position.set(-sd * 1.1, 8, 0); g.add(arm);
-  const bulb = bx(.8, .25, .5, lampMat); bulb.position.set(-sd * 2.1, 7.85, 0); g.add(bulb);
-  scroll(g);
+function motorboat(x, dir, y = -.3) {
+  const g = new THREE.Group(); const len = rr(6, 9);
+  const hull = bx(len * .32, len * .14, len, mat(0xffffff, .5)); hull.position.y = .15; g.add(hull);
+  const stripe = bx(len * .33, .12, len * .95, mat(0x2b5fa8, .5)); stripe.position.y = .35; g.add(stripe);
+  const cabin = bx(len * .24, len * .16, len * .3, mat(0xdfe6ea, .3)); cabin.position.set(0, .5 + len * .08, len * .05); g.add(cabin);
+  const wake = bx(len * .5, .05, len * .8, mat(0xf2f8fa)); wake.position.set(0, -.05, -len * .8); g.add(wake);
+  g.position.set(x, y, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
+  return scroll(g, dir * rr(6, 11), { kind: 'float', y, amp: .15, ph: rr(0, 6) });
 }
-// beach furniture
-for (let i = 0; i < 6; i++) {
-  const t = new THREE.Group(); t.position.set(rr(-60, -30), 0, rr(-L / 2, L / 2));
-  const hut = bx(3, 2.6, 3, mat(0x3f7fc8)); hut.position.y = 4.3; t.add(hut);
-  for (const a of [-1, 1]) for (const b of [-1, 1]) { const lg = bx(.25, 3, .25, mat(0xd9d2c4)); lg.position.set(a * 1.2, 1.5, b * 1.2); t.add(lg); }
-  scroll(t);
+const gullMat = mat(0xf7f7f7, .9);
+function gulls(n, x0, x1, y0, y1) {
+  for (let i = 0; i < n; i++) {
+    const g = new THREE.Group(); const body = bx(.22, .14, .45, gullMat); g.add(body);
+    const wings = [-1, 1].map(sd => { const w = new THREE.Group(); w.position.set(sd * .1, .03, 0); const m = bx(.7, .03, .18, gullMat); m.position.x = sd * .35; w.add(m); g.add(w); return { w, sd }; });
+    g.position.set(rr(x0, x1), rr(y0, y1), rr(-L / 2, L / 2)); g.rotation.y = rr(0, 6.3);
+    scroll(g, rr(-5, 5), { kind: 'gull', wings, ph: rr(0, 6), turn: rr(-.3, .3), x0, x1 });
+  }
 }
-for (let i = 0; i < 30; i++) {
-  const u = new THREE.Group(); u.position.set(rr(-66, -20), 0, rr(-L / 2, L / 2));
-  const pole = bx(.08, 2.2, .08, mat(0xeeeeee)); pole.position.y = 1.1; u.add(pole);
-  const top = new THREE.Mesh(new THREE.ConeGeometry(1.4, .6, 8), mat([0xe0555f, 0x3a8fd0, 0xf0d15c][i % 3])); top.position.y = 2.2; u.add(top);
-  scroll(u);
+function wavyWater(w, d, x, y, color, shoreX = null) {
+  const geo = new THREE.PlaneGeometry(w, d, Math.min(120, Math.round(w / 5)), Math.min(140, Math.round(d / 6)));
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, roughness: .35, metalness: .1, flatShading: true }));
+  m.rotation.x = -Math.PI / 2; m.position.set(x, y, 0); m.receiveShadow = true; statics.add(m);
+  const pos = geo.attributes.position, base = pos.array.slice();
+  return { m, wave(t, drift) {
+    const a = pos.array;
+    for (let i = 0; i < a.length; i += 3) {
+      const wxp = base[i] + x, wz = -base[i + 1] + drift;
+      const k = shoreX === null ? 1 : THREE.MathUtils.smoothstep(Math.abs(wxp - shoreX), 0, 36);
+      a[i + 2] = (Math.sin(wxp * .09 + t * 1.1) * .32 + Math.sin(wz * .13 - t * .8) * .22 + Math.sin((wxp + wz) * .05 + t * .5) * .25) * (.3 + .7 * k);
+    }
+    pos.needsUpdate = true; geo.computeVertexNormals();
+  } };
 }
 
+/* ============================ behaviours ============================ */
 let scareUntil = -1, lastHonk = 0;
 function updateCar(c, dt) {
   const z = c.obj.position.z, ahead = -z * c.dir;             // metres until the car reaches the dino
-  const inner = Math.abs(c.lane) < 4;
-  const swerving = inner && ahead > -14 && ahead < 48;
-  c.xT = swerving ? Math.sign(c.lane) * 7.2 : c.lane;
+  const swerving = c.escape !== c.lane && ahead > -14 && ahead < 48;
+  c.xT = swerving ? c.escape : c.lane;
   c.obj.position.x = lerp(c.obj.position.x, c.xT, 1 - Math.pow(.05, dt));
-  if (swerving && !c.honked && time - lastHonk > .6) { c.honked = true; lastHonk = time; honk(); }
-  if (!swerving && ahead < -14) c.honked = false;
   let v = c.v0 * (Math.abs(c.obj.position.x - c.lane) > .6 ? .65 : 1);
   if (time < c.brakeUntil) v = 0;
+  if (loc.stop && loc.stop(c)) v = 0;
   for (const o of scrollers) {                                 // keep a gap to the car ahead in the same lane
     if (o === c || o.kind !== 'car' || o.dir !== c.dir || Math.abs(o.obj.position.x - c.obj.position.x) > 2.2) continue;
     const gap = (o.obj.position.z - z) * c.dir;
@@ -507,23 +896,650 @@ function updatePed(p, dt) {
 }
 function panic() {                                             // called when the dino roars
   scareUntil = time + 4;
+  const wp = new THREE.Vector3();
   for (const o of scrollers) {
-    const dz = Math.abs(o.obj.position.z);
-    if (o.kind === 'ped' && dz < 60) o.fleeUntil = time + rr(3, 5);
+    const dz = Math.abs(o.obj.getWorldPosition(wp).z);
+    if ((o.kind === 'ped' || o.kind === 'xped') && dz < 60) o.fleeUntil = time + rr(3, 5);
     if (o.kind === 'car' && dz < 60) { o.brakeUntil = time + rr(2, 3.5); if (rnd() < .35) setTimeout(() => carAlarm(), rr(100, 900)); }
   }
 }
+let trafficAct = 0, crowdAct = 0;
 function scrollWorld(dt, worldSpeed) {
+  let ta = 0, ca = 0;
   for (const s of scrollers) {
+    if (s.kind === 'car' && Math.abs(s.obj.position.z) < 90) ta += Math.min(1, Math.abs(s.vz) / 12);
+    if (s.kind === 'ped' && Math.abs(s.obj.position.z) < 50) ca += 1;
+    if (s.kind === 'xped') continue;                             // moved by its crossing group
     if (s.kind === 'car') updateCar(s, dt);
     else if (s.kind === 'ped') updatePed(s, dt);
+    else if (s.kind === 'float') { s.obj.position.y = s.y + Math.sin(time * 1.2 + s.ph) * s.amp; s.obj.rotation.z = Math.sin(time * .9 + s.ph) * .05; s.obj.rotation.x = Math.sin(time * 1.1 + s.ph) * .04; }
+    else if (s.kind === 'gull') {
+      s.ph += dt * 7; s.obj.rotation.y += s.turn * dt; s.obj.position.x += Math.sin(s.obj.rotation.y) * 5 * dt;
+      if (s.obj.position.x > s.x1 || s.obj.position.x < s.x0) s.turn = -s.turn, s.obj.rotation.y += Math.PI;
+      s.obj.position.y += Math.sin(time * .6 + s.ph) * .01;
+      for (const { w, sd } of s.wings) w.rotation.z = sd * Math.sin(s.ph) * .55;
+    }
     s.obj.position.z += (s.vz - worldSpeed) * dt; wrapZ(s.obj);
   }
-  rot.rotation.x += .12 * dt;
-  for (const g of gondolas) g.rotation.x = -rot.rotation.x;
-  roadTex.offset.y -= worldSpeed * dt / 12;
+  trafficAct = Math.min(1, ta / 6); crowdAct = Math.min(1, ca / 12);
+  for (const t of loc.roadTex) t.offset.y -= worldSpeed * dt / 12;
+  waveDrift += worldSpeed * dt;
+  updateScreens(dt);
+  loc.update?.(dt, worldSpeed);
 }
-world.traverse(o => { o.userData.rest = o.rotation.clone(); if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+
+/* ============================ locations ============================ */
+const LOCATIONS = {
+  santaMonica: { name: 'Santa Monica', sub: 'Ocean Ave & the pier', lon: -118.5, lat: 34, amb: { wind: 0.3, waves: 0.9, birds: 0.6, crowd: 0.3, traffic: 0.6 }, fog: [150, 420], build() {
+    L = 440;
+    const roadTex = road(18, [-6, 6]);
+    plane(5, L * 2, 0xc9c4b8, .12, -11.5); plane(5, L * 2, 0xc9c4b8, .12, 11.5); curb(-9); curb(9);
+    plane(60, L * 2, 0xe3d3a6, 0, -44); plane(200, L * 2, 0x8f8b84, .05, 114);
+    const ocean = wavyWater(600, L * 2, -374, -.3, 0x2e7fb0, -74);
+    const foam = plane(2.5, L * 2, 0xeef6f8, -.25, -74.5, .9); foam.material.transparent = true; foam.material.opacity = .55;
+    for (let z = -L / 2; z < L / 2; z += 14) { palm(-11.6, z + rr(-2, 2)); palm(11.6, z + rr(-2, 2)); }
+    const facade = [0xf2e8d6, 0xe9d8c2, 0xd9b8a8, 0xf5f1e8, 0xc9d3d6, 0xe7c9b0];
+    for (let z = -L / 2; z < L / 2;) { const w = rr(18, 40), d = rr(18, 30); building(16 + d / 2, z + w / 2, w, d, Math.round(rr(2, 12)), pick(facade)); z += w + rr(3, 9); }
+    for (let i = 0; i < 6; i++) { car(-6.8, -1); car(-2.6, -1, { escape: -7.2 }); car(2.6, 1, { escape: 7.2 }); car(6.8, 1); }
+    for (let i = 0; i < 16; i++) { person(rr(-13.6, -9.6), i % 2 ? 1 : -1); person(rr(9.6, 13.6), i % 2 ? 1 : -1); }
+    lamps(-13.4, -1); lamps(13.4, 1);
+    // pier + Pacific Wheel
+    const pier = new THREE.Group(); pier.position.set(0, 0, 120);
+    const deckMat = mat(0x9c7b57), pileMat = mat(0x5a4a3c);
+    const deck = bx(150, .6, 26, deckMat); deck.position.set(-89, 5.3, 0); pier.add(deck);
+    for (let x = -20; x > -164; x -= 10) for (const z of [-11, 0, 11]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(.35, .35, 6, 8), pileMat); p.position.set(x, 2.5, z); pier.add(p); }
+    const ramp = bx(8, .6, 26, deckMat); ramp.position.set(-14, 2.7, 0); ramp.rotation.z = Math.atan2(5.2, 8); pier.add(ramp);
+    for (const z of [-12.5, 12.5]) { const rail = bx(150, 1.1, .12, mat(0xffffff)); rail.position.set(-89, 6.15, z); pier.add(rail); }
+    const sign = bx(.4, 2, 12, mat(0x1e5a9c)); sign.position.set(-10, 9, 0); pier.add(sign);
+    for (const z of [-6, 6]) { const post = bx(.4, 9, .4, mat(0xffffff)); post.position.set(-10, 4.5, z); pier.add(post); }
+    const shed = (x, z, w, h, d, c) => { const m = bx(w, h, d, mat(0xf3ead8)); m.position.set(x, 5.6 + h / 2, z); pier.add(m); const r = bx(w + .6, .4, d + .6, mat(c)); r.position.set(x, 5.6 + h + .2, z); pier.add(r); };
+    shed(-40, -6, 18, 5, 10, 0xd8433a); shed(-70, 7, 22, 7, 9, 0x2f7fb8); shed(-150, 0, 14, 5, 12, 0xf1c232);
+    const wheel = new THREE.Group(); wheel.position.set(-110, 20.6, 0); pier.add(wheel);
+    const rot = new THREE.Group(); wheel.add(rot);
+    const ringMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .4, emissive: 0xff5fb0, emissiveIntensity: 0 }); nightMats.push(ringMat);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(12.5, .35, 8, 48), ringMat); ring.rotation.y = Math.PI / 2; rot.add(ring);
+    for (let i = 0; i < 12; i++) { const sp = bx(.25, 25, .25, ringMat); sp.rotation.x = i * Math.PI / 12; rot.add(sp); }
+    const gondolas = [], gondMats = [0xe0555f, 0xf0d15c, 0x3a8fd0, 0x6fc276].map(c => { const m = new THREE.MeshStandardMaterial({ color: c, roughness: .6, emissive: c, emissiveIntensity: 0 }); nightMats.push(m); return m; });
+    for (let i = 0; i < 20; i++) { const a = i * Math.PI * 2 / 20, pivot = new THREE.Group(); pivot.position.set(0, Math.cos(a) * 12.5, Math.sin(a) * 12.5); rot.add(pivot); const g = bx(1.6, 1.4, 1.6, gondMats[i % 4]); g.position.y = -1.2; pivot.add(g); gondolas.push(pivot); }
+    for (const sd of [-1, 1]) { const leg = bx(.6, 17, .6, ringMat); leg.position.set(0, -8, sd * 5); leg.rotation.x = sd * .3; wheel.add(leg); }
+    scroll(pier);
+    // water life + beach
+    for (let i = 0; i < 5; i++) sailboat(rr(-140, -185), i % 2 ? 1 : -1);
+    for (let i = 0; i < 4; i++) sailboat(rr(-255, -330), i % 2 ? 1 : -1);
+    for (let i = 0; i < 3; i++) motorboat(rr(-120, -170), i % 2 ? 1 : -1);
+    for (let i = 0; i < 2; i++) motorboat(rr(-260, -320), -1);
+    for (let i = 0; i < 10; i++) {
+      const g = new THREE.Group(); const c = i % 2 ? 0xd83b2c : 0x3a8f3a;
+      const can = new THREE.Mesh(new THREE.CylinderGeometry(.6, .8, 1.6, 8), mat(c, .6)); can.position.y = .8; g.add(can);
+      const top = bx(.3, 1.2, .3, mat(0x333333)); top.position.y = 2.2; g.add(top);
+      const lamp = bx(.35, .35, .35, lampMat); lamp.position.y = 2.9; g.add(lamp);
+      g.position.set(i % 2 ? -108 : -232, -.3, -L / 2 + i * L / 10 + rr(-8, 8)); scroll(g, 0, { kind: 'float', y: -.3, amp: .3, ph: rr(0, 6) });
+    }
+    for (let i = 0; i < 8; i++) {
+      const g = new THREE.Group();
+      const board = bx(.6, .1, 2.4, mat([0xf5d547, 0xffffff, 0x3aa0d8][i % 3], .5)); board.position.y = .05; g.add(board);
+      const p = new THREE.Group(); p.position.set(0, .1, 0); g.add(p);
+      const legsP = bx(.35, .6, .3, mat(0x2c2c30)); legsP.position.y = .3; p.add(legsP);
+      const body = bx(.36, .5, .22, mat(0x1d1d1d)); body.position.y = .85; p.add(body);
+      const hd = bx(.2, .22, .2, skinMats[i % 4]); hd.position.y = 1.2; p.add(hd);
+      if (i % 3 === 0) { p.rotation.x = 1.5; p.position.y = .25; }
+      g.position.set(rr(-82, -100), -.3, rr(-L / 2, L / 2)); g.rotation.y = rr(0, 6.3); scroll(g, rr(-.5, .5), { kind: 'float', y: -.3, amp: .3, ph: rr(0, 6) });
+    }
+    gulls(14, -130, -20, 6, 22);
+    for (const [z, w, h] of [[-120, 220, 24], [40, 160, 30], [150, 120, 18]]) {
+      const isl = new THREE.Mesh(new THREE.CylinderGeometry(w * .25, w * .5, h, 9), new THREE.MeshStandardMaterial({ color: 0x5f6f7e, roughness: 1, flatShading: true }));
+      isl.position.set(-395 + rr(-10, 10), h / 2 - 2, z); isl.scale.z = .35; statics.add(isl);
+    }
+    for (let i = 0; i < 6; i++) {
+      const t = new THREE.Group(); t.position.set(rr(-60, -30), 0, rr(-L / 2, L / 2));
+      const hut = bx(3, 2.6, 3, mat(0x3f7fc8)); hut.position.y = 4.3; t.add(hut);
+      for (const a of [-1, 1]) for (const b of [-1, 1]) { const lg = bx(.25, 3, .25, mat(0xd9d2c4)); lg.position.set(a * 1.2, 1.5, b * 1.2); t.add(lg); }
+      scroll(t);
+    }
+    for (let i = 0; i < 30; i++) {
+      const u = new THREE.Group(); u.position.set(rr(-66, -20), 0, rr(-L / 2, L / 2));
+      const pole = bx(.08, 2.2, .08, mat(0xeeeeee)); pole.position.y = 1.1; u.add(pole);
+      const top = new THREE.Mesh(new THREE.ConeGeometry(1.4, .6, 8), mat([0xe0555f, 0x3a8fd0, 0xf0d15c][i % 3])); top.position.y = 2.2; u.add(top); scroll(u);
+    }
+    return { roadTex: [roadTex], sea: { x: -215, y: 0 }, update(dt) { rot.rotation.x += .12 * dt; for (const g of gondolas) g.rotation.x = -rot.rotation.x; ocean.wave(time, waveDrift); } };
+  } },
+
+  timesSquare: { name: 'Times Square', sub: 'Broadway & 7th Ave, New York', lon: -74, lat: 40.75, amb: { wind: 0.1, waves: 0, birds: 0, crowd: 1, traffic: 0.9 }, fog: [120, 380], build() {
+    L = 400;
+    const roadTex = road(18, [-6, 6], { yellow: false });
+    plane(7, L * 2, 0xbdbab4, .12, -12.5); plane(7, L * 2, 0xbdbab4, .12, 12.5); curb(-9); curb(9);
+    plane(400, L * 2, 0x55555a, .05, 216); plane(400, L * 2, 0x55555a, .05, -216);
+    const facade = [0xb8b2a8, 0x9d9a94, 0xcfc8bc, 0x7e7a78, 0xa89f92, 0x6d7280];
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2;) {
+      const w = rr(18, 44), d = rr(25, 45), floors = Math.round(rr(12, 55));
+      building(sd * (16 + d / 2), z + w / 2, w, d, floors, pick(facade), { roof: .5 });
+      const n = Math.round(rr(1, 3));
+      for (let i = 0; i < n; i++) { const sh = rr(8, 22), sw = Math.min(w * .8, rr(10, 30)); screen(sd * 15.6, rr(8, floors * 3.5 * .6), z + w / 2 + rr(-w * .3, w * .3), sw, sh, sd < 0 ? Math.PI / 2 : -Math.PI / 2); }
+      z += w + rr(0, 3);
+    }
+    // One Times Square-style tower with the ball, and the red TKTS steps
+    const tower = building(16 + 9, 150, 18, 18, 34, 0x8c8478, { roof: 0 });
+    const pole = bx(.6, 24, .6, mat(0x444444)); pole.position.set(25, 34 * 3.5 + 12, 150); scroll(pole);
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xe8f0ff, emissiveIntensity: 0, roughness: .3 }); nightMats.push(ballMat);
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(2.2, 12, 10), ballMat); ball.position.set(25, 34 * 3.5 + 22, 150); scroll(ball);
+    const redMat = mat(0xc9282e, .6);
+    for (let i = 0; i < 8; i++) { const st = bx(14, .6, 1.6, redMat); st.position.set(-12.5, .12 + .3 + i * .6, -120 - i * 1.6); scroll(st); }
+    for (let i = 0; i < 12; i++) { car(-6.8, -1, { taxi: true, color: 0xf5c518, speed: [6, 11] }); car(-2.6, -1, { escape: -7.2, taxi: rnd() < .7, color: rnd() < .7 ? 0xf5c518 : undefined, speed: [6, 11] }); car(2.6, 1, { escape: 7.2, taxi: rnd() < .7, color: rnd() < .7 ? 0xf5c518 : undefined, speed: [6, 11] }); car(6.8, 1, { taxi: true, color: 0xf5c518, speed: [6, 11] }); }
+    for (let i = 0; i < 30; i++) { person(rr(-15.6, -9.6), i % 2 ? 1 : -1); person(rr(9.6, 15.6), i % 2 ? 1 : -1); }
+    lamps(-15.5, -1, 24); lamps(15.5, 1, 24);
+    return { roadTex: [roadTex], sea: null };
+  } },
+
+  goldenGate: { name: 'Golden Gate Bridge', sub: 'San Francisco', lon: -122.5, lat: 37.8, amb: { wind: 0.9, waves: 0.5, birds: 0.4, crowd: 0.1, traffic: 0.8 }, fog: [110, 520], build() {
+    L = 1400;
+    const orange = mat(0xd9502a, .7);
+    const roadTex = road(27, [-9, -4.5, 4.5, 9]);
+    plane(3, L * 2, 0xc9c4b8, .12, -15); plane(3, L * 2, 0xc9c4b8, .12, 15); curb(-13.5); curb(13.5);
+    for (const sd of [-1, 1]) { const g = bx(1.2, 2.6, L * 2, orange); g.position.set(sd * 17, -1, 0); statics.add(g); const rail = bx(.15, 1.3, L * 2, orange); rail.position.set(sd * 16.4, .8, 0); statics.add(rail); }
+    const under = bx(34, 7, L * 2, orange); under.position.set(0, -4.5, 0); statics.add(under);
+    const bay = wavyWater(1600, L * 2, 0, -67, 0x3a6f8a);
+    // towers, cables, suspenders
+    const towerZ = 450, top = 160;
+    for (const tz of [-towerZ, towerZ]) for (const sd of [-1, 1]) {
+      const leg = bx(6, 227, 8, orange); leg.position.set(sd * 13.5, 227 / 2 - 67, tz); scroll(leg);
+      if (sd > 0) for (let i = 0; i < 5; i++) { const br = bx(21, 6, 3, orange); br.position.set(0, 10 + i * 30, tz); scroll(br); }
+    }
+    const cableY = z => { const a = Math.abs(z); return a < towerZ ? top * (z / towerZ) ** 2 : top * Math.max(0, 1 - ((a - towerZ) / (L / 2 - towerZ)) ** 2); };
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 20) {
+      const y0 = cableY(z), y1 = cableY(z + 20), seg = bx(.9, .9, Math.hypot(20, y1 - y0) + .5, orange);
+      seg.position.set(sd * 13.5, (y0 + y1) / 2 + 1.2, z + 10); seg.rotation.x = -Math.atan2(y1 - y0, 20); scroll(seg);
+      if (z % 40 === 0) { const h = y0 + 1.2; const s = bx(.18, h, .18, orange); s.position.set(sd * 13.5, h / 2, z); scroll(s); }
+    }
+    // headlands at both ends, city and Alcatraz across the bay
+    const hillMat = new THREE.MeshStandardMaterial({ color: 0x6f7a55, roughness: 1, flatShading: true });
+    for (let i = 0; i < 14; i++) { const h = rr(70, 160), w = rr(80, 200); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 7), hillMat); m.position.set(rr(40, 260) * (i % 2 ? 1 : -1), h / 2 - 67, L / 2 - rr(0, 60)); scroll(m); }
+    const cityMat = mat(0xb9b3a8);
+    for (let i = 0; i < 40; i++) { const h = rr(30, 160); const b = bx(rr(20, 40), h, rr(20, 40), cityMat); b.position.set(rr(700, 1100), h / 2 - 67, rr(-300, 300)); statics.add(b); }
+    const rock = new THREE.Mesh(new THREE.CylinderGeometry(40, 70, 30, 8), hillMat); rock.position.set(650, -52, 150); statics.add(rock);
+    const cell = bx(60, 14, 30, mat(0xd8d2c4)); cell.position.set(650, -30, 150); statics.add(cell);
+    for (let i = 0; i < 6; i++) sailboat(rr(120, 400), i % 2 ? 1 : -1, -67);
+    for (let i = 0; i < 4; i++) motorboat(rr(-120, -300), i % 2 ? 1 : -1, -67);
+    gulls(12, -60, 60, -30, 20);
+    for (let i = 0; i < 8; i++) { car(-11.25, -1, { speed: [12, 18] }); car(-6.75, -1, { speed: [12, 18] }); car(-2.25, -1, { escape: -6.75, speed: [12, 18] }); car(2.25, 1, { escape: 6.75, speed: [12, 18] }); car(6.75, 1, { speed: [12, 18] }); car(11.25, 1, { speed: [12, 18] }); }
+    for (let i = 0; i < 24; i++) person(rr(14.2, 15.8), i % 2 ? 1 : -1);
+    lamps(-16, -1, 48); lamps(16, 1, 48);
+    return { roadTex: [roadTex], sea: { x: 90, y: -66.7 }, update() { bay.wave(time, waveDrift); } };
+  } },
+
+  shibuya: { name: 'Shibuya Crossing', sub: 'Tokyo', lon: 139.7, lat: 35.66, amb: { wind: 0.1, waves: 0, birds: 0, crowd: 1, traffic: 0.6 }, fog: [130, 380], build() {
+    L = 320;
+    const roadTex = road(18, [-6, 6], { yellow: false });
+    plane(8, L * 2, 0xc4c1bb, .12, -13); plane(8, L * 2, 0xc4c1bb, .12, 13); curb(-9); curb(9);
+    plane(400, L * 2, 0x6a6a6e, .05, 217); plane(400, L * 2, 0x6a6a6e, .05, -217);
+    const XZ = 90, half = 30;                                            // the scramble crossing, scrolling with the world
+    const cross = new THREE.Group(); cross.position.set(0, 0, XZ); scroll(cross, 0, { kind: 'crossing' });
+    const ew = bx(120, .02, 22, mat(0x4a4a4c)); ew.position.set(0, .02, 0); ew.receiveShadow = true; cross.add(ew);
+    const sq = bx(18, .03, 22, mat(0x4a4a4c)); sq.position.y = .025; cross.add(sq);
+    const zebra = mat(0xf2f2f2, .8);
+    for (let i = -8; i <= 8; i++) { for (const zz of [-half + 4, half - 4]) { const s = bx(1, .04, 4, zebra); s.position.set(i * 1.1, .05, zz); cross.add(s); } for (const xx of [-half + 4, half - 4]) { const s = bx(4, .04, 1, zebra); s.position.set(xx, .05, i * 1.1); cross.add(s); } }
+    for (let i = -9; i <= 9; i++) { const s = bx(1, .04, 3, zebra); s.position.set(i * 1.6, .05, i * 1.6); s.rotation.y = -Math.PI / 4; cross.add(s); const s2 = bx(1, .04, 3, zebra); s2.position.set(i * 1.6, .05, -i * 1.6); s2.rotation.y = Math.PI / 4; cross.add(s2); }
+    const lightMats = [0xff3b3b, 0x33dd66].map(c => { const m = new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: .3 }); return m; });
+    const signals = [];
+    for (const [x, z] of [[-11, -half - 3], [11, half + 3], [-11, half + 3], [11, -half - 3]]) { const p = bx(.25, 5, .25, poleMat); p.position.set(x, 2.5, z); cross.add(p); const l = bx(.6, 1.4, .5, lightMats[0]); l.position.set(x, 5.5, z); cross.add(l); signals.push(l); }
+    const facade = [0xd8d3c8, 0xc8c2b8, 0xe4e0d6, 0x9fa3a8, 0xb9bcc4];
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2;) {
+      const w = rr(14, 30), d = rr(18, 30);
+      if (Math.abs(z + w / 2 - XZ) < half + 14) { z = XZ + half + 14; continue; }
+      const floors = Math.round(rr(5, 14)); building(sd * (17 + d / 2), z + w / 2, w, d, floors, pick(facade), { roof: .6 });
+      if (rnd() < .5) screen(sd * 16.6, rr(10, floors * 3.5 * .7), z + w / 2, Math.min(w * .8, rr(8, 18)), rr(5, 12), sd < 0 ? Math.PI / 2 : -Math.PI / 2);
+      z += w + rr(0, 2);
+    }
+    // Shibuya 109 cylinder, a big corner screen, Hachiko
+    const tower109 = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 40, 20), mat(0xd9d4c8)); tower109.position.set(-28, 20, XZ + half + 24); scroll(tower109);
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(9.2, 9.2, 3, 20), mat(0xc32b2b)); band.position.set(-28, 36, XZ + half + 24); scroll(band);
+    screen(16.6, 22, XZ - half - 22, 20, 14, -Math.PI / 2); screen(-16.6, 20, XZ + half + 30, 18, 12, Math.PI / 2);
+    const ped = bx(2.4, 1.2, 2.4, mat(0x8a8a86)); ped.position.set(12.5, .7, XZ - half - 8); scroll(ped);
+    const dog = bx(.7, 1, 1.3, mat(0x6d5a33, .5)); dog.position.set(12.5, 1.8, XZ - half - 8); scroll(dog);
+    const dogHead = bx(.5, .5, .6, mat(0x6d5a33, .5)); dogHead.position.set(12.5, 2.5, XZ - half - 7.4); scroll(dogHead);
+    // scramble crowd: waits at the corners, crosses when the light says so
+    const xpeds = [];
+    const corners = [[-13, -half - 4], [13, -half - 4], [-13, half + 4], [13, half + 4], [-13, 0], [13, 0]];
+    for (let i = 0; i < 44; i++) {
+      const { g, legs, arms } = personMesh(); const a = pick(corners); let b = pick(corners); while (b === a) b = pick(corners);
+      g.position.set(a[0] + rr(-3, 3), .12, a[1] + rr(-3, 3)); cross.add(g);
+      xpeds.push({ obj: g, legs, arms, from: [...a], to: [...b], ph: rr(0, 6), t: rr(0, 1), fleeUntil: 0, kind: 'xped', vz: 0 });
+    }
+    for (const x of xpeds) scrollers.push(x);                              // for panic() range checks — z is local to the crossing group
+    let cycle = 0; const CYC = 18, WALK = 7;
+    for (let i = 0; i < 8; i++) { car(-6.8, -1, { speed: [7, 11] }); car(-2.6, -1, { escape: -7.2, speed: [7, 11] }); car(2.6, 1, { escape: 7.2, speed: [7, 11] }); car(6.8, 1, { speed: [7, 11] }); }
+    for (let i = 0; i < 26; i++) { person(rr(-16.6, -9.6), i % 2 ? 1 : -1); person(rr(9.6, 16.6), i % 2 ? 1 : -1); }
+    lamps(-16.8, -1, 26); lamps(16.8, 1, 26);
+    const walking = () => cycle % CYC > CYC - WALK;
+    return { roadTex: [roadTex], sea: null,
+      stop(c) { const cz = cross.position.z, edge = cz - c.dir * (half + 2), ahead = (edge - c.obj.position.z) * c.dir; return walking() && ahead > 0 && ahead < 22; },
+      update(dt) {
+        cycle += dt; const w = walking();
+        for (const s of signals) s.material = lightMats[w ? 1 : 0];
+        for (const p of xpeds) {
+          const flee = time < p.fleeUntil;
+          let speed = 0;
+          if (flee) { speed = 4.5; p.t = Math.min(1, p.t + dt * speed / 40); const dir = Math.sign(p.obj.position.z + cross.position.z) || 1; p.obj.position.z += dir * speed * dt; p.arms.forEach(a => R(a, -2.7)); }
+          else if (w || (p.t > 0 && p.t < 1)) {
+            speed = 1.5; p.t = Math.min(1, p.t + dt * speed / Math.hypot(p.to[0] - p.from[0], p.to[1] - p.from[1]));
+            p.obj.position.x = lerp(p.from[0], p.to[0], p.t); p.obj.position.z = lerp(p.from[1], p.to[1], p.t);
+            p.obj.rotation.y = Math.atan2(p.to[0] - p.from[0], p.to[1] - p.from[1]);
+            p.arms.forEach((a, i) => R(a, Math.sin(p.ph + (i ? Math.PI : 0)) * .4));
+            if (p.t >= 1) { p.from = p.to; let b = pick(corners); while (b === p.from) b = pick(corners); p.to = [...b]; p.t = 0; if (w) p.t = -rr(0, .3); }
+          } else { if (p.t < 0) p.t = Math.min(0, p.t + dt * .3); p.obj.rotation.y = Math.atan2(-p.obj.position.x, -p.obj.position.z); }
+          p.ph += speed * 2.6 * dt; const amp = speed ? .5 : 0;
+          p.legs.forEach((l, i) => R(l, Math.sin(p.ph + (i ? Math.PI : 0)) * amp));
+        }
+      } };
+  } },
+
+  greatWall: { name: 'Great Wall', sub: 'Mutianyu, China', lon: 116.6, lat: 40.4, amb: { wind: 0.8, waves: 0, birds: 0.5, crowd: 0.1, traffic: 0 }, fog: [90, 330], build() {
+    L = 600;
+    const stone = mat(0x8e8677, .95), stoneDark = mat(0x6f6960, .95);
+    const top = plane(5.6, L * 2, 0x9a9384, 0, 0); top.material.roughness = 1;
+    const body = bx(7.5, 40, L * 2, stone); body.position.set(0, -20, 0); statics.add(body);
+    for (const sd of [-1, 1]) { const par = bx(.7, 1, L * 2, stoneDark); par.position.set(sd * 3.15, .5, 0); statics.add(par); }
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 3) { const m = bx(.7, .9, 1.5, stoneDark); m.position.set(sd * 3.15, 1.45, z); scroll(m); }
+    for (let i = 0; i < 4; i++) {                                          // watchtowers beside the walkway
+      const sd = i % 2 ? 1 : -1, z = -L / 2 + i * L / 4 + 40;
+      const t = bx(9, 9, 10, stone); t.position.set(sd * 8.2, 4.5, z); scroll(t);
+      const t2 = bx(7.5, 5, 8.5, stone); t2.position.set(sd * 8.2, 11.5, z); scroll(t2);
+      const roof = bx(8.5, 1, 9.5, mat(0x5a4a3a)); roof.position.set(sd * 8.2, 14.4, z); scroll(roof);
+      for (const dz of [-3, 0, 3]) { const win = bx(.3, 1.4, 1.2, mat(0x2a2620)); win.position.set(sd * 3.6, 6, z + dz); scroll(win); }
+    }
+    // terrain: two tiles of length L with heights periodic in z, so the wrap is seamless
+    const hAt = (x, z) => { const ax = Math.abs(x), base = -4 - Math.min(48, ax * .38), k = Math.min(1, Math.max(0, (ax - 6) / 30));
+      const b = 14 * Math.sin(2 * Math.PI * 2 * z / L + x * .02) + 9 * Math.sin(2 * Math.PI * 3 * z / L + 1.3 + x * .01) + 7 * Math.sin(x * .05 + 2 * Math.PI * z / L); return base + b * k; };
+    const terMat = new THREE.MeshStandardMaterial({ color: 0x5f7a48, roughness: 1, flatShading: true });
+    for (const off of [0, L]) {
+      const geo = new THREE.PlaneGeometry(420, L, 70, 100); const pos = geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) pos.setZ(i, hAt(pos.getX(i), -pos.getY(i) + off));
+      geo.computeVertexNormals(); const m = new THREE.Mesh(geo, terMat); m.rotation.x = -Math.PI / 2; m.receiveShadow = true; m.position.z = off; scroll(m);
+    }
+    for (let i = 0; i < 160; i++) { const x = rr(-190, 190); if (Math.abs(x) < 9) continue; const z = rr(-L / 2, L / 2); pine(x, hAt(x, z), z); }
+    const farMat = new THREE.MeshStandardMaterial({ color: 0x6a7d8e, roughness: 1, flatShading: true });
+    for (let i = 0; i < 16; i++) { const h = rr(80, 190), w = rr(120, 260); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 7), farMat); m.position.set(rr(200, 420) * (i % 2 ? 1 : -1), h / 2 - 60, rr(-L / 2, L / 2)); scroll(m); }
+    for (let i = 0; i < 22; i++) person(rr(-2.2, 2.2), i % 2 ? 1 : -1, 0);
+    return { roadTex: [], sea: null };
+  } },
+};
+/* ============================ more kit ============================ */
+function tree(x, y, z, { h = rr(8, 14), r = rr(3, 5), color = 0x4a7c3f, flat = false, trunk = 0x6b5138 } = {}) {
+  const g = new THREE.Group(); g.position.set(x, y, z);
+  const t = new THREE.Mesh(new THREE.CylinderGeometry(.25, .4, h, 6), mat(trunk)); t.position.y = h / 2; t.castShadow = true; g.add(t);
+  const c = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), mat(color)); c.position.y = h; c.castShadow = true; if (flat) c.scale.y = .35; g.add(c);
+  return scroll(g);
+}
+function animal(x, dir, { len = 2, ht = 1.2, color = 0x9a7b5a, belly, neck = 0, head = .4, legs = 4, speed = [.8, 1.5], y = 0, stripes = false, tusks = false } = {}) {
+  const g = new THREE.Group(), S = mat(color), lw = len * .18;
+  const body = bx(len * .38, ht * .45, len, S); body.position.y = ht * .78; g.add(body);
+  if (belly) { const b = bx(len * .3, ht * .25, len * .9, mat(belly)); b.position.y = ht * .6; g.add(b); }
+  if (stripes) for (let i = 0; i < 6; i++) { const s = bx(len * .4, ht * .46, len * .05, mat(0x1e1e1e)); s.position.set(0, ht * .78, -len * .4 + i * len * .16); g.add(s); }
+  const nk = new THREE.Group(); nk.position.set(0, ht * .95, len * .5); nk.rotation.x = -.9 - neck * .3; g.add(nk);
+  const nm = bx(len * .16, neck * len + len * .2, len * .16, S); nm.position.y = (neck * len + len * .2) / 2; nk.add(nm);
+  const hd = bx(head * len * .6, head * len * .5, head * len, S); hd.position.set(0, neck * len + len * .25, head * len * .3); nk.add(hd);
+  if (tusks) for (const sd of [-1, 1]) { const t = bx(.08 * len, .08 * len, .45 * len, M.bone); t.position.set(sd * head * len * .25, neck * len + len * .1, head * len * .7); nk.add(t); }
+  const lg = [], arms = [];
+  const zs = legs === 4 ? [-len * .35, len * .35] : [0];
+  for (const zz of zs) for (const sd of [-1, 1]) { const l = hang(lw, ht * .55, lw, S); l.position.set(sd * len * .14, ht * .55, zz); g.add(l); lg.push(l); }
+  if (lg.length === 4) lg.splice(0, 4, lg[0], lg[1], lg[3], lg[2]);          // BL BR FR FL → diagonal pairs
+  g.position.set(x, y, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
+  return scroll(g, dir * rr(speed[0], speed[1]), { kind: 'ped', legs: lg, arms, dir, v0: rr(speed[0], speed[1]), fleeUntil: 0, ph: rr(0, 6) });
+}
+function bus(lane, dir, color, { double = false, speed = [7, 11] } = {}) {
+  const g = new THREE.Group(), c = mat(color, .5);
+  const body = bx(2.5, double ? 4.2 : 2.6, 11, c); body.position.y = (double ? 4.2 : 2.6) / 2 + .5; g.add(body);
+  const win = bx(2.55, .9, 10, mat(0x8fb4c9, .2)); win.position.y = 1.8; g.add(win);
+  if (double) { const w2 = bx(2.55, .9, 10, mat(0x8fb4c9, .2)); w2.position.y = 3.6; g.add(w2); }
+  for (const sd of [-1, 1]) { const hl = bx(.4, .25, .1, headMat); hl.position.set(sd * .9, .9, 5.5); g.add(hl); const tl = bx(.4, .2, .1, tailMat); tl.position.set(sd * .9, .9, -5.5); g.add(tl); }
+  const wheels = [];
+  for (const wxx of [-1.15, 1.15]) for (const wz of [-3.5, 3.5]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, .3, 12), wheelMat); w.rotation.z = Math.PI / 2; w.position.set(wxx, .5, wz); g.add(w); wheels.push(w); }
+  g.position.set(lane, 0, rr(-L / 2, L / 2)); g.rotation.y = dir < 0 ? Math.PI : 0;
+  const v0 = rr(speed[0], speed[1]);
+  return scroll(g, dir * v0, { kind: 'car', wheels, lane, escape: lane, dir, v0, xT: lane, brakeUntil: 0, honked: false });
+}
+function pyramid(x, z, base, h, color, y = 0) {
+  const m = new THREE.Mesh(new THREE.ConeGeometry(base / Math.SQRT2, h, 4), mat(color, 1)); m.rotation.y = Math.PI / 4; m.position.set(x, y + h / 2, z); m.castShadow = m.receiveShadow = true; return m;
+}
+function cityBlock(sd, z0, z1, x0, { wMin = 14, wMax = 30, dMin = 16, dMax = 28, fMin = 5, fMax = 9, colors, roof = .3, storey = 3.5, chamfer = false }) {
+  for (let z = z0; z < z1;) {
+    const w = rr(wMin, wMax), d = rr(dMin, dMax), floors = Math.round(rr(fMin, fMax));
+    if (chamfer) {
+      const h = floors * storey, m = new THREE.Mesh(new THREE.CylinderGeometry(w * .6, w * .6, h, 8), mat(pick(colors))); m.rotation.y = Math.PI / 8; m.position.set(sd * (x0 + w * .55), h / 2, z + w * .6); m.castShadow = m.receiveShadow = true; scroll(m); z += w * 1.2 + 6;
+    } else { building(sd * (x0 + d / 2), z + w / 2, w, d, floors, pick(colors), { roof, storey }); z += w + rr(1, 5); }
+  }
+}
+function boatsAndGulls(x0, x1, y) { for (let i = 0; i < 5; i++) sailboat(rr(x0, x1), i % 2 ? 1 : -1, y); for (let i = 0; i < 3; i++) motorboat(rr(x0, x1), i % 2 ? 1 : -1, y); gulls(10, Math.min(x0, 0) - 20, Math.max(x1, 0) + 20, y + 6, y + 24); }
+
+Object.assign(LOCATIONS, {
+  paris: { name: 'Paris', sub: 'Eiffel Tower & Champ de Mars', lon: 2.29, lat: 48.86, amb: { wind: 0.2, waves: 0, birds: 0.4, crowd: 0.5, traffic: 0.2 }, fog: [140, 420], build() {
+    L = 480;
+    plane(60, L * 2, 0x6f9a4c, 0, 0); plane(12, L * 2, 0xd8cdb1, .04, -24); plane(12, L * 2, 0xd8cdb1, .04, 24);
+    plane(300, L * 2, 0x8f8b84, .02, 180); plane(300, L * 2, 0x8f8b84, .02, -180);
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 12) tree(sd * 36, 0, z, { h: 9, r: 4.5, color: 0x3f7a3a }); 
+    const hausColors = [0xe9e1d0, 0xf0e8d8, 0xdcd2bd]; cityBlock(-1, -L / 2, L / 2, 60, { fMin: 6, fMax: 7, colors: hausColors, roof: .9, wMin: 25, wMax: 45 }); cityBlock(1, -L / 2, L / 2, 60, { fMin: 6, fMax: 7, colors: hausColors, roof: .9, wMin: 25, wMax: 45 });
+    // Eiffel Tower: the path runs right between its legs
+    const iron = mat(0x5b4a3c, .6), TZ = 160;
+    const platform = (y, w) => { const p = bx(w, 3, w, iron); p.position.set(0, y, TZ); scroll(p); };
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+      const leg = bx(9, 62, 9, iron); leg.position.set(sx * 42, 29, TZ + sz * 42); leg.rotation.z = -sx * .55; leg.rotation.x = sz * .55; scroll(leg);
+      const leg2 = bx(6, 66, 6, iron); leg2.position.set(sx * 14, 88, TZ + sz * 14); leg2.rotation.z = -sx * .13; leg2.rotation.x = sz * .13; scroll(leg2);
+    }
+    for (const sd of [-1, 1]) { const arch = bx(70, 8, 4, iron); arch.position.set(0, 40, TZ + sd * 42); scroll(arch); const arch2 = bx(4, 8, 70, iron); arch2.position.set(sd * 42, 40, TZ); scroll(arch2); }
+    platform(57, 70); platform(116, 36);
+    const spire = new THREE.Mesh(new THREE.ConeGeometry(14, 170, 4), iron); spire.rotation.y = Math.PI / 4; spire.position.set(0, 118 + 85, TZ); scroll(spire);
+    platform(276, 16); const ant = bx(1.5, 40, 1.5, iron); ant.position.set(0, 310, TZ); scroll(ant);
+    const beacon = bx(2, 2, 2, lampMat); beacon.position.set(0, 331, TZ); scroll(beacon);
+    for (let i = 0; i < 30; i++) { person(rr(-29, -19), i % 2 ? 1 : -1, .04); person(rr(19, 29), i % 2 ? 1 : -1, .04); }
+    lamps(-30, -1, 40); lamps(30, 1, 40);
+    return { roadTex: [], sea: null };
+  } },
+
+  london: { name: 'London', sub: 'Tower Bridge over the Thames', lon: -0.075, lat: 51.505, amb: { wind: 0.4, waves: 0.3, birds: 0.4, crowd: 0.4, traffic: 0.5 }, fog: [100, 360], build() {
+    L = 520;
+    const roadTex = road(10, [], { yellow: false });
+    plane(3, L * 2, 0xc9c4b8, .12, -6.5); plane(3, L * 2, 0xc9c4b8, .12, 6.5); curb(-5); curb(5);
+    const stone = mat(0xc9bfa9, .95), blue = mat(0x2f5f8f, .6), white = mat(0xe8e6df, .8);
+    for (const sd of [-1, 1]) { const g = bx(1, 3, L * 2, blue); g.position.set(sd * 8.5, -1, 0); statics.add(g); const rail = bx(.15, 1.2, L * 2, blue); rail.position.set(sd * 8, .7, 0); statics.add(rail); }
+    const river = wavyWater(700, L * 2, 0, -12, 0x5d7a7a);
+    for (const tz of [-70, 70]) {
+      for (const sd of [-1, 1]) { const t = bx(9, 65, 9, stone); t.position.set(sd * 9, 20, tz); scroll(t); const cap = new THREE.Mesh(new THREE.ConeGeometry(6, 12, 4), mat(0x6f7a85)); cap.rotation.y = Math.PI / 4; cap.position.set(sd * 9, 58, tz); scroll(cap); for (const c of [-1, 1]) { const tur = bx(2.5, 14, 2.5, stone); tur.position.set(sd * 9 + c * 4.5, 58, tz + c * 4.5); scroll(tur); } }
+      const cross = bx(27, 6, 9, stone); cross.position.set(0, 44, tz); scroll(cross);
+    }
+    for (const sd of [-1, 1]) { const walk = bx(3, 3, 140, white); walk.position.set(sd * 9, 43, 0); scroll(walk); }
+    const cableY = z => { const a = Math.abs(z); return a < 70 ? 40 - 22 * (1 - (a / 70) ** 2) : Math.max(0, 40 - (a - 70) * .2); };
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 10) { const y0 = cableY(z), y1 = cableY(z + 10); if (y0 <= .5 && y1 <= .5) continue; const seg = bx(.7, .7, Math.hypot(10, y1 - y0) + .3, blue); seg.position.set(sd * 8.5, (y0 + y1) / 2 + 1, z + 5); seg.rotation.x = -Math.atan2(y1 - y0, 10); scroll(seg); }
+    // banks: Tower of London on one side, riverside offices, the Shard far off
+    const bankMat = mat(0x7b7b6f);
+    for (const sd of [-1, 1]) { const bank = bx(400, 14, 190, bankMat); bank.position.set(sd * 210, -7, L / 2); scroll(bank); }
+    const tol = bx(60, 22, 60, mat(0xd8cfb8)); tol.position.set(-90, 11, L / 2 - 60); scroll(tol); const keep = bx(30, 30, 30, mat(0xe4dccb)); keep.position.set(-90, 15, L / 2 - 60); scroll(keep);
+    for (let i = 0; i < 18; i++) { const h = rr(20, 60); const b = bx(rr(20, 40), h, rr(20, 40), mat(pick([0xb9b3a8, 0x8f9aa6, 0xd6d0c4]))); b.position.set(rr(60, 320) * (i % 2 ? 1 : -1), h / 2, L / 2 - rr(0, 80)); scroll(b); }
+    const shard = new THREE.Mesh(new THREE.ConeGeometry(28, 310, 4), mat(0xc7d4de, .2)); shard.position.set(260, 150, -L / 2 + 40); scroll(shard);
+    for (let i = 0; i < 4; i++) motorboat(rr(-120, 120), i % 2 ? 1 : -1, -12);
+    gulls(10, -80, 80, -4, 30);
+    for (let i = 0; i < 5; i++) { car(-2.4, -1, { color: 0x111111, speed: [5, 9] }); car(2.4, 1, { color: 0x111111, speed: [5, 9] }); }
+    bus(-2.4, -1, 0xc8102e, { double: true }); bus(2.4, 1, 0xc8102e, { double: true }); bus(2.4, 1, 0xc8102e, { double: true });
+    for (let i = 0; i < 20; i++) { person(rr(-7.6, -5.4), i % 2 ? 1 : -1); person(rr(5.4, 7.6), i % 2 ? 1 : -1); }
+    lamps(-7.8, -1, 36); lamps(7.8, 1, 36);
+    return { roadTex: [roadTex], sea: { x: 70, y: -11.7 }, update() { river.wave(time, waveDrift); } };
+  } },
+
+  rome: { name: 'Rome', sub: 'Via dei Fori Imperiali & the Colosseum', lon: 12.49, lat: 41.89, amb: { wind: 0.2, waves: 0, birds: 0.4, crowd: 0.5, traffic: 0.4 }, fog: [140, 400], build() {
+    L = 460;
+    const roadTex = road(14, [], { yellow: false, edges: false });
+    plane(6, L * 2, 0xc9c0ad, .12, -10); plane(6, L * 2, 0xc9c0ad, .12, 10); curb(-7); curb(7);
+    plane(400, L * 2, 0x9c8f75, .02, 213); plane(400, L * 2, 0x9c8f75, .02, -213);
+    const trav = mat(0xd9c7a2, .95), dark = mat(0x8c7c60, .95);
+    // Colosseum: three tiers of arches around an ellipse, part of the outer ring fallen
+    const CZ = 150, CX = -110, a = 94, b = 78;
+    for (let i = 0; i < 56; i++) {
+      const t = i / 56 * Math.PI * 2, x = CX + Math.cos(t) * a, z = CZ + Math.sin(t) * b, ruin = t > .9 && t < 2.4;
+      const tiers = ruin ? 2 : 4;
+      for (let k = 0; k < tiers; k++) { const p = bx(3.2, 10.5, 3.2, k === 3 ? dark : trav); p.position.set(x, 5.5 + k * 12, z); p.rotation.y = -t; scroll(p); }
+      if (i % 2 === 0 && !ruin) for (let k = 0; k < 3; k++) { const band = bx(11, 1.6, 2.4, dark); band.position.set(CX + Math.cos(t + .056) * a, 11.5 + k * 12, CZ + Math.sin(t + .056) * b); band.rotation.y = -(t + .056); scroll(band); }
+    }
+    for (let i = 0; i < 40; i++) { const t = i / 40 * Math.PI * 2, p = bx(3, 8, 3, trav); p.position.set(CX + Math.cos(t) * a * .7, 4, CZ + Math.sin(t) * b * .7); scroll(p); }
+    const arena = new THREE.Mesh(new THREE.CylinderGeometry(58, 58, 1, 32), mat(0xd2b98a)); arena.scale.z = .8; arena.position.set(CX, .5, CZ); scroll(arena);
+    // forum ruins: columns and broken walls on the other side, umbrella pines everywhere
+    for (let i = 0; i < 24; i++) { const h = rr(6, 14); const col = new THREE.Mesh(new THREE.CylinderGeometry(.8, .9, h, 10), trav); col.position.set(rr(14, 60), h / 2, rr(-L / 2, L / 2)); scroll(col); }
+    for (let i = 0; i < 10; i++) { const w = bx(rr(6, 20), rr(3, 9), 2, dark); w.position.set(rr(20, 70), 3, rr(-L / 2, L / 2)); w.rotation.y = rr(0, 3); scroll(w); }
+    for (let i = 0; i < 26; i++) tree(rr(12, 80) * (i % 3 ? 1 : -1), 0, rr(-L / 2, L / 2), { h: rr(12, 20), r: rr(7, 10), color: 0x3d6b36, flat: true });
+    cityBlock(1, -L / 2, L / 2, 90, { fMin: 4, fMax: 6, colors: [0xe6c9a3, 0xd9a87c, 0xe9d8b5, 0xc98a5e], roof: .9 });
+    for (let i = 0; i < 5; i++) { car(-4.5, -1, { speed: [6, 12] }); car(-1.6, -1, { escape: -5.2, speed: [6, 12] }); car(1.6, 1, { escape: 5.2, speed: [6, 12] }); car(4.5, 1, { speed: [6, 12] }); }
+    for (let i = 0; i < 26; i++) { person(rr(-12.6, -7.6), i % 2 ? 1 : -1); person(rr(7.6, 12.6), i % 2 ? 1 : -1); }
+    lamps(-12.5, -1, 34); lamps(12.5, 1, 34);
+    return { roadTex: [roadTex], sea: null };
+  } },
+
+  barcelona: { name: 'Barcelona', sub: 'Sagrada Família & the Eixample', lon: 2.174, lat: 41.404, amb: { wind: 0.2, waves: 0, birds: 0.3, crowd: 0.5, traffic: 0.5 }, fog: [140, 400], build() {
+    L = 440;
+    const roadTex = road(16, [-4, 4], { yellow: false });
+    plane(6, L * 2, 0xd0cbc0, .12, -11); plane(6, L * 2, 0xd0cbc0, .12, 11); curb(-8); curb(8);
+    plane(400, L * 2, 0x8f8b84, .02, 214); plane(400, L * 2, 0x8f8b84, .02, -214);
+    const ex = [0xe9dcc4, 0xdccbb0, 0xd7b998, 0xf0e6d2];
+    cityBlock(-1, -L / 2, -60, 14, { fMin: 6, fMax: 8, colors: ex, chamfer: true, wMin: 24, wMax: 30 }); cityBlock(-1, 210, L / 2, 14, { fMin: 6, fMax: 8, colors: ex, chamfer: true, wMin: 24, wMax: 30 });
+    cityBlock(1, -L / 2, L / 2, 14, { fMin: 6, fMax: 8, colors: ex, chamfer: true, wMin: 24, wMax: 30 });
+    // Sagrada Família: nave block and a forest of tapering spires
+    const SX = -75, SZ = 80, sand = mat(0xd9c39c, .95), tip = mat(0xe0855a, .6);
+    const nave = bx(70, 45, 100, sand); nave.position.set(SX, 22.5, SZ); scroll(nave);
+    const spire = (x, z, h, r) => { const c = new THREE.Mesh(new THREE.ConeGeometry(r, h, 8), sand); c.position.set(x, 45 + h / 2, z); scroll(c); const t = new THREE.Mesh(new THREE.SphereGeometry(r * .5, 8, 6), tip); t.position.set(x, 45 + h, z); scroll(t); };
+    for (const [dx, dz, h] of [[-22, -40, 60], [-8, -40, 70], [8, -40, 70], [22, -40, 60], [-22, 40, 60], [-8, 40, 70], [8, 40, 70], [22, 40, 60], [-14, 0, 90], [14, 0, 90], [0, 0, 128]]) spire(SX + dx, SZ + dz, h, 4 + h * .05);
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 16) tree(sd * 9.5, .12, z, { h: rr(8, 11), r: 3.5, color: 0x5d8f45 });
+    for (let i = 0; i < 5; i++) { car(-6, -1); car(-2, -1, { escape: -6.5 }); car(2, 1, { escape: 6.5 }); car(6, 1); }
+    for (let i = 0; i < 26; i++) { person(rr(-13.6, -8.4), i % 2 ? 1 : -1); person(rr(8.4, 13.6), i % 2 ? 1 : -1); }
+    lamps(-13.5, -1, 32); lamps(13.5, 1, 32);
+    return { roadTex: [roadTex], sea: null };
+  } },
+
+  giza: { name: 'Giza', sub: 'The Pyramids', lon: 31.13, lat: 29.98, amb: { wind: 0.7, waves: 0, birds: 0, crowd: 0.2, traffic: 0.1 }, fog: [200, 700], build() {
+    L = 900;
+    plane(1600, L * 2, 0xe0c58f, 0, 0); plane(9, L * 2, 0xc9ad78, .03, 0);
+    const sand = 0xd8b982;
+    statics.add(pyramid(-330, 260, 230, 146, sand)); statics.add(pyramid(-560, -80, 215, 136, sand)); statics.add(pyramid(-740, -360, 105, 65, sand));
+    for (let i = 0; i < 3; i++) statics.add(pyramid(-780 - i * 50, -450, 30, 20, sand));
+    // dunes
+    const dune = new THREE.MeshStandardMaterial({ color: 0xe6cc95, roughness: 1, flatShading: true });
+    for (let i = 0; i < 24; i++) { const w = rr(60, 200), h = rr(6, 22); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 6), dune); m.position.set(rr(60, 700) * (i % 2 ? 1 : -1), h / 2 - 1, rr(-L / 2, L / 2)); m.scale.z = rr(1.5, 3); scroll(m); }
+    // Sphinx
+    const sph = new THREE.Group(); sph.position.set(-140, 0, 20); sph.rotation.y = .5;
+    const body = bx(20, 14, 60, mat(0xcfae76)); body.position.set(0, 7, 0); sph.add(body);
+    const hd = bx(12, 14, 12, mat(0xcfae76)); hd.position.set(0, 18, 24); sph.add(hd);
+    const nemes = bx(16, 8, 10, mat(0xb8955f)); nemes.position.set(0, 24, 22); sph.add(nemes);
+    for (const sd of [-1, 1]) { const paw = bx(6, 6, 24, mat(0xcfae76)); paw.position.set(sd * 7, 3, 34); sph.add(paw); }
+    scroll(sph);
+    for (let i = 0; i < 10; i++) animal(rr(-30, 30), i % 2 ? 1 : -1, { len: 3, ht: 2.1, color: 0xc7a06a, neck: .5, head: .3, speed: [1, 1.6] });
+    for (let i = 0; i < 18; i++) person(rr(-40, 40), i % 2 ? 1 : -1, 0);
+    bus(6, 1, 0xf2f2f2, { speed: [6, 9] }); bus(-6, -1, 0xf2f2f2, { speed: [6, 9] });
+    return { roadTex: [], sea: null };
+  } },
+
+  serengeti: { name: 'Serengeti', sub: 'Savanna & the great migration', lon: 34.8, lat: -2.33, amb: { wind: 0.5, waves: 0, birds: 0.8, crowd: 0, traffic: 0.05 }, fog: [220, 800], build() {
+    L = 900;
+    plane(1800, L * 2, 0xb6a55c, 0, 0); plane(7, L * 2, 0xa0784e, .03, 0);
+    const grass = new THREE.MeshStandardMaterial({ color: 0xc2b166, roughness: 1, flatShading: true });
+    for (let i = 0; i < 30; i++) { const w = rr(40, 160), h = rr(3, 12); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 7), grass); m.position.set(rr(60, 800) * (i % 2 ? 1 : -1), h / 2 - 1, rr(-L / 2, L / 2)); m.scale.z = 2; scroll(m); }
+    for (let i = 0; i < 60; i++) tree(rr(15, 500) * (i % 2 ? 1 : -1), 0, rr(-L / 2, L / 2), { h: rr(6, 11), r: rr(5, 9), color: 0x5f7f3a, flat: true, trunk: 0x4d3a2a });
+    const rock = new THREE.MeshStandardMaterial({ color: 0x7d7468, roughness: 1, flatShading: true });
+    for (let i = 0; i < 8; i++) { const r = new THREE.Mesh(new THREE.DodecahedronGeometry(rr(6, 16)), rock); r.position.set(rr(40, 300) * (i % 2 ? 1 : -1), rr(2, 6), rr(-L / 2, L / 2)); scroll(r); }
+    // wildlife: herds share the plains and react like pedestrians
+    for (let i = 0; i < 24; i++) animal(rr(-120, -20), i % 2 ? 1 : -1, { len: 2.2, ht: 1.4, color: 0xe8e8e8, stripes: true, neck: .2, head: .35 });
+    for (let i = 0; i < 30; i++) animal(rr(20, 140), i % 2 ? 1 : -1, { len: 2.3, ht: 1.4, color: 0x5a4d40, neck: .1, head: .4 });
+    for (let i = 0; i < 6; i++) animal(rr(-200, -120), i % 2 ? 1 : -1, { len: 3.5, ht: 3.2, color: 0xd9a94a, neck: 1.1, head: .25, speed: [.7, 1.2] });
+    for (let i = 0; i < 5; i++) animal(rr(140, 220), i % 2 ? 1 : -1, { len: 6, ht: 3.2, color: 0x8a8580, neck: 0, head: .5, tusks: true, speed: [.6, 1] });
+    for (let i = 0; i < 3; i++) car(rr(-8, 8), i % 2 ? 1 : -1, { color: 0x6b7a4a, speed: [5, 9] });
+    // hot-air balloons drifting over the plain
+    for (let i = 0; i < 4; i++) { const g = new THREE.Group(); const env = new THREE.Mesh(new THREE.SphereGeometry(9, 10, 8), mat(pick([0xe0555f, 0xf0d15c, 0x3a8fd0]))); env.position.y = 12; g.add(env); const bsk = bx(2, 1.6, 2, mat(0x8a6a48)); g.add(bsk); g.position.set(rr(-300, 300), rr(60, 120), rr(-L / 2, L / 2)); scroll(g, rr(-1, 1), { kind: 'float', y: g.position.y, amp: 1.5, ph: rr(0, 6) }); }
+    gulls(8, -300, 300, 25, 60);
+    return { roadTex: [], sea: null };
+  } },
+
+  capeTown: { name: 'Cape Town', sub: 'Sea Point promenade & Table Mountain', lon: 18.38, lat: -33.91, amb: { wind: 0.7, waves: 0.9, birds: 0.5, crowd: 0.2, traffic: 0.4 }, fog: [200, 900], build() {
+    L = 520;
+    const roadTex = road(14, [-3.5, 3.5], { yellow: false });
+    plane(8, L * 2, 0xd0cbc0, .12, -11); plane(5, L * 2, 0xd0cbc0, .12, 9.5); curb(-7); curb(7);
+    plane(14, L * 2, 0x7d766a, -.4, -22); plane(300, L * 2, 0x9a9488, .02, 162);
+    const sea = wavyWater(900, L * 2, -480, -.3, 0x2d6f9a, -29);
+    // Table Mountain and Lion's Head
+    const mtn = new THREE.MeshStandardMaterial({ color: 0x6f7358, roughness: 1, flatShading: true });
+    const table = new THREE.Mesh(new THREE.CylinderGeometry(900, 1500, 1000, 8), mtn); table.scale.z = .55; table.position.set(1500, 500, 300); statics.add(table);
+    const lion = new THREE.Mesh(new THREE.ConeGeometry(420, 670, 8), mtn); lion.position.set(700, 335, -500); statics.add(lion);
+    cityBlock(1, -L / 2, L / 2, 12, { fMin: 3, fMax: 8, colors: [0xf2efe6, 0xe6ddd0, 0xd6d9dc, 0xf7e9d2], roof: .3 });
+    for (let z = -L / 2; z < L / 2; z += 18) palm(-13.5, z + rr(-3, 3));
+    for (let i = 0; i < 5; i++) { car(-5, -1); car(-1.7, -1, { escape: -5.5 }); car(1.7, 1, { escape: 5.5 }); car(5, 1); }
+    for (let i = 0; i < 24; i++) { person(rr(-14.8, -7.6), i % 2 ? 1 : -1); person(rr(7.6, 11.6), i % 2 ? 1 : -1); }
+    boatsAndGulls(-160, -330, -.3);
+    lamps(-15, -1, 34); lamps(11.8, 1, 34);
+    return { roadTex: [roadTex], sea: { x: -180, y: 0 }, update() { sea.wave(time, waveDrift); } };
+  } },
+
+  marrakech: { name: 'Marrakech', sub: 'The medina & Koutoubia', lon: -7.99, lat: 31.63, amb: { wind: 0.2, waves: 0, birds: 0.2, crowd: 0.9, traffic: 0 }, fog: [90, 300], build() {
+    L = 360;
+    plane(7, L * 2, 0xb99a6e, 0, 0); plane(600, L * 2, 0xc8a878, .01, 300); plane(600, L * 2, 0xc8a878, .01, -300);
+    const ochre = [0xc98f5c, 0xd4a06a, 0xbf8452, 0xd9ad78];
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2;) {
+      const w = rr(8, 20), d = rr(10, 18), h = rr(6, 11);
+      if (z > 60 && z < 160) { z = 160; continue; }                      // the square
+      const b = bx(d, h, w, mat(pick(ochre), .95)); b.position.set(sd * (3.5 + d / 2), h / 2, z + w / 2); scroll(b);
+      const par = bx(d + .4, .8, w + .4, mat(0xa6733f)); par.position.set(sd * (3.5 + d / 2), h + .2, z + w / 2); scroll(par);
+      for (let k = 0; k < 2; k++) { const win = bx(.3, 1.4, 1, mat(0x3a2c22)); win.position.set(sd * 3.55, 2 + k * 3.2, z + w * rr(.2, .8)); scroll(win); }
+      if (rnd() < .3) { const awn = bx(2.5, .1, 3, mat(pick([0xc03a3a, 0x2f7a5a, 0xe0b23a]))); awn.position.set(sd * 2.4, 3.2, z + w / 2); awn.rotation.z = sd * .4; scroll(awn); }
+      z += w + rr(0, 1);
+    }
+    // Jemaa el-Fnaa: stalls, lanterns; Koutoubia minaret beyond
+    for (let i = 0; i < 26; i++) { const st = new THREE.Group(); st.position.set(rr(-40, 40), 0, rr(65, 155)); if (Math.abs(st.position.x) < 6) st.position.x += 10; const tbl = bx(3, 1, 2, mat(0x8a6a48)); tbl.position.y = .5; st.add(tbl); const roof = bx(3.6, .1, 2.6, mat(pick([0xc03a3a, 0xe0b23a, 0x2f7a5a, 0xf4f1e8]))); roof.position.y = 2.6; st.add(roof); for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const p = bx(.1, 2.6, .1, mat(0x5a4632)); p.position.set(sx * 1.6, 1.3, sz * 1.2); st.add(p); } scroll(st); }
+    for (let i = 0; i < 30; i++) { const lan = bx(.5, .7, .5, lampMat); lan.position.set(rr(-40, 40), rr(3, 5), rr(65, 155)); scroll(lan); }
+    const kout = bx(13, 69, 13, mat(0xc9975f, .95)); kout.position.set(-70, 34.5, 200); scroll(kout); const kt = bx(6, 12, 6, mat(0xc9975f)); kt.position.set(-70, 75, 200); scroll(kt); const kb = new THREE.Mesh(new THREE.SphereGeometry(1.6, 8, 6), mat(0xd6b25a, .3)); kb.position.set(-70, 83, 200); scroll(kb);
+    for (let i = 0; i < 36; i++) person(rr(-2.8, 2.8), i % 2 ? 1 : -1, 0);
+    for (let i = 0; i < 6; i++) animal(rr(-2.5, 2.5), i % 2 ? 1 : -1, { len: 1.6, ht: 1.1, color: 0x8a8078, neck: .1, head: .35, speed: [.9, 1.3] });
+    return { roadTex: [], sea: null };
+  } },
+
+  rio: { name: 'Rio de Janeiro', sub: 'Copacabana, Sugarloaf & Corcovado', lon: -43.18, lat: -22.97, amb: { wind: 0.3, waves: 0.9, birds: 0.4, crowd: 0.6, traffic: 0.5 }, fog: [220, 900], build() {
+    L = 520;
+    const roadTex = road(18, [-6, 6], { yellow: false });
+    // the wavy black-and-white Copacabana pavement, as a texture
+    const pc = document.createElement('canvas'); pc.width = pc.height = 128; const pg = pc.getContext('2d'); pg.fillStyle = '#efe9dc'; pg.fillRect(0, 0, 128, 128); pg.fillStyle = '#2a2a2a'; pg.beginPath(); for (let y = 0; y <= 128; y += 4) pg.lineTo(64 + Math.sin(y / 128 * Math.PI * 2) * 28, y); pg.lineTo(128, 128); pg.lineTo(128, 0); pg.closePath(); pg.fill();
+    const pav = new THREE.CanvasTexture(pc); pav.wrapS = pav.wrapT = THREE.RepeatWrapping; pav.repeat.set(1, L * 2 / 12);
+    const walk = plane(9, L * 2, 0xffffff, .12, 13.5); walk.material.map = pav; walk.material.needsUpdate = true;
+    plane(5, L * 2, 0xd0cbc0, .12, -11.5); curb(-9); curb(9);
+    plane(90, L * 2, 0xeadcb0, 0, 63); plane(400, L * 2, 0x8f8b84, .02, -214);
+    const sea = wavyWater(800, L * 2, 508, -.3, 0x2a86a8, 108);
+    cityBlock(-1, -L / 2, L / 2, 14, { fMin: 10, fMax: 20, colors: [0xf2efe6, 0xe0e3e6, 0xd9cfc0, 0xf6e8d0], roof: .5 });
+    for (let z = -L / 2; z < L / 2; z += 16) palm(11, z + rr(-3, 3));
+    for (let i = 0; i < 34; i++) { const u = new THREE.Group(); u.position.set(rr(24, 100), 0, rr(-L / 2, L / 2)); const pole = bx(.08, 2.2, .08, mat(0xeeeeee)); pole.position.y = 1.1; u.add(pole); const top = new THREE.Mesh(new THREE.ConeGeometry(1.4, .6, 8), mat(pick([0xe0555f, 0x3a8fd0, 0xf0d15c, 0x3aa35a]))); top.position.y = 2.2; u.add(top); scroll(u); }
+    for (let i = 0; i < 20; i++) person(rr(20, 100), i % 2 ? 1 : -1, 0);
+    // Sugarloaf, Corcovado and Christ the Redeemer
+    const rock = new THREE.MeshStandardMaterial({ color: 0x6e6a5c, roughness: 1, flatShading: true }), green = new THREE.MeshStandardMaterial({ color: 0x3f6b3a, roughness: 1, flatShading: true });
+    const sugar = new THREE.Mesh(new THREE.ConeGeometry(160, 396, 9), rock); sugar.position.set(500, 198, 900); statics.add(sugar);
+    const corc = new THREE.Mesh(new THREE.ConeGeometry(420, 700, 9), green); corc.position.set(-900, 350, 300); statics.add(corc);
+    const cr = new THREE.Group(); cr.position.set(-900, 700, 300); const cb = bx(9, 30, 9, mat(0xf0efe8, .9)); cb.position.y = 15; cr.add(cb); const arms = bx(28, 4, 5, mat(0xf0efe8, .9)); arms.position.y = 26; cr.add(arms); const chh = bx(5, 5, 5, mat(0xf0efe8)); chh.position.y = 32; cr.add(chh); const base = bx(14, 8, 14, mat(0xd9d2c4)); base.position.y = -4; cr.add(base); statics.add(cr);
+    for (let i = 0; i < 5; i++) { car(-6.8, -1); car(-2.6, -1, { escape: -7.2 }); car(2.6, 1, { escape: 7.2 }); car(6.8, 1); }
+    for (let i = 0; i < 26; i++) { person(rr(-13.6, -9.6), i % 2 ? 1 : -1); person(rr(9.6, 17.6), i % 2 ? 1 : -1); }
+    boatsAndGulls(180, 380, -.3);
+    lamps(-13.5, -1, 34); lamps(18.2, 1, 34);
+    return { roadTex: [roadTex], sea: { x: 200, y: 0 }, update() { sea.wave(time, waveDrift); } };
+  } },
+
+  machuPicchu: { name: 'Machu Picchu', sub: 'Terraces in the clouds', lon: -72.545, lat: -13.163, amb: { wind: 0.6, waves: 0, birds: 0.6, crowd: 0.1, traffic: 0 }, fog: [80, 260], build() {
+    L = 420;
+    plane(6, L * 2, 0x8ea45a, 0, 0);
+    const grass = mat(0x6f9a48, 1), stone = mat(0xa9a394, .95), mtn = new THREE.MeshStandardMaterial({ color: 0x4f7a4a, roughness: 1, flatShading: true });
+    for (const sd of [-1, 1]) for (let i = 0; i < 14; i++) {                 // stepped terraces falling away on both sides
+      const x = sd * (3 + i * 6), y = -i * 3.2 - 1.6; const t = bx(6, 3.2, L * 2, grass); t.position.set(x, y, 0); statics.add(t);
+      const wall = bx(.5, 3.4, L * 2, stone); wall.position.set(x - sd * 2.9, y + .1, 0); statics.add(wall);
+    }
+    for (let i = 0; i < 40; i++) { const sd = i % 2 ? 1 : -1, k = Math.floor(rr(0, 6)); const w = bx(rr(4, 12), rr(1.5, 4), .6, stone); w.position.set(sd * (3 + k * 6), -k * 3.2 + 1, rr(-L / 2, L / 2)); w.rotation.y = rnd() < .5 ? Math.PI / 2 : 0; scroll(w); }
+    const peak = new THREE.Mesh(new THREE.ConeGeometry(120, 360, 8), mtn); peak.position.set(-40, 100, L / 2 - 30); scroll(peak);
+    for (let i = 0; i < 12; i++) { const h = rr(300, 700), w = rr(150, 300); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 8), mtn); m.position.set(rr(150, 500) * (i % 2 ? 1 : -1), h / 2 - 180, rr(-L / 2, L / 2)); scroll(m); }
+    for (let i = 0; i < 16; i++) { const c = new THREE.Mesh(new THREE.SphereGeometry(rr(14, 30), 8, 6), new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: .8 })); c.scale.y = .35; c.position.set(rr(-260, 260), rr(30, 80), rr(-L / 2, L / 2)); scroll(c, rr(.5, 2), { kind: 'float', y: c.position.y, amp: 2, ph: rr(0, 6) }); }
+    for (let i = 0; i < 8; i++) animal(rr(-2.5, 2.5), i % 2 ? 1 : -1, { len: 1.5, ht: 1.3, color: pick([0xf1e9d8, 0x8a6a48, 0xd9c3a0]), neck: .6, head: .3, speed: [.6, 1] });
+    for (let i = 0; i < 16; i++) person(rr(-2.4, 2.4), i % 2 ? 1 : -1, 0);
+    return { roadTex: [], sea: null };
+  } },
+
+  buenosAires: { name: 'Buenos Aires', sub: 'Avenida 9 de Julio & the Obelisco', lon: -58.38, lat: -34.6, amb: { wind: 0.2, waves: 0, birds: 0.2, crowd: 0.6, traffic: 0.9 }, fog: [160, 460], build() {
+    L = 480;
+    const roadTex = road(56, [-24, -18, -12, -6, 6, 12, 18, 24], { yellow: false });
+    for (const sd of [-1, 1]) { plane(10, L * 2, 0x7ea05a, .1, sd * 33); plane(6, L * 2, 0xd0cbc0, .12, sd * 41); curb(sd * 28); }
+    plane(400, L * 2, 0x8f8b84, .02, 244); plane(400, L * 2, 0x8f8b84, .02, -244);
+    for (const sd of [-1, 1]) for (let z = -L / 2; z < L / 2; z += 14) tree(sd * 33, .1, z + rr(-2, 2), { h: rr(8, 12), r: rr(4, 6), color: 0x8a6bc9 });
+    // the Obelisco on its own plaza
+    const ob = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 4.4, 63, 4), mat(0xe9e6de, .8)); ob.rotation.y = Math.PI / 4; ob.position.set(0, 31.5 + 3, 150); scroll(ob);
+    const tipp = new THREE.Mesh(new THREE.ConeGeometry(1.2, 4.5, 4), mat(0xe9e6de)); tipp.rotation.y = Math.PI / 4; tipp.position.set(0, 66.8, 150); scroll(tipp);
+    const plaza = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 3, 12), mat(0xd6d0c4)); plaza.position.set(0, 1.5, 150); scroll(plaza);
+    cityBlock(-1, -L / 2, L / 2, 44, { fMin: 8, fMax: 18, colors: [0xe6dfd0, 0xc9c4bc, 0xd8cdb8, 0xb8b4ae], roof: .5 }); cityBlock(1, -L / 2, L / 2, 44, { fMin: 8, fMax: 18, colors: [0xe6dfd0, 0xc9c4bc, 0xd8cdb8, 0xb8b4ae], roof: .5 });
+    const lanes = [-24, -18, -12, -6, 6, 12, 18, 24];
+    for (const x of lanes) for (let i = 0; i < 4; i++) car(x, x < 0 ? -1 : 1, { escape: Math.abs(x) === 6 ? Math.sign(x) * 12 : x });
+    for (const [x, c] of [[-18, 0xd83b2c], [18, 0x3466c2], [-12, 0xf0d15c], [12, 0x3aa35a]]) bus(x, x < 0 ? -1 : 1, c);
+    for (let i = 0; i < 30; i++) { person(rr(-43.6, -38.4), i % 2 ? 1 : -1); person(rr(38.4, 43.6), i % 2 ? 1 : -1); person(rr(-37, -29), i % 2 ? 1 : -1, .1); person(rr(29, 37), i % 2 ? 1 : -1, .1); }
+    lamps(-43.5, -1, 32); lamps(43.5, 1, 32);
+    return { roadTex: [roadTex], sea: null };
+  } },
+
+  amazon: { name: 'Amazon', sub: 'River trail deep in the rainforest', lon: -60.02, lat: -3.1, amb: { wind: 0.3, waves: 0.4, birds: 1, crowd: 0, traffic: 0 }, fog: [70, 240], build() {
+    L = 440;
+    plane(5, L * 2, 0x6b5a3a, 0, 0); plane(1200, L * 2, 0x3d6b33, -.05, 606); plane(60, L * 2, 0x7a6a45, -.3, -34);
+    const river = wavyWater(500, L * 2, -314, -.5, 0x6d6a3c, -64);
+    const canopy = [0x2f6b2e, 0x3c7e3a, 0x4d8f3b, 0x2b5a30];
+    for (let i = 0; i < 150; i++) { const x = rr(6, 400); tree(x, 0, rr(-L / 2, L / 2), { h: rr(14, 32), r: rr(6, 12), color: pick(canopy), trunk: 0x5a4632 }); }
+    for (let i = 0; i < 90; i++) tree(rr(-64, -380), 0, rr(-L / 2, L / 2), { h: rr(14, 30), r: rr(6, 12), color: pick(canopy) });
+    for (let i = 0; i < 40; i++) tree(rr(-60, -6), 0, rr(-L / 2, L / 2), { h: rr(4, 8), r: rr(2.5, 4), color: pick(canopy) });
+    for (let i = 0; i < 6; i++) { const g = new THREE.Group(); const hull = bx(3, 1.2, 12, mat(0xd8cfb8)); hull.position.y = .4; g.add(hull); const roof = bx(3.4, .2, 8, mat(0xc03a3a)); roof.position.y = 3; g.add(roof); for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const p = bx(.15, 2.4, .15, mat(0x5a4632)); p.position.set(sx * 1.4, 1.8, sz * 3.6); g.add(p); } g.position.set(rr(-90, -240), -.5, rr(-L / 2, L / 2)); g.rotation.y = i % 2 ? Math.PI : 0; scroll(g, (i % 2 ? -1 : 1) * rr(2, 4), { kind: 'float', y: -.5, amp: .12, ph: rr(0, 6) }); }
+    for (let i = 0; i < 8; i++) { const c = bx(.8, .4, 4, mat(0x8a6a48)); c.position.set(rr(-70, -120), -.4, rr(-L / 2, L / 2)); scroll(c, rr(-1, 1), { kind: 'float', y: -.4, amp: .15, ph: rr(0, 6) }); }
+    gulls(16, -200, 60, 10, 30);
+    for (const s of scrollers) if (s.kind === 'gull') s.obj.traverse(o => { if (o.isMesh) o.material = mat(pick([0xe0362c, 0x2f7fd8, 0xf0d15c])); });
+    for (let i = 0; i < 12; i++) person(rr(-2, 2), i % 2 ? 1 : -1, 0);
+    return { roadTex: [], sea: { x: -140, y: -.2 }, update() { river.wave(time, waveDrift); } };
+  } },
+
+  sydney: { name: 'Sydney', sub: 'Circular Quay, Opera House & Harbour Bridge', lon: 151.21, lat: -33.86, amb: { wind: 0.4, waves: 0.6, birds: 0.6, crowd: 0.4, traffic: 0.2 }, fog: [200, 800], build() {
+    L = 560;
+    plane(16, L * 2, 0xd0cbc0, 0, 0); plane(300, L * 2, 0x8f8b84, .02, -160);
+    const harbour = wavyWater(900, L * 2, 458, -1.2, 0x2f7fa8, 10);
+    const quay = bx(6, 2.4, L * 2, mat(0xb9b4a8)); quay.position.set(10, -1.2, 0); statics.add(quay);
+    cityBlock(-1, -L / 2, L / 2, 12, { fMin: 15, fMax: 45, colors: [0xd6d9dc, 0xb9c2cc, 0xe6e2d8, 0x9fa8b2], roof: .4 });
+    // Opera House: white shells on a podium jutting into the harbour
+    const pod = bx(70, 6, 120, mat(0xd6c2a0)); pod.position.set(60, 2, 140); scroll(pod);
+    const shell = (x, z, r, ry) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12, 0, Math.PI, 0, Math.PI / 2), mat(0xf4f1ea, .5)); s.position.set(x, 5, z); s.rotation.y = ry; s.rotation.x = -.35; s.castShadow = true; scroll(s); };
+    for (const [z, r] of [[100, 20], [130, 26], [160, 30]]) shell(48, z, r, Math.PI / 2); for (const [z, r] of [[110, 16], [140, 22], [170, 26]]) shell(78, z, r, Math.PI / 2);
+    // Harbour Bridge: steel arch over the water with a deck beneath
+    const steel = mat(0x59616a, .6), BZ = -150;
+    const arch = new THREE.Mesh(new THREE.TorusGeometry(250, 6, 8, 40, Math.PI), steel); arch.position.set(310, -1, BZ); arch.rotation.y = 0; arch.rotation.z = 0; scroll(arch);
+    const deck = bx(560, 4, 30, steel); deck.position.set(310, 50, BZ); scroll(deck);
+    for (let x = 80; x <= 540; x += 40) { const h = Math.max(4, Math.sqrt(Math.max(0, 250 ** 2 - (x - 310) ** 2)) - 52); const hg = bx(2, h, 2, steel); hg.position.set(x, 52 + h / 2, BZ); scroll(hg); }
+    for (const x of [40, 580]) { const py = bx(30, 90, 30, mat(0xb8a98c)); py.position.set(x, 44, BZ); scroll(py); }
+    for (let i = 0; i < 6; i++) motorboat(rr(120, 400), i % 2 ? 1 : -1, -1.2);
+    for (let i = 0; i < 4; i++) { const f = motorboat(rr(120, 300), i % 2 ? 1 : -1, -1.2); f.scale.set(1.8, 1.6, 1.8); f.children[1].material = mat(0x2f7a5a, .5); }
+    gulls(14, -20, 300, 4, 30);
+    for (let i = 0; i < 30; i++) person(rr(-7, 7), i % 2 ? 1 : -1, 0);
+    lamps(-7.5, -1, 30);
+    return { roadTex: [], sea: { x: 220, y: -.9 }, update() { harbour.wave(time, waveDrift); } };
+  } },
+
+  antarctica: { name: 'Antarctica', sub: 'Ross Ice Shelf & McMurdo', lon: 166.67, lat: -77.85, amb: { wind: 1, waves: 0.5, birds: 0.1, crowd: 0, traffic: 0.05 }, fog: [180, 600], build() {
+    L = 520;
+    const snow = new THREE.MeshStandardMaterial({ color: 0xf2f6fa, roughness: 1, flatShading: true });
+    const shelf = new THREE.Mesh(new THREE.PlaneGeometry(1200, L * 2, 60, 60), snow); shelf.rotation.x = -Math.PI / 2; shelf.position.set(560, 0, 0); shelf.receiveShadow = true; statics.add(shelf);
+    const sp = shelf.geometry.attributes.position; for (let i = 0; i < sp.count; i++) sp.setZ(i, rr(-.4, .4)); shelf.geometry.computeVertexNormals();
+    const cliff = bx(8, 30, L * 2, mat(0xd7e6f2, .9)); cliff.position.set(-44, -15, 0); statics.add(cliff);
+    const ocean = wavyWater(700, L * 2, -398, -28, 0x1f4b6e);
+    const iceMat = new THREE.MeshStandardMaterial({ color: 0xe6f2fb, roughness: .8, flatShading: true });
+    for (let i = 0; i < 18; i++) { const b = new THREE.Mesh(new THREE.DodecahedronGeometry(rr(6, 24)), iceMat); b.position.set(rr(-80, -330), -28 + rr(2, 8), rr(-L / 2, L / 2)); b.scale.y = .6; scroll(b, rr(-.3, .3), { kind: 'float', y: b.position.y, amp: .6, ph: rr(0, 6) }); }
+    for (let i = 0; i < 10; i++) { const h = rr(60, 200), w = rr(100, 260); const m = new THREE.Mesh(new THREE.ConeGeometry(w, h, 7), snow); m.position.set(rr(300, 700), h / 2 - 5, rr(-L / 2, L / 2)); scroll(m); }
+    // station huts on stilts, a fuel tank, an icebreaker at the shelf edge
+    for (let i = 0; i < 7; i++) { const g = new THREE.Group(); g.position.set(rr(20, 90), 0, rr(-L / 2, L / 2)); const hut = bx(rr(8, 16), 4, rr(6, 10), mat(pick([0x2f7a5a, 0x3466c2, 0xd83b2c, 0xf0d15c]))); hut.position.y = 3.5; g.add(hut); for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const st = bx(.4, 1.5, .4, mat(0x444444)); st.position.set(sx * 3, .75, sz * 2.5); g.add(st); } scroll(g); }
+    const tank = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 9, 16), mat(0xe8e8e8, .6)); tank.position.set(70, 4.5, 60); scroll(tank);
+    const ship = new THREE.Group(); ship.position.set(-90, -28, -120); const hull = bx(20, 10, 90, mat(0xc0392b, .5)); hull.position.y = 3; ship.add(hull); const sup = bx(16, 12, 30, mat(0xf4f4f4, .6)); sup.position.set(0, 14, -10); ship.add(sup); const fun = bx(4, 8, 6, mat(0xf0d15c)); fun.position.set(0, 24, -14); ship.add(fun); scroll(ship, 0, { kind: 'float', y: -28, amp: .4, ph: 1 });
+    // penguins waddle the shelf and react like everyone else
+    for (let i = 0; i < 40; i++) { const p = animal(rr(-30, 40), i % 2 ? 1 : -1, { len: .6, ht: .9, color: 0x1e1e22, belly: 0xf5f5f5, neck: 0, head: .4, legs: 2, speed: [.4, .8] }); p.rotation.x = 0; }
+    for (let i = 0; i < 8; i++) person(rr(-20, 20), i % 2 ? 1 : -1, 0);
+    car(-10, -1, { color: 0xd83b2c, speed: [3, 6] }); car(10, 1, { color: 0xd83b2c, speed: [3, 6] });
+    return { roadTex: [], sea: { x: -180, y: -27.7 }, update() { ocean.wave(time, waveDrift); } };
+  } },
+});
+
+const CONTINENT = { santaMonica: 'North America', timesSquare: 'North America', goldenGate: 'North America', shibuya: 'Asia', greatWall: 'Asia',
+  paris: 'Europe', london: 'Europe', rome: 'Europe', barcelona: 'Europe', giza: 'Africa', serengeti: 'Africa', capeTown: 'Africa', marrakech: 'Africa',
+  rio: 'South America', machuPicchu: 'South America', buenosAires: 'South America', amazon: 'South America', sydney: 'Oceania', antarctica: 'Antarctica' };
+const NUDGE = { santaMonica: [-1, 4], goldenGate: [-2, -4], timesSquare: [1, 0], london: [-2.5, -3], paris: [-.5, 1.5], barcelona: [-2, 5], rome: [2, 1], marrakech: [-2, 2], giza: [2, -1] };
+function clearGroup(g) {
+  g.traverse(o => { if (o.isMesh) { o.geometry.dispose(); const ms = Array.isArray(o.material) ? o.material : [o.material]; for (const m of ms) { m.map?.dispose(); m.emissiveMap?.dispose(); m.dispose(); } } });
+  while (g.children.length) g.remove(g.children[0]);
+}
+let locId = null;
+function loadLocation(id) {
+  if (locId === id) return;
+  if (typeof story !== 'undefined' && story.active) endStory();
+  clearGroup(world); clearGroup(statics); scrollers = []; locNightMats = []; screens.length = 0; seed = 7; waveDrift = 0;
+  locId = id; const def = LOCATIONS[id];
+  loc = def.build(); loc.def = def;
+  world.traverse(o => { o.userData.rest = o.rotation.clone(); if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  statics.traverse(o => { if (o.isMesh) o.receiveShadow = true; });
+  if (typeof setTime === 'function' && typeof hour !== 'undefined') setTime(hour);
+  if (typeof placeCurrent === 'function') placeCurrent();
+  for (const b of document.querySelectorAll('[data-loc]')) b.setAttribute('aria-pressed', b.dataset.loc === id);
+  const el = document.getElementById('curLoc'); if (el) el.textContent = def.name;
+  if (typeof setAmbience === 'function' && def.amb) setAmbience(def.amb);
+}
 
 /* ============================ day / night ============================ */
 const SKY = [[0, 0x0a1428], [4.5, 0x101c3a], [6, 0xf0975e], [7, 0xffc38a], [9, 0x9fcdee], [13, 0xa9d3ef], [17, 0x9cc4ea], [18.3, 0xf08a52], [19.3, 0x6a4a78], [20.5, 0x1a2448], [24, 0x0a1428]];
@@ -537,7 +1553,8 @@ function setTime(h) {
   const day = THREE.MathUtils.smoothstep(el, -.08, .3);
   darkness = 1 - day;
   const sky = skyAt(hour);
-  scene.background = sky; scene.fog = new THREE.Fog(sky, 150 - 60 * darkness, 420 - 140 * darkness);
+  const [fn, ff] = loc?.def?.fog ?? [150, 420];
+  scene.background = sky; scene.fog = new THREE.Fog(sky, fn * (1 - .4 * darkness), ff * (1 - .33 * darkness));
   if (el > -.05) {                                                   // sun rises east (+x), sets over the ocean (-x)
     sun.position.set(Math.cos(a) * 120, Math.max(3, el * 120), 40);
     sun.color.set(0xfff1d6).lerp(new THREE.Color(0xff9a4a), 1 - THREE.MathUtils.smoothstep(el, 0, .45));
@@ -547,7 +1564,7 @@ function setTime(h) {
     sun.color.set(0x8fa8d8); sun.intensity = .35; sun.castShadow = true;
   }
   hemi.color.copy(sky).lerp(new THREE.Color(0xffffff), .35); hemi.groundColor.set(0x6d6455); hemi.intensity = .28 + .5 * day;
-  for (const m of nightMats) m.emissiveIntensity = darkness;
+  for (const m of nightMats.all()) m.emissiveIntensity = darkness;
   const hh = Math.floor(hour), mm = Math.floor((hour - hh) * 60), h12 = ((hh + 11) % 12) + 1;
   clockLabel.textContent = `${h12}:${String(mm).padStart(2, '0')} ${hh < 12 ? 'am' : 'pm'}`;
   if (document.activeElement !== clockEl) clockEl.value = hour;
@@ -597,14 +1614,56 @@ function makeThumb(id) {
   thumbCanvas.getContext('2d').putImageData(img, 0, 0);
   return thumbCanvas.toDataURL('image/png');
 }
-const strip = document.getElementById('strip');
-for (const id of ORDER) {
-  const b = document.createElement('button'); b.className = 'thumb'; b.setAttribute('aria-pressed', 'false');
-  b.innerHTML = `<img alt=""><span>${SPECIES[id].name}</span>`;
-  try { b.querySelector('img').src = makeThumb(id); } catch (err) { console.error('thumbnail', id, err); }
-  b.addEventListener('click', () => { select(id); unlockAudio(); });
-  strip.appendChild(b); b.dataset.id = id;
+const THUMBS = {};
+for (const id of ORDER) { try { THUMBS[id] = makeThumb(id); } catch (err) { console.error('thumbnail', id, err); THUMBS[id] = ''; } }
+
+/* ============================ browser drawer ============================ */
+const PERIODS = ['Triassic', 'Jurassic', 'Cretaceous'], DIETS = ['Carnivore', 'Herbivore', 'Omnivore', 'Piscivore'];
+const FAMILIES = [...new Set(SPECIES_LIST.map(s => s.family))];
+const filters = { period: new Set(), diet: new Set(), family: new Set() };
+let query = '';
+const grid = document.getElementById('grid'), tiles = {}, drawer = document.getElementById('drawer'), browseBtn = document.getElementById('browse');
+for (const sp of SPECIES_LIST) {
+  const b = document.createElement('button'); b.className = 'tile'; b.setAttribute('aria-pressed', 'false'); b.dataset.id = sp.id;
+  b.innerHTML = `<img alt=""><span>${sp.name}</span><small>${sp.period}</small>`;
+  b.querySelector('img').src = THUMBS[sp.id];
+  b.addEventListener('click', () => { select(sp.id); unlockAudio(); if (innerWidth <= 720) openDrawer(false); });
+  grid.appendChild(b); tiles[sp.id] = b;
 }
+function chips(el, key, values) {
+  for (const v of values) {
+    const b = document.createElement('button'); b.textContent = v; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => { filters[key].has(v) ? filters[key].delete(v) : filters[key].add(v); b.setAttribute('aria-pressed', filters[key].has(v)); applyFilters(); });
+    el.appendChild(b);
+  }
+}
+chips(document.getElementById('chipPeriod'), 'period', PERIODS);
+chips(document.getElementById('chipDiet'), 'diet', DIETS);
+chips(document.getElementById('chipFamily'), 'family', FAMILIES);
+function matches(sp) {
+  return (!filters.period.size || filters.period.has(sp.period)) && (!filters.diet.size || filters.diet.has(sp.diet)) && (!filters.family.size || filters.family.has(sp.family))
+    && (!query || (sp.name + ' ' + sp.family + ' ' + sp.period).toLowerCase().includes(query));
+}
+function visibleIds() { return SPECIES_LIST.filter(matches).map(s => s.id); }
+function applyFilters() {
+  const vis = visibleIds();
+  for (const sp of SPECIES_LIST) tiles[sp.id].hidden = !vis.includes(sp.id);
+  document.getElementById('count').textContent = `${vis.length} of ${SPECIES_LIST.length} species`;
+}
+document.getElementById('search').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); applyFilters(); });
+function openDrawer(open) { drawer.hidden = !open; browseBtn.setAttribute('aria-expanded', open); if (open) document.getElementById('search').focus({ preventScroll: true }); }
+browseBtn.addEventListener('click', () => openDrawer(drawer.hidden));
+document.getElementById('closeDrawer').addEventListener('click', () => openDrawer(false));
+addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) openDrawer(false); });
+function step(dir) {
+  const vis = visibleIds(); if (!vis.length) return;
+  const i = vis.indexOf(currentId), next = vis[((i < 0 ? 0 : i) + dir + vis.length) % vis.length];
+  select(next); unlockAudio();
+}
+document.getElementById('prev').addEventListener('click', () => step(-1));
+document.getElementById('next').addEventListener('click', () => step(1));
+addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+applyFilters();
 
 /* ============================ audio ============================ */
 let actx = null, master = null, soundOn = false;
@@ -613,6 +1672,7 @@ function unlockAudio() {
   try {
     actx = new (window.AudioContext || window.webkitAudioContext)();
     master = actx.createGain(); master.gain.value = 0; master.connect(actx.destination);
+    ensureAmb();
   } catch (e) { actx = null; }
 }
 function setSound(on) {
@@ -635,9 +1695,47 @@ function footstep(mass, intensity) {
   if (big > .5) { const o = actx.createOscillator(), og = actx.createGain(); o.frequency.setValueAtTime(50, t); o.frequency.exponentialRampToValueAtTime(25, t + .3);
     og.gain.setValueAtTime(.5 * big, t); og.gain.exponentialRampToValueAtTime(.001, t + .35); o.connect(og); og.connect(master); o.start(t); o.stop(t + .4); }
 }
+/* ambience: looping noise beds mixed per location, traffic hum follows real traffic */
+let amb = null, ambBuf = null;
+function ambNoise() {
+  if (!ambBuf) { ambBuf = actx.createBuffer(1, actx.sampleRate * 4, actx.sampleRate); const d = ambBuf.getChannelData(0); let b = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; b = (b + .02 * w) / 1.02; d[i] = (b * 3.5 + w * .15); } }
+  const n = actx.createBufferSource(); n.buffer = ambBuf; n.loop = true; return n;
+}
+function ensureAmb() {
+  if (!actx || amb) return;
+  const bed = (type, f, q = 1) => { const n = ambNoise(), fl = actx.createBiquadFilter(), g = actx.createGain(); fl.type = type; fl.frequency.value = f; fl.Q.value = q; g.gain.value = 0; n.connect(fl); fl.connect(g); g.connect(master); n.start(); return { g, fl }; };
+  amb = { wind: bed('lowpass', 380), waves: bed('lowpass', 900), crowd: bed('bandpass', 700, .6), traffic: bed('lowpass', 160), levels: { wind: 0, waves: 0, birds: 0, crowd: 0, traffic: 0 } };
+  const o = actx.createOscillator(), of = actx.createBiquadFilter(), og = actx.createGain(); o.type = 'sawtooth'; o.frequency.value = 46; of.type = 'lowpass'; of.frequency.value = 110; og.gain.value = 0;
+  o.connect(of); of.connect(og); og.connect(master); o.start(); amb.drone = og;
+  const gust = actx.createOscillator(), gg = actx.createGain(); gust.frequency.value = .07; gg.gain.value = 180; gust.connect(gg); gg.connect(amb.wind.fl.frequency); gust.start();
+  amb.birdTimer = setInterval(chirp, 700);
+  if (loc?.def?.amb) setAmbience(loc.def.amb);
+}
+function setAmbience(l) {
+  if (!amb) return; amb.levels = l; const t = actx.currentTime;
+  amb.wind.g.gain.setTargetAtTime(.11 * l.wind, t, 1.5);
+  amb.waves.g.gain.setTargetAtTime(.13 * l.waves, t, 1.5);
+  amb.crowd.g.gain.setTargetAtTime(.05 * l.crowd, t, 1.5);
+}
+function updateAmb() {
+  if (!amb || !soundOn) return; const t = actx.currentTime, l = amb.levels;
+  const tr = l.traffic * (.25 + .75 * trafficAct);
+  amb.traffic.g.gain.setTargetAtTime(.16 * tr, t, .8); amb.drone.gain.setTargetAtTime(.06 * tr, t, .8);
+  amb.waves.g.gain.setTargetAtTime(.13 * l.waves * (.55 + .45 * Math.sin(time * .45)), t, .6);
+  amb.crowd.g.gain.setTargetAtTime(.05 * l.crowd * (.4 + .6 * crowdAct) * (.8 + .2 * Math.sin(time * 1.7)), t, .5);
+}
+function chirp() {
+  if (!actx || !soundOn || !amb || Math.random() > amb.levels.birds * .45) return;
+  const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(); o.connect(g); g.connect(master);
+  const gull = amb.levels.waves > .4 && Math.random() < .5;
+  if (gull) { o.type = 'sawtooth'; o.frequency.setValueAtTime(900, t); o.frequency.exponentialRampToValueAtTime(1300, t + .12); o.frequency.exponentialRampToValueAtTime(700, t + .45); g.gain.setValueAtTime(.001, t); g.gain.exponentialRampToValueAtTime(.05, t + .05); g.gain.exponentialRampToValueAtTime(.001, t + .5); o.start(t); o.stop(t + .55); }
+  else { const n = 2 + Math.floor(Math.random() * 3), f0 = 1800 + Math.random() * 1400; o.type = 'sine'; g.gain.setValueAtTime(.001, t);
+    for (let i = 0; i < n; i++) { const s = t + i * .13; o.frequency.setValueAtTime(f0, s); o.frequency.exponentialRampToValueAtTime(f0 * 1.5, s + .06); o.frequency.exponentialRampToValueAtTime(f0 * .9, s + .12); g.gain.exponentialRampToValueAtTime(.06, s + .02); g.gain.exponentialRampToValueAtTime(.001, s + .12); }
+    o.start(t); o.stop(t + n * .13 + .05); }
+}
 function honk() {
   if (!actx || !soundOn) return;
-  const t = actx.currentTime, g = actx.createGain(); g.gain.setValueAtTime(.001, t); g.gain.exponentialRampToValueAtTime(.18, t + .02); g.gain.setValueAtTime(.18, t + .3); g.gain.exponentialRampToValueAtTime(.001, t + .4); g.connect(master);
+  const t = actx.currentTime, g = actx.createGain(); g.gain.setValueAtTime(.001, t); g.gain.exponentialRampToValueAtTime(.07, t + .02); g.gain.setValueAtTime(.07, t + .3); g.gain.exponentialRampToValueAtTime(.001, t + .4); g.connect(master);
   for (const f of [392, 494]) { const o = actx.createOscillator(); o.type = 'square'; o.frequency.value = f; o.connect(g); o.start(t); o.stop(t + .45); }
 }
 function carAlarm() {
@@ -646,6 +1744,20 @@ function carAlarm() {
   g.gain.setValueAtTime(.12, t); g.gain.setValueAtTime(.12, t + 2.6); g.gain.exponentialRampToValueAtTime(.001, t + 3);
   for (let i = 0; i < 9; i++) o.frequency.setValueAtTime(i % 2 ? 620 : 880, t + i * .3);
   o.start(t); o.stop(t + 3);
+}
+function siren() {
+  if (!actx || !soundOn) return;
+  const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(); o.type = 'triangle'; o.connect(g); g.connect(master);
+  g.gain.setValueAtTime(.001, t); g.gain.exponentialRampToValueAtTime(.14, t + .3); g.gain.setValueAtTime(.14, t + 7); g.gain.exponentialRampToValueAtTime(.001, t + 8);
+  for (let i = 0; i < 16; i++) { o.frequency.setValueAtTime(600, t + i * .5); o.frequency.exponentialRampToValueAtTime(900, t + i * .5 + .25); o.frequency.exponentialRampToValueAtTime(600, t + i * .5 + .5); }
+  o.start(t); o.stop(t + 8.2);
+}
+function chopper(dur) {
+  if (!actx || !soundOn) return;
+  const t = actx.currentTime, n = noise(), f = actx.createBiquadFilter(), g = actx.createGain(), lfo = actx.createOscillator(), lg = actx.createGain();
+  f.type = 'lowpass'; f.frequency.value = 220; lfo.type = 'square'; lfo.frequency.value = 13; lg.gain.value = .5; lfo.connect(lg); lg.connect(g.gain);
+  g.gain.setValueAtTime(.001, t); g.gain.linearRampToValueAtTime(.5, t + 1.5); g.gain.setValueAtTime(.5, t + dur - 1.5); g.gain.linearRampToValueAtTime(.001, t + dur);
+  n.loop = true; n.connect(f); f.connect(g); g.connect(master); n.start(t); lfo.start(t); n.stop(t + dur); lfo.stop(t + dur);
 }
 function roarSound(v) {
   if (!actx || !soundOn) return;
@@ -700,19 +1812,7 @@ function animate(dt) {
   amp = lerp(amp, targetAmp, 1 - Math.pow(.02, dt));
   run = lerp(run, mode === 'run' ? 1 : 0, 1 - Math.pow(.02, dt));
   phase += hz * 2 * Math.PI * dt;
-
-  for (const l of d.legs) poseLeg(l, phase + legOffset(l, d.quad, run > .5), amp, sp);
-
-  const bob = Math.abs(Math.sin(phase * (d.quad ? 2 : 1))) * .035 * amp * d.hipY;
   const idle = 1 - Math.min(1, amp);
-  d.hips.position.y = d.hipY + bob + Math.sin(time * 1.4) * .01 * d.hipY * idle;
-  d.hips.rotation.z = Math.sin(phase) * .04 * amp;
-  d.hips.rotation.y = Math.sin(phase) * .05 * amp * (d.quad ? .4 : 1);
-  d.hips.rotation.x = -.06 * run;
-  d.torso.scale.y = 1 + Math.sin(time * 1.6) * .015;
-
-  d.tail.forEach((s, i) => R(s, Math.sin(time * 1.1 + i * .5) * .02 * idle + Math.sin(phase * 2 + i) * .02 * amp,
-                                  Math.sin(phase - i * .55) * .13 * amp + Math.sin(time * .7 - i * .5) * .05 * idle));
 
   // roar: raise the neck, open the jaw, ease back
   let raise = 0, open = 0;
@@ -722,21 +1822,121 @@ function animate(dt) {
     raise = env * (d.quad ? .35 : .55); open = env * .55 + (env > .3 ? Math.sin(time * 30) * .03 : 0);
     if (roarT > dur) { roarT = -1; mode = prevMode; syncModeButtons(); }
   }
+
+  if (d.kind === 'land') {
+    for (const l of d.legs) poseLeg(l, phase + legOffset(l, d.quad, run > .5), amp, sp);
+    const bob = Math.abs(Math.sin(phase * (d.quad ? 2 : 1))) * .035 * amp * d.hipY;
+    d.hips.position.y = d.hipY + bob + Math.sin(time * 1.4) * .01 * d.hipY * idle;
+    d.hips.rotation.z = Math.sin(phase) * .04 * amp;
+    d.hips.rotation.y = Math.sin(phase) * .05 * amp * (d.quad ? .4 : 1);
+    d.hips.rotation.x = -.06 * run;
+    d.torso.scale.y = 1 + Math.sin(time * 1.6) * .015;
+    d.tail.forEach((s, i) => R(s, Math.sin(time * 1.1 + i * .5) * .02 * idle + Math.sin(phase * 2 + i) * .02 * amp,
+                                    Math.sin(phase - i * .55) * .13 * amp + Math.sin(time * .7 - i * .5) * .05 * idle));
+  } else if (d.kind === 'air') {
+    const flap = .15 + amp * .85;                                        // idle = soaring with a gentle beat
+    for (const w of d.wings) {
+      R(w.shoulder, 0, 0, w.side * (Math.sin(phase) * .5 * flap + .08));
+      R(w.elbow, 0, 0, w.side * (-Math.sin(phase - .8) * .45 * flap));
+    }
+    d.hips.position.y = d.hipY + Math.sin(phase - 1.3) * .012 * d.width * amp + Math.sin(time * .8) * .012 * d.width;
+    d.hips.rotation.z = Math.sin(time * .5) * .1;
+    d.hips.rotation.x = -.12 * run + Math.sin(phase) * .03 * amp;
+    d.tail.forEach((s, i) => R(s, Math.sin(time * 1.5 + i) * .05, Math.sin(time * .7) * .05));
+  } else {                                                                 // sea
+    const sw = .25 + amp;
+    d.tail.forEach((s, i) => R(s, 0, Math.sin(phase - i * .7) * .16 * sw));
+    for (const f of d.fins) R(f.group, 0, 0, f.side * Math.sin(phase + (f.front ? 0 : 1.6)) * .45 * sw);
+    d.hips.position.y = d.hipY + Math.sin(time * 1.1) * .03 * d.width + Math.sin(phase * 2) * .01 * d.width * amp;
+    d.hips.rotation.z = Math.sin(phase - .5) * .06 * amp + Math.sin(time * .6) * .03;
+    d.hips.rotation.y = Math.sin(phase) * .05 * amp;
+    d.hips.rotation.x = Math.sin(time * .9) * .02 - .04 * run;
+  }
+
   d.neck.forEach((s, i) => R(s, -raise / d.neck.length * 1.6 + Math.sin(time * 1.3 + i) * .015 * idle + Math.sin(phase * 2 + i * .8) * .02 * amp,
                                   Math.sin(time * .9 + i) * .02 * idle));
   R(d.head.group, raise * .4 + Math.sin(phase * 2 + .4) * .06 * amp, Math.sin(time * .6) * .08 * idle);
   R(d.head.jaw, open + Math.max(0, Math.sin(time * .35)) * .03 * idle);
   d.arms.forEach((a, i) => R(a, Math.sin(phase + (i ? 0 : Math.PI)) * .3 * amp - raise * .6));
 
-  // treadmill
   scrollWorld(dt, hz * sp.step * (1 + .6 * run));
   if (cycling) setTime(hour + dt * .25);                             // one hour every four seconds
 }
 
+/* ============================ story mode ============================ */
+const story = { active: false, t: 0, i: -1, cam: null, helis: [], hourBefore: 14 };
+const cineEl = document.getElementById('cine'), lowerEl = document.getElementById('lower');
+function caption(h, sub) { lowerEl.classList.remove('on'); setTimeout(() => { document.getElementById('headline').textContent = h; document.getElementById('subline').textContent = sub; lowerEl.classList.add('on'); }, 250); }
+function doRoar() { if (mode !== 'roar') prevMode = mode; mode = 'roar'; roarT = 0; roarSound(SPECIES[currentId].voice); panic(); }
+function setMode(m) { mode = m; prevMode = m; roarT = -1; syncModeButtons(); }
+function shot(theta, phi, radiusK, { head = false, dtheta = 0, dradius = 0 } = {}) {
+  story.cam = { theta, phi, radius: fitDistance(current.bounds) * radiusK, head, dtheta, dradius };
+  orbit.theta = theta; orbit.phi = phi; orbit.radius = story.cam.radius;
+  target.copy(head ? current.head.group.getWorldPosition(new THREE.Vector3()) : focus());
+}
+function heli() {
+  const g = new THREE.Group(), body = bx(2.2, 1.6, 4.5, mat(0x2c3e50, .5)); body.position.y = 1; g.add(body);
+  const glass = bx(2, 1, 1.6, mat(0x8fb4c9, .2)); glass.position.set(0, 1.2, 1.8); g.add(glass);
+  const boom = bx(.5, .5, 5, mat(0x2c3e50, .5)); boom.position.set(0, 1.3, -4); g.add(boom);
+  const rotor = bx(9, .08, .3, mat(0x222222)); rotor.position.y = 2.1; g.add(rotor);
+  const tail = bx(.06, 1.6, .25, mat(0x222222)); tail.position.set(.4, 1.6, -6.3); g.add(tail);
+  for (const sd of [-1, 1]) { const sk = bx(.15, .15, 3.5, mat(0x555555)); sk.position.set(sd * .9, .1, 0); g.add(sk); }
+  const lightM = new THREE.MeshStandardMaterial({ color: 0xff2020, emissive: 0xff2020, emissiveIntensity: 1 }); const light = bx(.3, .3, .3, lightM); light.position.set(0, 2.4, -1); g.add(light);
+  const beam = new THREE.SpotLight(0xfff2c0, 2, 90, .35, .5, 1); beam.position.set(0, .3, .5); g.add(beam); g.add(beam.target); beam.target.position.set(0, -30, 2);
+  scene.add(g);
+  return { g, rotor, tail, lightM, a: rr(0, 6.3), r: rr(35, 55), y: rr(28, 42), w: rr(.35, .5) };
+}
+function updateHelis(dt) {
+  const f = focus();
+  for (const h of story.helis) {
+    h.a += h.w * dt; h.rotor.rotation.y += 40 * dt; h.tail.rotation.x += 40 * dt;
+    h.g.position.set(f.x + Math.cos(h.a) * h.r, f.y + h.y + Math.sin(time * 1.3) * 1.5, f.z + Math.sin(h.a) * h.r);
+    h.g.rotation.y = -h.a - Math.PI / 2; h.g.rotation.z = .12;
+    h.lightM.emissiveIntensity = Math.sin(time * 12) > 0 ? 1.5 : .1;
+  }
+}
+const STAGES = [
+  { dur: 6, enter() { setMode('idle'); story.hourBefore = hour; setTime(15.5); caption(loc.def.name, 'A quiet afternoon on ' + loc.def.sub + '.'); shot(.25, 1.42, 1.15, { dtheta: .04, dradius: -.02 }); } },
+  { dur: 7, enter() { setMode('walk'); caption('Something is on the avenue', 'Witnesses describe a very large ' + SPECIES[currentId].name + '.'); shot(1.5, 1.4, .55, { head: true, dtheta: -.06 }); } },
+  { dur: 6, enter() { caption('Traffic grinds to a halt', 'Drivers are honking. It is not helping.'); shot(Math.PI - .35, 1.05, 1.3, { dtheta: .05 }); setTimeout(honk, 900); setTimeout(honk, 2700); } },
+  { dur: 7, enter() { setMode('idle'); setTimeout(doRoar, 900); caption(SPECIES[currentId].name + ' makes itself known', 'Residents advised to stay indoors.'); shot(.6, 1.35, .32, { head: true, dradius: .05 }); setTimeout(siren, 1500); } },
+  { dur: 9, enter() { setMode('run'); story.helis = [heli(), heli()]; chopper(9); caption('Panic in the streets', 'News helicopters are over the scene.'); shot(2.2, .55, 1.6, { dtheta: .25 }); setTimeout(doRoar, 3500); setTimeout(doRoar, 6500); } },
+  { dur: 9, enter() { setMode('walk'); caption('Nightfall', 'It is still here.'); shot(-.7, 1.2, 1.8, { dtheta: .06, dradius: .04 }); story.dusk = true; } },
+  { dur: 3, enter() { setMode('idle'); caption('Blocky Dinos', 'Fin.'); shot(.4, 1.3, .8, { dtheta: .1 }); } },
+];
+function startStory() {
+  if (story.active) return;
+  unlockAudio(); if (actx) actx.resume();
+  story.active = true; story.t = 0; story.i = -1; story.dusk = false; openDrawer(false);
+  document.body.classList.add('story'); cineEl.hidden = false;
+  nextStage();
+}
+function nextStage() {
+  story.i++; story.t = 0;
+  if (story.i >= STAGES.length) return endStory();
+  STAGES[story.i].enter();
+}
+function endStory() {
+  story.active = false; story.cam = null; story.dusk = false;
+  for (const h of story.helis) scene.remove(h.g); story.helis = [];
+  document.body.classList.remove('story'); cineEl.hidden = true; lowerEl.classList.remove('on');
+  setMode('walk');
+}
+function updateStory(dt) {
+  if (!story.active) return;
+  story.t += dt;
+  if (story.dusk) setTime(Math.min(21, hour + dt * .9));
+  const c = story.cam; if (c) { orbit.theta += c.dtheta * dt; orbit.radius *= 1 + c.dradius * dt; }
+  if (story.t >= STAGES[story.i].dur) nextStage();
+}
+document.getElementById('story').addEventListener('click', startStory);
+document.getElementById('skip').addEventListener('click', endStory);
+addEventListener('keydown', e => { if (e.key === 'Escape' && story.active) endStory(); });
+
 /* ============================ camera ============================ */
 const orbit = { theta: .75, phi: 1.2, radius: 20, dragging: false, lx: 0, ly: 0, pinch: 0 };
 const target = new THREE.Vector3();
-canvas.addEventListener('pointerdown', e => { orbit.dragging = true; orbit.lx = e.clientX; orbit.ly = e.clientY; canvas.setPointerCapture(e.pointerId); unlockAudio(); });
+canvas.addEventListener('pointerdown', e => { if (story.active) return; orbit.dragging = true; orbit.lx = e.clientX; orbit.ly = e.clientY; canvas.setPointerCapture(e.pointerId); unlockAudio(); });
 canvas.addEventListener('pointerup', () => orbit.dragging = false);
 canvas.addEventListener('pointermove', e => {
   if (!orbit.dragging) return;
@@ -749,8 +1949,10 @@ canvas.addEventListener('touchmove', e => { if (e.touches.length === 2) { const 
   if (orbit.pinch) orbit.radius = Math.min(orbit.max, Math.max(orbit.min, orbit.radius * orbit.pinch / d)); orbit.pinch = d; orbit.dragging = false; } }, { passive: true });
 canvas.addEventListener('touchend', () => orbit.pinch = 0);
 
+const focus = () => current.bounds.center.clone().add(current.root.position);
 function updateCamera() {
-  target.lerp(current.bounds.center, .06);
+  const goal = story.cam?.head ? current.head.group.getWorldPosition(new THREE.Vector3()) : focus();
+  target.lerp(goal, story.active ? .12 : .06);
   camera.position.set(target.x + orbit.radius * Math.sin(orbit.phi) * Math.sin(orbit.theta),
                       target.y + orbit.radius * Math.cos(orbit.phi),
                       target.z + orbit.radius * Math.sin(orbit.phi) * Math.cos(orbit.theta));
@@ -763,14 +1965,28 @@ function select(id) {
   if (current) scene.remove(current.root);
   currentId = id; current = dinos[id]; scene.add(current.root);
   const sp = SPECIES[id];
-  fitCamera();
+  placeCurrent(); fitCamera();
   phase = 0; roarT = -1; if (mode === 'roar') mode = prevMode;
   for (const l of current.legs) l.prevC = 1;
+  target.copy(focus());
   document.getElementById('name').textContent = sp.name;
-  document.getElementById('period').textContent = sp.period;
-  for (const k of ['len', 'hgt', 'wgt', 'diet']) document.getElementById(k).textContent = sp[k];
+  document.getElementById('period').textContent = sp.dates;
+  for (const k of ['len', 'hgt', 'wgt', 'diet', 'family']) document.getElementById(k).textContent = sp[k];
   document.getElementById('fact').textContent = sp.fact;
-  for (const b of strip.children) b.setAttribute('aria-pressed', b.dataset.id === id);
+  document.getElementById('curName').textContent = sp.name; document.getElementById('curThumb').src = THUMBS[id];
+  document.getElementById('specNo').textContent = `No. ${ORDER.indexOf(id) + 1} of ${ORDER.length}`;
+  const st = document.getElementById('stampPeriod'); st.textContent = sp.period; st.className = 'stamp ' + sp.period.toLowerCase();
+  for (const b of Object.values(tiles)) b.setAttribute('aria-pressed', b.dataset.id === id);
+  tiles[id].scrollIntoView({ block: 'nearest' });
+}
+function placeCurrent() {
+  if (!current) return;
+  const beached = current.kind === 'sea' && !loc.sea;
+  if (current.kind === 'sea' && loc.sea) current.root.position.set(loc.sea.x, loc.sea.y, 0);
+  else if (beached) current.root.position.set(0, .3 + .15 * current.bh, 0);
+  else current.root.position.set(0, 0, 0);
+  document.getElementById('beached').hidden = !beached;
+  fitCamera(); target.copy(focus());
 }
 function fitCamera() {
   orbit.radius = fitDistance(current.bounds); orbit.min = orbit.radius * .25; orbit.max = orbit.radius * 3;
@@ -782,21 +1998,70 @@ function syncModeButtons() {
 }
 for (const b of document.querySelectorAll('[data-mode]')) b.addEventListener('click', () => { mode = b.dataset.mode; prevMode = mode; roarT = -1; syncModeButtons(); unlockAudio(); });
 document.getElementById('roar').addEventListener('click', () => {
-  unlockAudio(); if (actx) actx.resume();
-  if (mode !== 'roar') prevMode = mode;
-  mode = 'roar'; roarT = 0; roarSound(SPECIES[currentId].voice); panic();
+  unlockAudio(); if (actx) actx.resume(); doRoar();
 });
 document.getElementById('sound').addEventListener('click', () => setSound(!soundOn));
+document.getElementById('more').addEventListener('click', e => { const c = document.getElementById('controls'); c.classList.toggle('more'); e.currentTarget.setAttribute('aria-expanded', c.classList.contains('more')); });
 if (reduced) { mode = 'idle'; prevMode = 'idle'; syncModeButtons(); }
 if (innerWidth <= 640) document.getElementById('info').open = false;
 
+// world map picker (equirectangular; rough continent outlines)
+const CONTINENTS = [
+  [[-168,66],[-140,70],[-95,72],[-60,60],[-55,47],[-75,35],[-82,25],[-97,20],[-105,22],[-118,32],[-125,48],[-150,60]],
+  [[-80,10],[-60,8],[-50,0],[-35,-8],[-40,-22],[-52,-33],[-62,-40],[-70,-55],[-75,-45],[-72,-18],[-80,-5]],
+  [[-17,15],[-5,35],[10,37],[32,31],[43,12],[51,12],[40,-5],[35,-25],[20,-34],[12,-18],[9,4],[-15,5]],
+  [[-10,43],[-8,55],[5,62],[25,71],[60,73],[100,77],[140,72],[180,68],[160,60],[135,45],[122,30],[108,18],[100,5],[77,8],[65,25],[50,28],[35,33],[25,38],[-2,36],[-9,37]],
+  [[114,-22],[130,-12],[142,-11],[153,-27],[148,-38],[135,-35],[115,-34]],
+  [[-45,60],[-20,70],[-25,83],[-60,80],[-70,72]],
+];
+const px = (lon, lat) => [(lon + 180) / 360 * 100, (90 - lat) / 180 * 100];
+const mapEl = document.getElementById('map');
+mapEl.innerHTML = `<svg viewBox="0 0 100 50" preserveAspectRatio="none">${[...Array(11)].map((_, i) => `<line x1="${i * 10}" y1="0" x2="${i * 10}" y2="50" stroke="#fff" stroke-opacity=".35" stroke-width=".2"/>`).join('')}${[...Array(6)].map((_, i) => `<line x1="0" y1="${i * 10}" x2="100" y2="${i * 10}" stroke="#fff" stroke-opacity=".35" stroke-width=".2"/>`).join('')}${CONTINENTS.map(c => `<polygon points="${c.map(([lo, la]) => { const [x, y] = px(lo, la); return `${x},${y / 2}`; }).join(' ')}" fill="#e9e2d0" stroke="#a89f88" stroke-width=".3"/>`).join('')}</svg>`;
+const locChips = document.getElementById('locChips');
+let lastCont = null;
+Object.entries(LOCATIONS).forEach(([id, def], i) => {
+  const [x, y] = px(def.lon, def.lat), [nx, ny] = NUDGE[id] ?? [0, 0];
+  const pin = document.createElement('button'); pin.className = 'pin'; pin.dataset.loc = id; pin.setAttribute('aria-pressed', 'false');
+  pin.style.left = (x + nx) + '%'; pin.style.top = (y + ny) + '%'; pin.textContent = i + 1; pin.title = `${def.name} — ${def.sub}`; pin.setAttribute('aria-label', def.name);
+  if (CONTINENT[id] !== lastCont) { lastCont = CONTINENT[id]; const h = document.createElement('span'); h.className = 'cont'; h.textContent = lastCont; locChips.appendChild(h); }
+  const chip = document.createElement('button'); chip.dataset.loc = id; chip.setAttribute('aria-pressed', 'false'); chip.innerHTML = `<b>${i + 1}</b>${def.name}`; chip.title = def.sub;
+  for (const el of [pin, chip]) el.addEventListener('click', () => { loadLocation(id); unlockAudio(); if (innerWidth <= 720) openDrawer(false); });
+  mapEl.appendChild(pin); locChips.appendChild(chip);
+});
+loadLocation('santaMonica');
 select('trex');
+
+/* ============================ cover page & guided tour ============================ */
+const EXHIBITS = [
+  { sp: 'trex', loc: 'timesSquare', hour: 15, mode: 'walk', title: 'The king on Broadway', text: 'Twelve metres of Tyrannosaurus against the billboards. Cabs swerve; nobody films in landscape.' },
+  { sp: 'brachio', loc: 'paris', hour: 17.6, mode: 'walk', title: 'Taller than the arches', text: 'Brachiosaurus browses at twelve metres. It walks straight under the tower without ducking.' },
+  { sp: 'mosasaurus', loc: 'london', hour: 12, mode: 'walk', title: 'Something in the Thames', text: 'A fifteen-metre sea lizard beneath Tower Bridge. The bascules will not be raised.' },
+  { sp: 'quetzalcoatlus', loc: 'sydney', hour: 18.4, mode: 'walk', title: 'Wings over the harbour', text: 'The largest flying animal ever, ten metres across, circling the Opera House at dusk.' },
+  { sp: 'raptor', loc: 'antarctica', hour: 10, mode: 'run', title: 'Among the penguins', text: 'Turkey-sized, feathered, and much faster than anything else on the ice shelf.' },
+  { sp: 'diplo', loc: 'greatWall', hour: 8, mode: 'walk', title: 'The longest tail on the ridge', text: 'Twenty-six metres of Diplodocus on a walkway built for two people abreast.' },
+];
+const tourEl = document.getElementById('tour'); let tourI = -1;
+function showExhibit(i) {
+  const e = EXHIBITS[i]; loadLocation(e.loc); select(e.sp); setTime(e.hour); setMode(e.mode);
+  orbit.theta = .6 + i * .3; orbit.phi = 1.15;
+  document.getElementById('tourStep').textContent = `Exhibit ${i + 1} of ${EXHIBITS.length}`;
+  document.getElementById('tourTitle').textContent = e.title; document.getElementById('tourText').textContent = e.text;
+  document.getElementById('tourNext').textContent = i === EXHIBITS.length - 1 ? 'Finish' : 'Next';
+}
+function startTour() { document.body.classList.add('touring'); openDrawer(false); tourEl.hidden = false; tourI = 0; showExhibit(0); }
+function endTour() { document.body.classList.remove('touring'); tourEl.hidden = true; tourI = -1; document.getElementById('info').open = true; }
+document.getElementById('tourNext').addEventListener('click', () => { if (tourI >= EXHIBITS.length - 1) return endTour(); showExhibit(++tourI); });
+document.getElementById('tourEnd').addEventListener('click', endTour);
+document.getElementById('beginTour').addEventListener('click', () => { unlockAudio(); document.getElementById('splash').hidden = true; startTour(); });
+document.getElementById('explore').addEventListener('click', () => { unlockAudio(); document.getElementById('splash').hidden = true; });
+document.getElementById('story').addEventListener('click', () => { if (tourI >= 0) endTour(); });
 
 /* ============================ loop ============================ */
 const clock = new THREE.Clock();
 (function loop() {
   requestAnimationFrame(loop);
-  animate(Math.min(clock.getDelta(), .05));
+  const dt = Math.min(clock.getDelta(), .05);
+  animate(dt); updateStory(dt); updateHelis(dt); updateAmb();
   updateCamera();
   renderer.render(scene, camera);
 })();
