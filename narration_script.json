@@ -1,0 +1,622 @@
+{
+ "voice": "echo",
+ "model": "gpt-4o-mini-tts",
+ "instructions": "You are a calm, warm museum docent recording an audio guide. Unhurried documentary pace. Enunciate dinosaur names carefully; when a pronunciation guide is given, say it slowly, syllable by syllable, then repeat the name naturally.",
+ "clips": [
+  {
+   "file": "species/coelophysis-name.mp3",
+   "text": "Coelophysis. Pronounced: see – lo – fy – sis. Coelophysis."
+  },
+  {
+   "file": "species/coelophysis-name-only.mp3",
+   "text": "Coelophysis"
+  },
+  {
+   "file": "species/coelophysis-notes.mp3",
+   "text": "Coelophysis. Late Triassic, 216–196 million years ago. 3 m long, 1 m at the hip, about 25 kg. Carnivore. Hundreds were found buried together at Ghost Ranch, New Mexico; it is the state fossil of New Mexico."
+  },
+  {
+   "file": "species/herrerasaurus-name.mp3",
+   "text": "Herrerasaurus. Pronounced: heh – rair – ah – sore – us. Herrerasaurus."
+  },
+  {
+   "file": "species/herrerasaurus-name-only.mp3",
+   "text": "Herrerasaurus"
+  },
+  {
+   "file": "species/herrerasaurus-notes.mp3",
+   "text": "Herrerasaurus. Late Triassic, 231 million years ago. 6 m long, 1.1 m at the hip, about 350 kg. Carnivore. One of the earliest known dinosaurs, from the Ischigualasto badlands of Argentina, with a sliding jaw joint for gripping prey."
+  },
+  {
+   "file": "species/eoraptor-name.mp3",
+   "text": "Eoraptor. Pronounced: ee – oh – rap – tor. Eoraptor."
+  },
+  {
+   "file": "species/eoraptor-name-only.mp3",
+   "text": "Eoraptor"
+  },
+  {
+   "file": "species/eoraptor-notes.mp3",
+   "text": "Eoraptor. Late Triassic, 231 million years ago. 1 m long, 0.4 m at the hip, about 10 kg. Omnivore. The \"dawn thief\" is among the very first dinosaurs; its mixed teeth suggest it ate both plants and small animals."
+  },
+  {
+   "file": "species/plateosaurus-name.mp3",
+   "text": "Plateosaurus. Pronounced: plat – ee – oh – sore – us. Plateosaurus."
+  },
+  {
+   "file": "species/plateosaurus-name-only.mp3",
+   "text": "Plateosaurus"
+  },
+  {
+   "file": "species/plateosaurus-notes.mp3",
+   "text": "Plateosaurus. Late Triassic, 214–204 million years ago. 7 m long, 2 m at the hip, about 1 tonne. Herbivore. Europe's most common Triassic dinosaur; hundreds of skeletons come from Germany and Switzerland, many trapped in mud."
+  },
+  {
+   "file": "species/riojasaurus-name.mp3",
+   "text": "Riojasaurus. Pronounced: ree – oh – hah – sore – us. Riojasaurus."
+  },
+  {
+   "file": "species/riojasaurus-name-only.mp3",
+   "text": "Riojasaurus"
+  },
+  {
+   "file": "species/riojasaurus-notes.mp3",
+   "text": "Riojasaurus. Late Triassic, 227–208 million years ago. 10 m long, 2 m at the hip, about 3 tonnes. Herbivore. An early four-legged sauropodomorph from Argentina with unusually heavy limb bones for its time."
+  },
+  {
+   "file": "species/staurikosaurus-name.mp3",
+   "text": "Staurikosaurus. Pronounced: store – ik – oh – sore – us. Staurikosaurus."
+  },
+  {
+   "file": "species/staurikosaurus-name-only.mp3",
+   "text": "Staurikosaurus"
+  },
+  {
+   "file": "species/staurikosaurus-notes.mp3",
+   "text": "Staurikosaurus. Late Triassic, 233 million years ago. 2 m long, 0.6 m at the hip, about 30 kg. Carnivore. Found in Brazil, it is one of the oldest dinosaurs known, a lightly built runner with a long tail."
+  },
+  {
+   "file": "species/postosuchus-name.mp3",
+   "text": "Postosuchus. Pronounced: post – oh – soo – kus. Postosuchus."
+  },
+  {
+   "file": "species/postosuchus-name-only.mp3",
+   "text": "Postosuchus"
+  },
+  {
+   "file": "species/postosuchus-notes.mp3",
+   "text": "Postosuchus. Late Triassic, 228–202 million years ago. 4.5 m long, 1.2 m at the hip, about 250 kg. Carnivore. Not a dinosaur: a crocodile-line archosaur that was the top predator of Triassic North America, before dinosaurs took over."
+  },
+  {
+   "file": "species/placerias-name.mp3",
+   "text": "Placerias. Pronounced: plah – seer – ee – us. Placerias."
+  },
+  {
+   "file": "species/placerias-name-only.mp3",
+   "text": "Placerias"
+  },
+  {
+   "file": "species/placerias-notes.mp3",
+   "text": "Placerias. Late Triassic, 221–210 million years ago. 3.5 m long, 1.5 m at the shoulder, about 1 tonne. Herbivore. A tusked dicynodont, a distant mammal relative rather than a dinosaur, and one of the last of its kind."
+  },
+  {
+   "file": "species/nothosaurus-name.mp3",
+   "text": "Nothosaurus. Pronounced: no – tho – sore – us. Nothosaurus."
+  },
+  {
+   "file": "species/nothosaurus-name-only.mp3",
+   "text": "Nothosaurus"
+  },
+  {
+   "file": "species/nothosaurus-notes.mp3",
+   "text": "Nothosaurus. Middle–Late Triassic, 240–210 million years ago. 4 m long, about 150 kg. Piscivore. A seal-like fish hunter that hauled out on shore; its paddle limbs still had separate fingers."
+  },
+  {
+   "file": "species/shonisaurus-name.mp3",
+   "text": "Shonisaurus. Pronounced: show – nee – sore – us. Shonisaurus."
+  },
+  {
+   "file": "species/shonisaurus-name-only.mp3",
+   "text": "Shonisaurus"
+  },
+  {
+   "file": "species/shonisaurus-notes.mp3",
+   "text": "Shonisaurus. Late Triassic, 215 million years ago. 15 m long, about 30 tonnes. Piscivore. Nevada's state fossil and, for decades, the largest marine reptile known; dozens lie together at Berlin-Ichthyosaur State Park."
+  },
+  {
+   "file": "species/eudimorphodon-name.mp3",
+   "text": "Eudimorphodon. Pronounced: you – dih – mor – fo – don. Eudimorphodon."
+  },
+  {
+   "file": "species/eudimorphodon-name-only.mp3",
+   "text": "Eudimorphodon"
+  },
+  {
+   "file": "species/eudimorphodon-notes.mp3",
+   "text": "Eudimorphodon. Late Triassic, 210 million years ago. 1 m wingspan long, about 10 kg. Piscivore. One of the earliest pterosaurs, with multi-pointed teeth suited to gripping slippery fish."
+  },
+  {
+   "file": "species/tanystropheus-name.mp3",
+   "text": "Tanystropheus. Pronounced: tan – ee – stro – fee – us. Tanystropheus."
+  },
+  {
+   "file": "species/tanystropheus-name-only.mp3",
+   "text": "Tanystropheus"
+  },
+  {
+   "file": "species/tanystropheus-notes.mp3",
+   "text": "Tanystropheus. Middle Triassic, 242–235 million years ago. 6 m long, about 100 kg. Piscivore. Its neck was longer than body and tail combined yet had only 13 vertebrae; it likely ambushed fish from the shallows."
+  },
+  {
+   "file": "species/brachio-name.mp3",
+   "text": "Brachiosaurus. Pronounced: brack – ee – oh – sore – us. Brachiosaurus."
+  },
+  {
+   "file": "species/brachio-name-only.mp3",
+   "text": "Brachiosaurus"
+  },
+  {
+   "file": "species/brachio-notes.mp3",
+   "text": "Brachiosaurus. Late Jurassic, 154–150 million years ago. 22 m long, 12 m to the head, about 30–60 tonnes. Herbivore. The name means \"arm lizard\": its front legs were longer than its back legs, giving it a giraffe-like posture for browsing treetops."
+  },
+  {
+   "file": "species/diplo-name.mp3",
+   "text": "Diplodocus. Pronounced: dih – plod – oh – kus. Diplodocus."
+  },
+  {
+   "file": "species/diplo-name-only.mp3",
+   "text": "Diplodocus"
+  },
+  {
+   "file": "species/diplo-notes.mp3",
+   "text": "Diplodocus. Late Jurassic, 154–152 million years ago. 26 m long, 4–5 m at the hip, about 12–15 tonnes. Herbivore. More than half its length was tail. One hypothesis holds the whip-like tip could be cracked faster than the speed of sound."
+  },
+  {
+   "file": "species/apatosaurus-name.mp3",
+   "text": "Apatosaurus. Pronounced: ah – pat – oh – sore – us. Apatosaurus."
+  },
+  {
+   "file": "species/apatosaurus-name-only.mp3",
+   "text": "Apatosaurus"
+  },
+  {
+   "file": "species/apatosaurus-notes.mp3",
+   "text": "Apatosaurus. Late Jurassic, 152–151 million years ago. 22 m long, 4.5 m at the hip, about 20 tonnes. Herbivore. Long confused with \"Brontosaurus\", it had an unusually thick, heavy neck and a whip-like tail."
+  },
+  {
+   "file": "species/stegosaurus-name.mp3",
+   "text": "Stegosaurus. Pronounced: steg – oh – sore – us. Stegosaurus."
+  },
+  {
+   "file": "species/stegosaurus-name-only.mp3",
+   "text": "Stegosaurus"
+  },
+  {
+   "file": "species/stegosaurus-notes.mp3",
+   "text": "Stegosaurus. Late Jurassic, 155–150 million years ago. 9 m long, 4 m to the plates, about 5 tonnes. Herbivore. Its brain was the size of a walnut; the tail spikes are nicknamed the \"thagomizer\" after a Far Side cartoon."
+  },
+  {
+   "file": "species/allosaurus-name.mp3",
+   "text": "Allosaurus. Pronounced: al – oh – sore – us. Allosaurus."
+  },
+  {
+   "file": "species/allosaurus-name-only.mp3",
+   "text": "Allosaurus"
+  },
+  {
+   "file": "species/allosaurus-notes.mp3",
+   "text": "Allosaurus. Late Jurassic, 155–145 million years ago. 8.5 m long, 2.5 m at the hip, about 2.5 tonnes. Carnivore. Top predator of the Morrison Formation; it may have swung its hatchet-like upper jaw down into prey rather than biting."
+  },
+  {
+   "file": "species/dilophosaurus-name.mp3",
+   "text": "Dilophosaurus. Pronounced: dy – loaf – oh – sore – us. Dilophosaurus."
+  },
+  {
+   "file": "species/dilophosaurus-name-only.mp3",
+   "text": "Dilophosaurus"
+  },
+  {
+   "file": "species/dilophosaurus-notes.mp3",
+   "text": "Dilophosaurus. Early Jurassic, 193 million years ago. 7 m long, 1.8 m at the hip, about 400 kg. Carnivore. The real animal had no neck frill and no venom; it did have two thin bony crests along its snout."
+  },
+  {
+   "file": "species/kentrosaurus-name.mp3",
+   "text": "Kentrosaurus. Pronounced: ken – tro – sore – us. Kentrosaurus."
+  },
+  {
+   "file": "species/kentrosaurus-name-only.mp3",
+   "text": "Kentrosaurus"
+  },
+  {
+   "file": "species/kentrosaurus-notes.mp3",
+   "text": "Kentrosaurus. Late Jurassic, 152 million years ago. 4.5 m long, 1.5 m at the hip, about 1 tonne. Herbivore. A small East African stegosaur: plates over the shoulders give way to long paired spikes down the back and tail."
+  },
+  {
+   "file": "species/mamenchisaurus-name.mp3",
+   "text": "Mamenchisaurus. Pronounced: mah – men – chee – sore – us. Mamenchisaurus."
+  },
+  {
+   "file": "species/mamenchisaurus-name-only.mp3",
+   "text": "Mamenchisaurus"
+  },
+  {
+   "file": "species/mamenchisaurus-notes.mp3",
+   "text": "Mamenchisaurus. Late Jurassic, 160–145 million years ago. 25 m long, 3.5 m at the hip, about 15 tonnes. Herbivore. Its neck alone could reach 15 m, about half its total length, one of the longest necks of any animal."
+  },
+  {
+   "file": "species/compsognathus-name.mp3",
+   "text": "Compsognathus. Pronounced: komp – sog – nah – thus. Compsognathus."
+  },
+  {
+   "file": "species/compsognathus-name-only.mp3",
+   "text": "Compsognathus"
+  },
+  {
+   "file": "species/compsognathus-notes.mp3",
+   "text": "Compsognathus. Late Jurassic, 150 million years ago. 1 m long, 0.3 m at the hip, about 3 kg. Carnivore. Chicken-sized; one specimen was fossilised with a whole lizard in its stomach."
+  },
+  {
+   "file": "species/rhamphorhynchus-name.mp3",
+   "text": "Rhamphorhynchus. Pronounced: ram – fo – rink – us. Rhamphorhynchus."
+  },
+  {
+   "file": "species/rhamphorhynchus-name-only.mp3",
+   "text": "Rhamphorhynchus"
+  },
+  {
+   "file": "species/rhamphorhynchus-notes.mp3",
+   "text": "Rhamphorhynchus. Late Jurassic, 150 million years ago. 1.8 m wingspan long, about 1.5 kg. Piscivore. A long-tailed pterosaur with a diamond-shaped vane at the tip and needle teeth angled outward for snatching fish."
+  },
+  {
+   "file": "species/plesiosaurus-name.mp3",
+   "text": "Plesiosaurus. Pronounced: plee – see – oh – sore – us. Plesiosaurus."
+  },
+  {
+   "file": "species/plesiosaurus-name-only.mp3",
+   "text": "Plesiosaurus"
+  },
+  {
+   "file": "species/plesiosaurus-notes.mp3",
+   "text": "Plesiosaurus. Early Jurassic, 199–175 million years ago. 3.5 m long, about 100 kg. Piscivore. Described in 1821 from Mary Anning's finds at Lyme Regis; it flew through the water with four wing-like flippers."
+  },
+  {
+   "file": "species/ichthyosaurus-name.mp3",
+   "text": "Ichthyosaurus. Pronounced: ik – thee – oh – sore – us. Ichthyosaurus."
+  },
+  {
+   "file": "species/ichthyosaurus-name-only.mp3",
+   "text": "Ichthyosaurus"
+  },
+  {
+   "file": "species/ichthyosaurus-notes.mp3",
+   "text": "Ichthyosaurus. Early Jurassic, 200–190 million years ago. 3 m long, about 90 kg. Piscivore. Dolphin-shaped but a reptile; fossils show it gave birth to live young at sea, tail first."
+  },
+  {
+   "file": "species/liopleurodon-name.mp3",
+   "text": "Liopleurodon. Pronounced: ly – oh – ploor – oh – don. Liopleurodon."
+  },
+  {
+   "file": "species/liopleurodon-name-only.mp3",
+   "text": "Liopleurodon"
+  },
+  {
+   "file": "species/liopleurodon-notes.mp3",
+   "text": "Liopleurodon. Middle–Late Jurassic, 165–155 million years ago. 6.5 m long, about 1.5 tonnes. Carnivore. A short-necked pliosaur with a crocodile-like skull; its nostrils may have let it smell underwater in stereo."
+  },
+  {
+   "file": "species/trex-name.mp3",
+   "text": "Tyrannosaurus rex. Pronounced: tie – ran – oh – sore – us rex. Tyrannosaurus rex."
+  },
+  {
+   "file": "species/trex-name-only.mp3",
+   "text": "Tyrannosaurus rex"
+  },
+  {
+   "file": "species/trex-notes.mp3",
+   "text": "Tyrannosaurus rex. Late Cretaceous, 68–66 million years ago. 12 m long, 4 m at the hip, about 8 tonnes. Carnivore. Its bite was the strongest of any known land animal, and those famous little arms were still strong enough to lift more than a person."
+  },
+  {
+   "file": "species/trike-name.mp3",
+   "text": "Triceratops. Pronounced: try – sair – ah – tops. Triceratops."
+  },
+  {
+   "file": "species/trike-name-only.mp3",
+   "text": "Triceratops"
+  },
+  {
+   "file": "species/trike-notes.mp3",
+   "text": "Triceratops. Late Cretaceous, 68–66 million years ago. 8–9 m long, 3 m at the shoulder, about 6–12 tonnes. Herbivore. It carried several hundred teeth packed into batteries that were replaced continually, shearing tough plants like scissors."
+  },
+  {
+   "file": "species/raptor-name.mp3",
+   "text": "Velociraptor. Pronounced: veh – loss – ih – rap – tor. Velociraptor."
+  },
+  {
+   "file": "species/raptor-name-only.mp3",
+   "text": "Velociraptor"
+  },
+  {
+   "file": "species/raptor-notes.mp3",
+   "text": "Velociraptor. Late Cretaceous, 75–71 million years ago. 2 m long, 0.5 m at the hip, about 15 kg. Carnivore. Turkey-sized and feathered: fossils of its forearm bones show quill knobs, the same anchors that hold flight feathers in modern birds."
+  },
+  {
+   "file": "species/spinosaurus-name.mp3",
+   "text": "Spinosaurus. Pronounced: spy – no – sore – us. Spinosaurus."
+  },
+  {
+   "file": "species/spinosaurus-name-only.mp3",
+   "text": "Spinosaurus"
+  },
+  {
+   "file": "species/spinosaurus-notes.mp3",
+   "text": "Spinosaurus. Late Cretaceous, 99–93 million years ago. 14 m long, 2.8 m at the hip, about 7 tonnes. Piscivore. The largest known predatory dinosaur, with a 1.5 m sail and a crocodile-like snout; it probably hunted in rivers."
+  },
+  {
+   "file": "species/ankylosaurus-name.mp3",
+   "text": "Ankylosaurus. Pronounced: ang – ky – lo – sore – us. Ankylosaurus."
+  },
+  {
+   "file": "species/ankylosaurus-name-only.mp3",
+   "text": "Ankylosaurus"
+  },
+  {
+   "file": "species/ankylosaurus-notes.mp3",
+   "text": "Ankylosaurus. Late Cretaceous, 68–66 million years ago. 7 m long, 1.7 m, about 6 tonnes. Herbivore. A living tank: bony armor even covered its eyelids, and the tail club could have broken a tyrannosaur's leg."
+  },
+  {
+   "file": "species/parasaurolophus-name.mp3",
+   "text": "Parasaurolophus. Pronounced: pair – ah – sore – ol – oh – fus. Parasaurolophus."
+  },
+  {
+   "file": "species/parasaurolophus-name-only.mp3",
+   "text": "Parasaurolophus"
+  },
+  {
+   "file": "species/parasaurolophus-notes.mp3",
+   "text": "Parasaurolophus. Late Cretaceous, 76–73 million years ago. 9.5 m long, 2.7 m at the hip, about 2.5 tonnes. Herbivore. The hollow crest was a resonating chamber; computer models suggest it produced a low, trombone-like call."
+  },
+  {
+   "file": "species/iguanodon-name.mp3",
+   "text": "Iguanodon. Pronounced: ig – wan – oh – don. Iguanodon."
+  },
+  {
+   "file": "species/iguanodon-name-only.mp3",
+   "text": "Iguanodon"
+  },
+  {
+   "file": "species/iguanodon-notes.mp3",
+   "text": "Iguanodon. Early Cretaceous, 126–122 million years ago. 10 m long, 2.7 m at the hip, about 3.5 tonnes. Herbivore. The second dinosaur ever named; its thumb spike was at first mistaken for a nose horn."
+  },
+  {
+   "file": "species/pachycephalosaurus-name.mp3",
+   "text": "Pachycephalosaurus. Pronounced: pak – ee – sef – ah – lo – sore – us. Pachycephalosaurus."
+  },
+  {
+   "file": "species/pachycephalosaurus-name-only.mp3",
+   "text": "Pachycephalosaurus"
+  },
+  {
+   "file": "species/pachycephalosaurus-notes.mp3",
+   "text": "Pachycephalosaurus. Late Cretaceous, 70–66 million years ago. 4.5 m long, 1.5 m at the hip, about 400 kg. Omnivore. Its skull dome was up to 25 cm thick; healed injuries on some domes suggest they really did butt heads."
+  },
+  {
+   "file": "species/carnotaurus-name.mp3",
+   "text": "Carnotaurus. Pronounced: kar – no – tore – us. Carnotaurus."
+  },
+  {
+   "file": "species/carnotaurus-name-only.mp3",
+   "text": "Carnotaurus"
+  },
+  {
+   "file": "species/carnotaurus-notes.mp3",
+   "text": "Carnotaurus. Late Cretaceous, 72–69 million years ago. 8 m long, 2.4 m at the hip, about 1.5 tonnes. Carnivore. The \"meat-eating bull\" had horns over its eyes and arms even smaller than T. rex's; it may have been the fastest large theropod."
+  },
+  {
+   "file": "species/therizinosaurus-name.mp3",
+   "text": "Therizinosaurus. Pronounced: thair – ih – zeen – oh – sore – us. Therizinosaurus."
+  },
+  {
+   "file": "species/therizinosaurus-name-only.mp3",
+   "text": "Therizinosaurus"
+  },
+  {
+   "file": "species/therizinosaurus-notes.mp3",
+   "text": "Therizinosaurus. Late Cretaceous, 70 million years ago. 10 m long, 3 m at the hip, about 5 tonnes. Herbivore. A pot-bellied, plant-eating theropod whose hand claws reached a metre long, the longest of any animal."
+  },
+  {
+   "file": "species/gallimimus-name.mp3",
+   "text": "Gallimimus. Pronounced: gal – ih – my – mus. Gallimimus."
+  },
+  {
+   "file": "species/gallimimus-name-only.mp3",
+   "text": "Gallimimus"
+  },
+  {
+   "file": "species/gallimimus-notes.mp3",
+   "text": "Gallimimus. Late Cretaceous, 70 million years ago. 6 m long, 1.9 m at the hip, about 440 kg. Omnivore. An ostrich-like runner, probably the fastest dinosaur of its size at 50 km/h or more."
+  },
+  {
+   "file": "species/pteranodon-name.mp3",
+   "text": "Pteranodon. Pronounced: teh – ran – oh – don. Pteranodon."
+  },
+  {
+   "file": "species/pteranodon-name-only.mp3",
+   "text": "Pteranodon"
+  },
+  {
+   "file": "species/pteranodon-notes.mp3",
+   "text": "Pteranodon. Late Cretaceous, 86–84 million years ago. 6.5 m wingspan long, about 25 kg. Piscivore. Toothless and crested; over a thousand specimens are known from the chalk of Kansas, once a shallow inland sea."
+  },
+  {
+   "file": "species/quetzalcoatlus-name.mp3",
+   "text": "Quetzalcoatlus. Pronounced: ket – sal – ko – at – lus. Quetzalcoatlus."
+  },
+  {
+   "file": "species/quetzalcoatlus-name-only.mp3",
+   "text": "Quetzalcoatlus"
+  },
+  {
+   "file": "species/quetzalcoatlus-notes.mp3",
+   "text": "Quetzalcoatlus. Late Cretaceous, 68 million years ago. 10.5 m wingspan long, 5 m standing, about 250 kg. Carnivore. The largest flying animal ever: as tall as a giraffe on the ground, with the wingspan of a small aeroplane."
+  },
+  {
+   "file": "species/mosasaurus-name.mp3",
+   "text": "Mosasaurus. Pronounced: moe – zah – sore – us. Mosasaurus."
+  },
+  {
+   "file": "species/mosasaurus-name-only.mp3",
+   "text": "Mosasaurus"
+  },
+  {
+   "file": "species/mosasaurus-notes.mp3",
+   "text": "Mosasaurus. Late Cretaceous, 82–66 million years ago. 15 m long, about 14 tonnes. Carnivore. A giant sea lizard related to monitors and snakes, with a second set of teeth in the roof of its mouth to ratchet prey down."
+  },
+  {
+   "file": "species/elasmosaurus-name.mp3",
+   "text": "Elasmosaurus. Pronounced: eh – lazz – mo – sore – us. Elasmosaurus."
+  },
+  {
+   "file": "species/elasmosaurus-name-only.mp3",
+   "text": "Elasmosaurus"
+  },
+  {
+   "file": "species/elasmosaurus-notes.mp3",
+   "text": "Elasmosaurus. Late Cretaceous, 80 million years ago. 12 m long, about 2 tonnes. Piscivore. Its 7 m neck held 72 vertebrae; the first describer famously mounted the skull on the wrong end."
+  },
+  {
+   "file": "locations/santaMonica.mp3",
+   "text": "Santa Monica."
+  },
+  {
+   "file": "locations/timesSquare.mp3",
+   "text": "Times Square."
+  },
+  {
+   "file": "locations/goldenGate.mp3",
+   "text": "Golden Gate Bridge."
+  },
+  {
+   "file": "locations/shibuya.mp3",
+   "text": "Shibuya Crossing."
+  },
+  {
+   "file": "locations/greatWall.mp3",
+   "text": "Great Wall."
+  },
+  {
+   "file": "locations/paris.mp3",
+   "text": "Paris."
+  },
+  {
+   "file": "locations/london.mp3",
+   "text": "London."
+  },
+  {
+   "file": "locations/rome.mp3",
+   "text": "Rome."
+  },
+  {
+   "file": "locations/barcelona.mp3",
+   "text": "Barcelona."
+  },
+  {
+   "file": "locations/giza.mp3",
+   "text": "Giza."
+  },
+  {
+   "file": "locations/serengeti.mp3",
+   "text": "Serengeti."
+  },
+  {
+   "file": "locations/capeTown.mp3",
+   "text": "Cape Town."
+  },
+  {
+   "file": "locations/marrakech.mp3",
+   "text": "Marrakech."
+  },
+  {
+   "file": "locations/rio.mp3",
+   "text": "Rio de Janeiro."
+  },
+  {
+   "file": "locations/machuPicchu.mp3",
+   "text": "Machu Picchu."
+  },
+  {
+   "file": "locations/buenosAires.mp3",
+   "text": "Buenos Aires."
+  },
+  {
+   "file": "locations/amazon.mp3",
+   "text": "Amazon."
+  },
+  {
+   "file": "locations/sydney.mp3",
+   "text": "Sydney."
+  },
+  {
+   "file": "locations/antarctica.mp3",
+   "text": "Antarctica."
+  },
+  {
+   "file": "story/0.mp3",
+   "text": "A quiet afternoon. Nothing to report.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/1.mp3",
+   "text": "Something is on the avenue. Witnesses describe a very large",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/2.mp3",
+   "text": "Traffic has ground to a halt. Drivers are honking. It is not helping.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/3.mp3",
+   "text": "has made itself known. Residents are advised to stay indoors.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/4.mp3",
+   "text": "Panic in the streets. News helicopters are over the scene.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/5.mp3",
+   "text": "Nightfall. It is still here.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "story/6.mp3",
+   "text": "Blocky Dinos. Fin.",
+   "style": "breaking news anchor, urgent but composed"
+  },
+  {
+   "file": "tour/0.mp3",
+   "text": "Exhibit 1. The king on Broadway. Twelve metres of Tyrannosaurus against the billboards. Cabs swerve; nobody films in landscape."
+  },
+  {
+   "file": "tour/1.mp3",
+   "text": "Exhibit 2. Taller than the arches. Brachiosaurus browses at twelve metres. It walks straight under the tower without ducking."
+  },
+  {
+   "file": "tour/2.mp3",
+   "text": "Exhibit 3. Something in the Thames. A fifteen-metre sea lizard beneath Tower Bridge. The bascules will not be raised."
+  },
+  {
+   "file": "tour/3.mp3",
+   "text": "Exhibit 4. Wings over the harbour. The largest flying animal ever, ten metres across, circling the Opera House at dusk."
+  },
+  {
+   "file": "tour/4.mp3",
+   "text": "Exhibit 5. Among the penguins. Turkey-sized, feathered, and much faster than anything else on the ice shelf."
+  },
+  {
+   "file": "tour/5.mp3",
+   "text": "Exhibit 6. The longest tail on the ridge. Twenty-six metres of Diplodocus on a walkway built for two people abreast."
+  }
+ ]
+}
