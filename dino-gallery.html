@@ -50,8 +50,8 @@
   .row button.attack { background: var(--stamp); color: #fff; font-weight: 700; }
   .row.clock { align-items: center; gap: 10px; padding: 6px 12px; }
   .row.clock span { min-width: 6.5ch; text-align: right; font: 13px/1 var(--mono); }
-  .row.clock input { flex: 1 1 80px; min-width: 60px; width: 0; accent-color: var(--ink); }
-  .row.clock button { flex: 0 0 auto; padding: 6px 10px; }
+  .row.clock input, .row.audio input { flex: 1 1 80px; min-width: 60px; width: 0; accent-color: var(--ink); }
+  .row.clock button, .row.audio button { flex: 0 0 auto; padding: 6px 10px; }
   #row2, #row3 { display: none; }
   #controls.more #row2, #controls.more #row3 { display: flex; }
 
@@ -80,7 +80,6 @@
   #drawer[hidden] { display: none; }
   .dhead { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; }
   .dhead h2 { margin: 0; flex: 1; font-size: 20px; font-style: italic; font-weight: 700; }
-  .dhead input { flex: 1; font: 14px/1.2 var(--mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: rgba(255,250,240,.6); color: var(--ink); min-width: 0; }
   .dhead button { border: 1px solid var(--line); background: transparent; border-radius: 4px; width: 38px; height: 38px; font-size: 18px; flex: none; }
   .maplabel { margin: 4px 0 -4px; font: 11px/1 var(--mono); color: var(--ink-2); letter-spacing: .14em; text-transform: uppercase; flex: 0 0 auto; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 0 0 auto; }
@@ -165,7 +164,7 @@
 </header>
 
 <aside id="drawer" class="paper" hidden aria-label="The collection">
-  <div class="dhead"><h2>The Collection</h2><input id="search" type="search" placeholder="Search…" aria-label="Search species"><button id="closeDrawer" aria-label="Close">✕</button></div>
+  <div class="dhead"><h2>The Collection</h2><button id="closeDrawer" aria-label="Close">✕</button></div>
   <p class="maplabel">Expedition map</p>
   <div id="map"></div>
   <div class="chips locs" id="locChips"></div>
@@ -219,10 +218,11 @@
       <input id="clock" type="range" min="0" max="24" step="0.05" value="14" aria-label="Time of day">
       <button id="cycle" aria-pressed="false">Cycle</button>
     </div>
-    <div class="row paper" id="row3" role="group" aria-label="Audio">
+    <div class="row paper audio" id="row3" role="group" aria-label="Audio">
       <button id="sound" aria-pressed="false">Sound off</button>
       <button id="voice" aria-pressed="true">Voice on</button>
       <button id="music" aria-pressed="true">Music on</button>
+      <input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.2" aria-label="Music volume">
     </div>
   </div>
 </div>
@@ -1631,7 +1631,6 @@ for (const id of ORDER) { try { THUMBS[id] = makeThumb(id); } catch (err) { cons
 const PERIODS = ['Triassic', 'Jurassic', 'Cretaceous'], DIETS = ['Carnivore', 'Herbivore', 'Omnivore', 'Piscivore'];
 const FAMILIES = [...new Set(SPECIES_LIST.map(s => s.family))];
 const filters = { period: new Set(), diet: new Set(), family: new Set() };
-let query = '';
 const grid = document.getElementById('grid'), tiles = {}, drawer = document.getElementById('drawer'), browseBtn = document.getElementById('browse');
 for (const sp of SPECIES_LIST) {
   const b = document.createElement('button'); b.className = 'tile'; b.setAttribute('aria-pressed', 'false'); b.dataset.id = sp.id;
@@ -1651,8 +1650,7 @@ chips(document.getElementById('chipPeriod'), 'period', PERIODS);
 chips(document.getElementById('chipDiet'), 'diet', DIETS);
 chips(document.getElementById('chipFamily'), 'family', FAMILIES);
 function matches(sp) {
-  return (!filters.period.size || filters.period.has(sp.period)) && (!filters.diet.size || filters.diet.has(sp.diet)) && (!filters.family.size || filters.family.has(sp.family))
-    && (!query || (sp.name + ' ' + sp.family + ' ' + sp.period).toLowerCase().includes(query));
+  return (!filters.period.size || filters.period.has(sp.period)) && (!filters.diet.size || filters.diet.has(sp.diet)) && (!filters.family.size || filters.family.has(sp.family));
 }
 function visibleIds() { return SPECIES_LIST.filter(matches).map(s => s.id); }
 function applyFilters() {
@@ -1660,8 +1658,7 @@ function applyFilters() {
   for (const sp of SPECIES_LIST) tiles[sp.id].hidden = !vis.includes(sp.id);
   document.getElementById('count').textContent = `${vis.length} of ${SPECIES_LIST.length} species`;
 }
-document.getElementById('search').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); applyFilters(); });
-function openDrawer(open) { drawer.hidden = !open; browseBtn.setAttribute('aria-expanded', open); if (open) document.getElementById('search').focus({ preventScroll: true }); }
+function openDrawer(open) { drawer.hidden = !open; browseBtn.setAttribute('aria-expanded', open); }
 browseBtn.addEventListener('click', () => openDrawer(drawer.hidden));
 document.getElementById('closeDrawer').addEventListener('click', () => openDrawer(false));
 addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) openDrawer(false); });
@@ -1925,9 +1922,14 @@ document.getElementById('voice').addEventListener('click', e => { NARR.voiceOn =
 // as long as the page is open. Starts on the cover-page click (a user gesture), ducks under narration.
 // Plain <audio>, independent of the Web Audio `master` so the Sound toggle stays effects-only.
 const MUSIC = { tracks: ['music/dino-blocks-1.mp3', 'music/dino-blocks-2.mp3', 'music/learn-and-play-1.mp3', 'music/learn-and-play-2.mp3'],
-  el: new Audio(), on: true, queue: [], last: null, vol: .35, k: 1, started: false, errors: 0, ramp: null };
-try { MUSIC.on = localStorage.getItem('music') !== 'off'; } catch (e) {}
+  el: new Audio(), on: true, queue: [], last: null, vol: .2, k: 1, started: false, errors: 0, ramp: null };
+try { MUSIC.on = localStorage.getItem('music') !== 'off'; const v = parseFloat(localStorage.getItem('musicVol')); if (v >= 0 && v <= 1) MUSIC.vol = v; } catch (e) {}
 MUSIC.el.preload = 'none'; MUSIC.el.volume = MUSIC.vol;
+const musicVolEl = document.getElementById('musicVol'); musicVolEl.value = MUSIC.vol;
+musicVolEl.addEventListener('input', e => {                              // the slider sets the level; narration ducking scales it by MUSIC.k
+  MUSIC.vol = Math.min(1, Math.max(0, +e.target.value)); MUSIC.el.volume = MUSIC.vol * MUSIC.k;
+  try { localStorage.setItem('musicVol', MUSIC.vol.toFixed(2)); } catch (err) {}
+});
 function playNextTrack() {
   if (MUSIC.errors >= MUSIC.tracks.length) return;                    // every track failed to load: give up quietly
   if (!MUSIC.queue.length) {
@@ -1949,7 +1951,7 @@ function startMusic() {
 function musicDuck(k) {                                                // ramp <audio>.volume; it has no automation of its own
   MUSIC.k = k; if (MUSIC.ramp) clearInterval(MUSIC.ramp);
   MUSIC.ramp = setInterval(() => {
-    const goal = MUSIC.vol * MUSIC.k, v = MUSIC.el.volume, step = MUSIC.vol / 12;
+    const goal = MUSIC.vol * MUSIC.k, v = MUSIC.el.volume, step = Math.max(.005, MUSIC.vol / 12);
     if (Math.abs(goal - v) <= step) { MUSIC.el.volume = goal; clearInterval(MUSIC.ramp); MUSIC.ramp = null; }
     else MUSIC.el.volume = v + Math.sign(goal - v) * step;
   }, 33);
